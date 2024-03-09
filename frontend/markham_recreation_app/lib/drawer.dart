@@ -3,6 +3,7 @@ library drawer;
 import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/pages/weekly_checklist.dart';
 
+
 Drawer drawer(BuildContext context) {
   return Drawer(
     child: ListView(
@@ -125,7 +126,7 @@ Drawer drawer(BuildContext context) {
           applicationIcon: Icon(
             Icons.local_play,
           ),
-          applicationName: 'Markham Recreation App',
+          applicationName: 'Markham Recreation Summer Camp App',
           applicationVersion: '0.0.0',
           applicationLegalese: '© 2024 StealthTech',
           aboutBoxChildren: [

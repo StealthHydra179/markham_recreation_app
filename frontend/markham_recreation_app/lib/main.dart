@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: globals.primaryColor),
         useMaterial3: true,
       ),
-      home: const LandingPage(title: 'Markham Recreation Summer Camp Administration App'),
+      home: const LandingPage(title: globals.title),
     );
   }
 }
@@ -69,9 +69,9 @@ class _LandingPageState extends State<LandingPage> {
         
         title: Text(
           widget.title,
-          style: TextStyle(color: globals.secondaryColor) 
+          style: const TextStyle(color: globals.secondaryColor) 
         ),
-        iconTheme: IconThemeData(color: globals.secondaryColor),
+        iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       drawer: drawer.drawer(context),
       body: Center(
