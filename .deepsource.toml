@@ -1,0 +1,11 @@
+version = 1
+
+[[analyzers]]
+name = "javascript"
+
+[[analyzers]]
+name = "dart-analyze"
+type = "community"
+
+[[transformers]]
+name = "standardjs"
