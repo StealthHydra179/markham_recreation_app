@@ -34,6 +34,7 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
                 camperInformationForms = value!;
               });
             },
+            // TODO add descriptions to make it clear what each checkbox is for?
             title: const Text('Collect and Alphebetize Camper Information Forms'),
           ),
           const Divider(height: 0),

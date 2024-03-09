@@ -9,3 +9,6 @@ type = "community"
 
 [[transformers]]
 name = "standardjs"
+
+[analyzers.meta]
+    environment = ["nodejs"]
