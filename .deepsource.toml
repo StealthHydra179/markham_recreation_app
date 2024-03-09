@@ -3,12 +3,12 @@ version = 1
 [[analyzers]]
 name = "javascript"
 
+    [analyzers.meta]
+    environment = ["nodejs"]
+
 [[analyzers]]
 name = "dart-analyze"
 type = "community"
 
 [[transformers]]
 name = "standardjs"
-
-[analyzers.meta]
-    environment = ["nodejs"]
