@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'globals.dart' as globals;
+import 'package:markham_recreation_app/globals.dart' as globals;
+import 'package:markham_recreation_app/drawer.dart' as drawer;
 
 void main() {
   runApp(const MyApp());
@@ -72,7 +73,7 @@ class _LandingPageState extends State<LandingPage> {
         ),
         iconTheme: IconThemeData(color: globals.secondaryColor),
       ),
-      drawer: globals.drawer(context),
+      drawer: drawer.drawer(context),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -95,4 +96,3 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 }
-
