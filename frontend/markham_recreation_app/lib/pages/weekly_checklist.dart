@@ -18,7 +18,6 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
   bool campDirectorMeeting = false;
   bool campCounsellorMeeting = false;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +35,6 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
               });
             },
             title: const Text('Collect and Alphebetize Camper Information Forms'),
-            // subtitle: const Text('Supporting text'),
           ),
           const Divider(height: 0),
           CheckboxListTile(
@@ -47,8 +45,6 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
               });
             },
             title: const Text('Share Allergy and Medical Information with Camp Counsellors'),
-            // subtitle: const Text(
-                // 'Longer supporting text to demonstrate how the text wraps and the checkbox is centered vertically with the text.'),
           ),
           const Divider(height: 0),
           CheckboxListTile(
@@ -59,9 +55,6 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
               });
             },
             title: const Text('Track and Record Swim Test Pass/Fail of Each Camper'),
-            // subtitle: const Text(
-            //     "Longer supporting text to demonstrate how the text wraps and how setting 'CheckboxListTile.isThreeLine = true' aligns the checkbox to the top vertically with the text."),
-            // isThreeLine: true,
           ),
           const Divider(height: 0),
           CheckboxListTile(
@@ -72,9 +65,6 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
               });
             },
             title: const Text('Review and Update Weekly Program Plans'),
-            // subtitle: const Text(
-            //     "Longer supporting text to demonstrate how the text wraps and how setting 'CheckboxListTile.isThreeLine = true' aligns the checkbox to the top vertically with the text."),
-            // isThreeLine: true,
           ),
           const Divider(height: 0),
           CheckboxListTile(
@@ -85,9 +75,6 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
               });
             },
             title: const Text('Meet and Check-in with Camp Director'),
-            // subtitle: const Text(
-            //     "Longer supporting text to demonstrate how the text wraps and how setting 'CheckboxListTile.isThreeLine = true' aligns the checkbox to the top vertically with the text."),
-            // isThreeLine: true,
           ),
           const Divider(height: 0),
           CheckboxListTile(
@@ -98,9 +85,6 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
               });
             },
             title: const Text('Meet and Check-in with Camp Counsellors'),
-            // subtitle: const Text(
-            //     "Longer supporting text to demonstrate how the text wraps and how setting 'CheckboxListTile.isThreeLine = true' aligns the checkbox to the top vertically with the text."),
-            // isThreeLine: true,
           ),
         ],
       ),
