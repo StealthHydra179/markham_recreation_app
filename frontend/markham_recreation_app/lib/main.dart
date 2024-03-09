@@ -72,80 +72,9 @@ class _LandingPageState extends State<LandingPage> {
         ),
         iconTheme: IconThemeData(color: globals.secondaryColor),
       ),
-      drawer: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary), // Can use global color here, and make the whole header constant for performance
-              accountName: Text(
-                "User Name",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              accountEmail: Text(
-                "stealth@shydra.dev",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              currentAccountPicture: FlutterLogo(),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.home,
-              ),
-              title: const Text('Page 1'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.train,
-              ),
-              title: const Text('Page 2'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            AboutListTile( // <-- SEE HERE
-              icon: Icon(
-                Icons.info,
-              ),
-              child: Text('About app'),
-              applicationIcon: Icon(
-                Icons.local_play,
-              ),
-              applicationName: 'My Cool App',
-              applicationVersion: '1.0.25',
-              applicationLegalese: '© 2019 Company',
-              aboutBoxChildren: [
-                ///Content goes here...
-              ],
-            ),
-          ],
-        ),
-      ),
+      drawer: globals.drawer(context),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
@@ -162,7 +91,8 @@ class _LandingPageState extends State<LandingPage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
+
