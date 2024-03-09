@@ -5,8 +5,8 @@ require('dotenv').config()
 const app = express()
 const port = 3000
 
-const client = new postgres_client();
-await client.connect();
+const client = new postgres_client()
+await client.connect()
 
 app.get('/', (req, res) => {
   res.send('Hello World')
