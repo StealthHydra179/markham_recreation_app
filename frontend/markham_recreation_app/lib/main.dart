@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/drawer.dart' as drawer;
+import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
+
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  findSystemLocale().whenComplete(() => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

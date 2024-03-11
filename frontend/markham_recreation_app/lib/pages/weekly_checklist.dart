@@ -2,6 +2,9 @@ library weekly_checklist;
 
 import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/drawer.dart' as drawer;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:markham_recreation_app/globals.dart' as globals;
 
 class WeeklyChecklist extends StatefulWidget {
   const WeeklyChecklist({super.key});
@@ -20,9 +23,39 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
 
   @override
   Widget build(BuildContext context) {
+    // Update checkbox state
+
+    Future<http.Response> response = http.get(
+      Uri.parse('${globals.serverUrl}/api/weekly_checklist'),
+    );
+    response.then((http.Response response) {
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Weekly Checklist Saved'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to Save Weekly Checklist'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    });
+
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Weekly Checklist'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        
+        title: const Text(
+          'Weekly Checklist',
+          style: TextStyle(color: globals.secondaryColor) 
+        ),
+        iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       drawer: drawer.drawer(context),
       body: Column(
@@ -86,6 +119,48 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
               });
             },
             title: const Text('Meet and Check-in with Camp Counsellors'),
+          ),
+          const Divider(height: 0),
+        
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(10),
+            ),
+            onPressed: () {
+              // Send the checklist to the server
+              Future<http.Response> response = http.post(
+                Uri.parse('${globals.serverUrl}/api/weekly_checklist/'+globals.camp_id.toString()),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode(<String, bool>{
+                  'camperInformationForms': camperInformationForms,
+                  'allergyAndMedicalInformation': allergyAndMedicalInformation,
+                  'swimTest': swimTest,
+                  'programPlans': programPlans,
+                  'campDirectorMeeting': campDirectorMeeting,
+                  'campCounsellorMeeting': campCounsellorMeeting,
+                }),
+              );
+              response.then((http.Response response) {
+                if (response.statusCode == 200) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Weekly Checklist Saved'),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to Save Weekly Checklist'),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                }
+              });
+            },
+            child: const Text('Save'),
           ),
         ],
       ),

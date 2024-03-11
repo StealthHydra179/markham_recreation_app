@@ -2,6 +2,7 @@ library drawer;
 
 import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/pages/weekly_checklist.dart';
+import 'package:markham_recreation_app/pages/absence.dart';
 
 
 Drawer drawer(BuildContext context) {
@@ -53,7 +54,10 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Absent Campers'),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Absence()),
+            );
           },
         ),
         ListTile(

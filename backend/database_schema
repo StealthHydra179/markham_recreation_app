@@ -1,0 +1,164 @@
+Table users {
+  id int [pk]
+  email string
+  password string
+  first_name string
+  last_name string
+  role string
+}
+
+Table camps {
+  id int [pk]
+  name string
+  user int
+  week string
+}
+
+Ref: users.id < camps.user
+
+
+Table attendance {
+  id int [pk]
+  camp int
+  date date
+  // TODO store timestamps?
+  present int
+  present_edited_by int
+
+  before_care int
+  before_care_edited_by int
+
+  after_care int
+  after_care_edited_by int
+}
+
+Table absent {
+  id int [pk]
+  camp int
+  person_name string
+  day date
+  notes string
+  date_modified date
+  edited_by int
+}
+
+Table checklist {
+  camp int [pk]
+  camper_info_form bool
+  camper_info_for_edited_by int
+  camper_info_form_update_date date
+
+  allergy_medical_info bool
+  allergy_medical_info_edited_by int
+  allergy_medical_info_date date
+
+  swim_test_records bool
+  swim_test_records_edited_by int
+  swim_test_records_date date
+
+  weekly_plans bool
+  weekly_plans_edited_by int
+  weekly_plans_date bool
+
+  director_check bool
+  director_check_edited_by int
+  director_check_date bool
+
+  counsellor_check bool
+  counsellor_check_edited_by int
+  counsellor_check_date bool
+}
+
+// Ref: week_update.camp_id > camps.id
+// Ref: absent.week_id > week_update.id
+
+Table message {
+  id int [pk]
+  date date
+  camp int
+  message string
+  by int
+}
+
+Table notes {
+  id int [pk]
+  date date
+  camp int
+  note string
+  by int
+}
+
+Table staff_performance_notes {
+  id int [pk]
+  date date
+  camp int
+  performance_note string
+  by int
+}
+
+Table equipment_supplies_notes {
+  id int [pk]
+  date date
+  camp int
+  equipment_supplies_note string
+  by int
+}
+
+Table parent_notes {
+ id int [pk]
+ date date
+ camp int
+ parent_note string
+ by int
+}
+
+Table incident_notes {
+ id int [pk]
+ date date
+ camp int
+ incident_note string
+ by int
+}
+
+
+Ref: "checklist"."camp" - "camps"."id"
+
+Ref: "camps"."id" < "absent"."camp"
+
+Ref: "camps"."id" < "message"."camp"
+
+Ref: "camps"."id" < "notes"."camp"
+
+Ref: "camps"."id" < "staff_performance_notes"."camp"
+
+Ref: "users"."id" < "checklist"."camper_info_for_edited_by"
+
+Ref: "users"."id" < "checklist"."allergy_medical_info_edited_by"
+
+Ref: "users"."id" < "checklist"."swim_test_records_edited_by"
+
+Ref: "users"."id" < "checklist"."weekly_plans_edited_by"
+
+Ref: "users"."id" < "checklist"."director_check_edited_by"
+
+Ref: "users"."id" < "checklist"."counsellor_check_edited_by"
+
+Ref: "users"."id" < "absent"."edited_by"
+
+Ref: "users"."id" < "notes"."by"
+
+Ref: "users"."id" < "message"."by"
+
+Ref: "users"."id" < "staff_performance_notes"."by"
+
+Ref: "camps"."id" < "equipment_supplies_notes"."camp"
+
+Ref: "users"."id" < "equipment_supplies_notes"."by"
+
+Ref: "camps"."id" < "parent_notes"."camp"
+
+Ref: "users"."id" < "parent_notes"."by"
+
+Ref: "camps"."id" < "incident_notes"."camp"
+
+Ref: "users"."id" < "incident_notes"."by"
