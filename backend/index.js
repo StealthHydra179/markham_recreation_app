@@ -23,26 +23,26 @@ const logger = winston.createLogger({
   defaultMeta: { service: 'Markham Recreation Summer Camp Server' }
 })
 logger.configure({
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-    ),
-    transports: [
-        new DailyRotateFile({
-          filename: 'logs/markham_rec_server-%DATE%-error.log',
-          datePattern: 'YYYY-MM-DD',
-          zippedArchive: false,
-          maxSize: '20m',
-          level: 'error'
-        }),
-      new DailyRotateFile({
-        filename: 'logs/markham_rec_server-%DATE%-info.log',
-        datePattern: 'YYYY-MM-DD',
-        zippedArchive: false,
-        maxSize: '20m',
-        level: 'info'
-      })
-    ]
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new DailyRotateFile({
+      filename: 'logs/markham_rec_server-%DATE%-error.log',
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: false,
+      maxSize: '20m',
+      level: 'error'
+    }),
+    new DailyRotateFile({
+      filename: 'logs/markham_rec_server-%DATE%-info.log',
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: false,
+      maxSize: '20m',
+      level: 'info'
+    })
+  ]
 })
 if (process.env.NODE_ENV !== 'production' || process.env.NODE_ENV == null) {
   console.log('Logging to console')
@@ -52,7 +52,6 @@ if (process.env.NODE_ENV !== 'production' || process.env.NODE_ENV == null) {
   }))
 }
 logger.info('Server started')
-
 
 async function connect () {
   await client.connect()
@@ -130,8 +129,6 @@ app.post('/api/new_absence/:camp_id', (req, res) => {
   console.log(req.body)
   res.json(req.body)
 })
-
-
 
 app.listen(port, () => {
   logger.info(`Server running on port ${port}`)
