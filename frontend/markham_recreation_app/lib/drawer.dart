@@ -1,6 +1,5 @@
-library drawer;
-
 import 'package:flutter/material.dart';
+
 import 'package:markham_recreation_app/pages/weekly_checklist.dart';
 import 'package:markham_recreation_app/pages/absence.dart';
 

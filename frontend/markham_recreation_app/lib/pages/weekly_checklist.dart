@@ -3,7 +3,9 @@ library weekly_checklist;
 import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:http/http.dart' as http;
+
 import 'dart:convert';
+
 import 'package:markham_recreation_app/globals.dart' as globals;
 
 class WeeklyChecklist extends StatefulWidget {
@@ -42,6 +44,13 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
           ),
         );
       }
+    }).catchError((error, stackTrace) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to Load Weekly Checklist'),
+          duration: Duration(seconds: 3),
+        ),
+      );
     });
   }
 
@@ -166,6 +175,14 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
                     ),
                   );
                 }
+              }).catchError((error, stackTrace) {
+                // Runs when the server is down
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Failed to Load Weekly Checklist'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
               });
             },
             child: const Text('Save'),

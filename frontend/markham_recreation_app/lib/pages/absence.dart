@@ -3,9 +3,12 @@ library weekly_checklist;
 import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:http/http.dart' as http;
+
 import 'dart:convert';
-import 'package:markham_recreation_app/globals.dart' as globals;
+
 import 'package:date_field/date_field.dart';
+
+import 'package:markham_recreation_app/globals.dart' as globals;
 
 class Absence extends StatefulWidget {
   const Absence({super.key});
