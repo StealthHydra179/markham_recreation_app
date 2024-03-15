@@ -12,6 +12,19 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
-    "pg": "^8.11.3"
-  }
+    "pg": "^8.11.3",
+    "triple-beam": "^1.4.1",
+    "winston": "^3.12.0",
+    "winston-daily-rotate-file": "^5.0.0",
+    "winston-transport": "^4.7.0"
+  },
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Server",
+      "program": "index.js",
+      "console": "integratedTerminal"
+    }
+  ]
 }
