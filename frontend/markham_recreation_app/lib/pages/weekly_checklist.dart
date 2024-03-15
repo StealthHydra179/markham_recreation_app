@@ -21,10 +21,7 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
   bool campDirectorMeeting = false;
   bool campCounsellorMeeting = false;
 
-  @override
-  Widget build(BuildContext context) {
-    // Update checkbox state
-
+  void _fetch_checklist() async {
     Future<http.Response> response = http.get(
       Uri.parse('${globals.serverUrl}/api/weekly_checklist'),
     );
@@ -32,20 +29,31 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Weekly Checklist Saved'),
+            content: Text('Weekly Checklist Loaded'),
             duration: Duration(seconds: 3),
+            //TODO edit the state of the checkboxes to match the response
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Failed to Save Weekly Checklist'),
+            content: Text('Failed to Load Weekly Checklist'),
             duration: Duration(seconds: 3),
           ),
         );
       }
     });
+  }
 
+  @override
+  void initState() {
+    super.initState();
+    _fetch_checklist();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Update checkbox state
 
     return Scaffold(
       appBar: AppBar(
