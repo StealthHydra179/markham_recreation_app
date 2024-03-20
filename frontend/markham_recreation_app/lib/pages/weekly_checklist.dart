@@ -46,8 +46,8 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
       }
     }).catchError((error, stackTrace) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to Load Weekly Checklist'),
+        SnackBar(
+          content: Text(error.toString()),
           duration: Duration(seconds: 3),
         ),
       );

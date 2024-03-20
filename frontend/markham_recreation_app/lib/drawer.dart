@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:markham_recreation_app/pages/weekly_checklist.dart';
-import 'package:markham_recreation_app/pages/absence.dart';
+import 'package:markham_recreation_app/pages/new_absence.dart';
+import 'package:markham_recreation_app/pages/fetch_absences.dart';
 
 
 Drawer drawer(BuildContext context) {
@@ -55,7 +56,19 @@ Drawer drawer(BuildContext context) {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const Absence()),
+              MaterialPageRoute(builder: (context) => const FetchAbsences()),
+            );
+          },
+        ),
+        ListTile(
+          leading: const Icon(
+            Icons.add,
+          ),
+          title: const Text('New Absence'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const NewAbsence()),
             );
           },
         ),

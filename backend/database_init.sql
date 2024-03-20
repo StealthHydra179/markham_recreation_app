@@ -61,7 +61,7 @@ CREATE TABLE "equipment_supplies_notes" (
   "upd_by" INTEGER
 );
 
-ALTER TABLE "camps" ADD FOREIGN KEY ("camp_id") REFERENCES "checklist" ("camp_id");
+-- ALTER TABLE "camps" ADD FOREIGN KEY ("camp_id") REFERENCES "checklist" ("camp_id"); -- TODO reverse this
 
 ALTER TABLE "absent" ADD FOREIGN KEY ("camp_id") REFERENCES "camps" ("camp_id");
 

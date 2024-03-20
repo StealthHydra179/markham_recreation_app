@@ -10,14 +10,14 @@ import 'package:date_field/date_field.dart';
 
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-class Absence extends StatefulWidget {
-  const Absence({super.key});
+class NewAbsence extends StatefulWidget {
+  const NewAbsence({super.key});
 
   @override
-  State<Absence> createState() => _AbsenceState();
+  State<NewAbsence> createState() => _NewAbsenceState();
 }
 
-class _AbsenceState extends State<Absence> {
+class _NewAbsenceState extends State<NewAbsence> {
   bool followedUp = false;
   DateTime? selectedDate;
 
@@ -47,7 +47,7 @@ class _AbsenceState extends State<Absence> {
             child:  SizedBox(
               child: TextField(
                 controller: _name_controller,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Camper Name',
                 ),
@@ -89,7 +89,7 @@ class _AbsenceState extends State<Absence> {
               child:  SizedBox(
                 child: TextField(
                   controller: _notes_controller,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Notes',
                   ),
@@ -106,7 +106,7 @@ class _AbsenceState extends State<Absence> {
             onPressed: () {
               // Send the checklist to the server
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/new_absence/'+globals.camp_id.toString()),//+globals.camp_id.toString()
+                Uri.parse('${globals.serverUrl}/api/new_absence/${globals.camp_id}'),//+globals.camp_id.toString()
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
@@ -133,6 +133,14 @@ class _AbsenceState extends State<Absence> {
                     ),
                   );
                 }
+              }).catchError((error, stackTrace) {
+                // Runs when the server is down
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Failed to Save New Absence'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
               });
             },
             child: const Text('Save'),
