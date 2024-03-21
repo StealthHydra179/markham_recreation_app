@@ -96,10 +96,10 @@ app.post('/api/weekly_checklist/:camp_id', async (req, res) => {
         return
     }
     logger.debug('POST /api/weekly_checklist/:camp_id') // TODO, add camp ID and request body to the log
-    const userId = req.params.camp_id
+    const campid = req.params.camp_id
     console.log(req.body)
 
-    const {rows} = await client.query('SELECT * FROM checklist WHERE camp_id = 1')
+    const {rows} = await client.query('SELECT * FROM checklist WHERE camp_id = ' + campid)
     res.json(req.body)
 })
 
