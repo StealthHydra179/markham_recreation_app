@@ -62,9 +62,9 @@ class _NewAbsenceState extends State<NewAbsence> {
                     labelText: 'Enter Date',
                   ),
                   mode: DateTimeFieldPickerMode.date,
-                  firstDate: DateTime.now().add(const Duration(days: 10)),
-                  lastDate: DateTime.now().add(const Duration(days: 40)),
-                  initialPickerDateTime: DateTime.now().add(const Duration(days: 20)),
+                  firstDate: DateTime.now().add(const Duration(days: -7)),
+                  lastDate: DateTime.now().add(const Duration(days: 7)),
+                  initialPickerDateTime: DateTime.now().add(const Duration(days: 0)),
                   onChanged: (DateTime? value) {
                     selectedDate = value;
                   },
@@ -104,6 +104,37 @@ class _NewAbsenceState extends State<NewAbsence> {
               padding: const EdgeInsets.all(10),
             ),
             onPressed: () {
+              // TODO input validation
+              if (_name_controller.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please enter a name'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+                return;
+              }
+
+              if (selectedDate == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please enter a date'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+                return;
+              }
+
+              if (followedUp && _notes_controller.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please enter notes'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+                return;
+              }
+
               // Send the checklist to the server
               Future<http.Response> response = http.post(
                 Uri.parse('${globals.serverUrl}/api/new_absence/${globals.camp_id}'),//+globals.camp_id.toString()

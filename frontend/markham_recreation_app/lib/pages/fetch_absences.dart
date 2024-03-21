@@ -1,23 +1,14 @@
 library weekly_checklist;
 
 import 'package:flutter/material.dart';
-import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 
-import 'package:date_field/date_field.dart';
-
+import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-class FetchAbsences extends StatefulWidget {
-  const FetchAbsences({super.key});
-
-  @override
-  State<FetchAbsences> createState() => _FetchAbsencesState();
-}
-
-Future<List<Absence>> fetchAbsences() async {
+Future<List<Absence>> futureFetchAbsences() async {
   final response = await http.get(
     Uri.parse('${globals.serverUrl}/api/get_absences/${globals.camp_id}'),
   );
@@ -36,24 +27,37 @@ Future<List<Absence>> fetchAbsences() async {
   }
 }
 
-class _FetchAbsencesState extends State<FetchAbsences> {
+String dateTimeFormatter(String date) {
+  // Import form yyyy-mm-ddThh:mm:ss.000Z to mm/dd/yyyy hh:mm
+  return '${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)} ${date.substring(11, 16)}';
+}
 
-  late Future<List<Absence>> absences;
+String dateFormatter(String date) {
+  // Import form yyyy-mm-ddThh:mm:ss.000Z to mm/dd/yyyy
+  return '${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}';
+}
+
+class FetchAbsences extends StatefulWidget {
+  const FetchAbsences({super.key});
+
+  @override
+  State<FetchAbsences> createState() => _FetchAbsencesState();
+}
+
+class _FetchAbsencesState extends State<FetchAbsences> {
+  late Future<List<Absence>> futureAbsences;
 
   @override
   void initState() {
     super.initState();
-    absences = fetchAbsences();
+    futureAbsences = futureFetchAbsences();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Update checkbox state
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        
         title: const Text(
           'Absences',
           style: TextStyle(color: globals.secondaryColor) 
@@ -64,7 +68,7 @@ class _FetchAbsencesState extends State<FetchAbsences> {
       body: Column(
         children: <Widget>[
           FutureBuilder<List<Absence>>(
-            future: absences,
+            future: futureAbsences,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Expanded(
@@ -88,7 +92,6 @@ class _FetchAbsencesState extends State<FetchAbsences> {
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
-
               // By default, show a loading spinner.
               return const CircularProgressIndicator();
             },
@@ -102,7 +105,7 @@ class _FetchAbsencesState extends State<FetchAbsences> {
 class AbsenceDetails extends StatelessWidget {
   final Absence absence;
 
-  const AbsenceDetails({required this.absence});
+  const AbsenceDetails({super.key, required this.absence});
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +118,29 @@ class AbsenceDetails extends StatelessWidget {
           style: TextStyle(color: globals.secondaryColor) 
         ),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
+        //add edit and delete buttons
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              //TODO add edit page
+              // open a new version of new_absence but with the fields filled in and the error messages be tailored towards editing
+              // send put request to server
+              // if successful, update the page
+              // if not, show error message 
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              //TODO add delete function
+              // send delete request to server
+              // if successful, pop the page
+              // if not, show error message
+
+            },
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -122,16 +148,16 @@ class AbsenceDetails extends StatelessWidget {
             title: Text('Camper Name: ${absence.camper_name}'),
           ),
           ListTile(
-            title: Text('Date: ${absence.date}'),
+            title: Text('Date: ${dateFormatter(absence.date)}'),
           ),
           ListTile(
-            title: Text('Followed Up: ${absence.followed_up}'),
+            title: Text('Followed Up: ${absence.followed_up ? 'yes' : 'no'}'),
           ),
           ListTile(
             title: Text('Reason: ${absence.reason}'),
           ),
           ListTile(
-            title: Text('Date Modified: ${absence.date_modified}'),
+            title: Text('Date Modified: ${dateTimeFormatter(absence.date_modified)}'),
           ),
         ],
       ),
@@ -139,6 +165,7 @@ class AbsenceDetails extends StatelessWidget {
   }
 }
 
+// TODO add modified by field to absence
 class Absence {
   final int absent_id;
   final int camp_id;
