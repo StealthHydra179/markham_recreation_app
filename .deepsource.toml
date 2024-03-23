@@ -11,4 +11,4 @@ name = "dart-analyze"
 type = "community"
 
 [[transformers]]
-name = "standardjs"
+name = "prettier"
