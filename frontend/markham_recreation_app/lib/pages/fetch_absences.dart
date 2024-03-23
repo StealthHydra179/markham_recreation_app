@@ -162,6 +162,44 @@ class AbsenceDetails extends StatelessWidget {
               // if successful, pop the page
               // if not, show error message
 
+              //post request to delete_absence
+              Future<http.Response> response = http.post(
+                Uri.parse('${globals.serverUrl}/api/delete_absence/${globals.camp_id}'),//+globals.camp_id.toString()
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode(<String, String>{
+                  'absent_id': absence.absent_id.toString(),
+                }),
+              );
+
+              response.then((http.Response response) {
+                if (response.statusCode == 200) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Deleted Absence'),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+
+                  Navigator.pop(context, true);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to Delete Absence'),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                }
+              }).catchError((error, stackTrace) {
+                // Runs when the server is down
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Failed to Delete Absence'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              });
             },
           ),
         ],

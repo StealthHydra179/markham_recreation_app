@@ -179,19 +179,6 @@ app.post('/api/edit_absence/:camp_id', (req, res) => {
   if (req.body.followed_up === 'false') {
     req.body.reason = ''
   }
-
-  /*
-  body: jsonEncode(<String, String>{
-                  'absent_id': widget.absence.absent_id.toString(),
-                  'camp_id': widget.absence.camp_id.toString(),
-                  'camper_name': _name_controller.text,
-                  'date': selectedDate.toString(),
-                  'followed_up': followedUp.toString(),
-                  'reason': _notes_controller.text,
-                  'date_modified': DateTime.now().toString(),
-                }),
-   */
-
   // update specific query
   const updateQuery = 'UPDATE absent SET camper_name = $1, date = $2, followed_up = $3, reason = $4, date_modified = $5, upd_by = $6 WHERE absent_id = $7'
   const updateQueryValues = [req.body.camper_name, req.body.date, req.body.followed_up, req.body.reason, (new Date()).toISOString(), 0, req.body.absent_id]
@@ -205,6 +192,31 @@ app.post('/api/edit_absence/:camp_id', (req, res) => {
       console.error(e.stack)
     })
   res.json(req.body)
+})
+
+app.post('/api/delete_absence/:camp_id', (req, res) => {
+    if (!connected) {
+        res.status(500).send({ message: 'Database not connected' })
+        logger.warn('Database not connected')
+        return
+    }
+    const camp_id = req.params.camp_id
+    logger.debug('POST /api/delete_absence/:camp_id ' + camp_id + ' ' + req.body.absent_id)
+    logger.warn('TODO do input data validation') // TODO
+
+    // delete specific query
+    const deleteQuery = 'DELETE FROM absent WHERE absent_id = $1'
+    const deleteQueryValues = [req.body.absent_id]
+    console.log(deleteQueryValues)
+    client
+        .query(deleteQuery, deleteQueryValues)
+        .then(res => {
+        console.log('Deleted')
+        })
+        .catch(e => {
+        console.error(e.stack)
+        })
+    res.json(req.body)
 })
 
 app.listen(port, () => {
