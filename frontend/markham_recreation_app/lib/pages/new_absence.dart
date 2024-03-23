@@ -21,8 +21,8 @@ class _NewAbsenceState extends State<NewAbsence> {
   bool followedUp = false;
   DateTime? selectedDate;
 
-  final TextEditingController _name_controller = TextEditingController();
-  final TextEditingController _notes_controller = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _notesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _NewAbsenceState extends State<NewAbsence> {
             margin: const EdgeInsets.all(10),
             child:  SizedBox(
               child: TextField(
-                controller: _name_controller,
+                controller: _nameController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Camper Name',
@@ -88,7 +88,7 @@ class _NewAbsenceState extends State<NewAbsence> {
               margin: const EdgeInsets.all(10),
               child:  SizedBox(
                 child: TextField(
-                  controller: _notes_controller,
+                  controller: _notesController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Notes',
@@ -105,7 +105,7 @@ class _NewAbsenceState extends State<NewAbsence> {
             ),
             onPressed: () {
               // TODO input validation
-              if (_name_controller.text.isEmpty) {
+              if (_nameController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please enter a name'),
@@ -125,7 +125,7 @@ class _NewAbsenceState extends State<NewAbsence> {
                 return;
               }
 
-              if (followedUp && _notes_controller.text.isEmpty) {
+              if (followedUp && _notesController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please enter notes'),
@@ -142,10 +142,10 @@ class _NewAbsenceState extends State<NewAbsence> {
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode(<String, String>{
-                  'name': _name_controller.text,
+                  'name': _nameController.text,
                   'date': selectedDate.toString(),
                   'followedUp': followedUp.toString(),
-                  'notes': _notes_controller.text,
+                  'notes': _notesController.text,
                 }),
               );
               response.then((http.Response response) {
