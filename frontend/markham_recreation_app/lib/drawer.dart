@@ -3,28 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/pages/weekly_checklist.dart';
 import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
 
-
 Drawer drawer(BuildContext context) {
   return Drawer(
     child: ListView(
       // Important: Remove any padding from the ListView.
       padding: EdgeInsets.zero,
       children: [
-        UserAccountsDrawerHeader(
+         UserAccountsDrawerHeader(
           decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary), // Can use global color here, and make the whole header constant for performance
-          accountName: const Text(
+          accountName: Text(
             "User Name",
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
           accountEmail: const Text(
-            "stealth@shydra.dev",
+            "{current camp}", // TODO add current camp
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
-          currentAccountPicture: const FlutterLogo(),
+          currentAccountPicture: FlutterLogo(),
+          onDetailsPressed: () {
+            // snack bar
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Camp switching is not implemented'), // TODO
+              ),
+            );
+          },
         ),
         ListTile(
           leading: const Icon(
