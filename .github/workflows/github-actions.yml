@@ -25,7 +25,7 @@ jobs:
         uses: dart-lang/setup-dart@v1
 
       - name: Run Dart Analyze
-        run: dart analyze > dart_analyze.txt || true
+        run: dart analyze ./frontend/markham_recreation_app > dart_analyze.txt || true
 
       - name: Dart Analyze to SARIF
         uses: advanced-security/dart-analyzer-sarif@main
