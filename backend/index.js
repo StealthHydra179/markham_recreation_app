@@ -148,17 +148,6 @@ app.get('/api/get_absences/:camp_id', (req, res) => {
     }
     res.json(result.rows)
   })
-})
-
-    const query = "SELECT * FROM absent WHERE camp_id = $1 ORDER BY date DESC";
-    const values = [camp_id];
-    client.query(query, values, (err, result) => {
-        if (err) {
-            logger.error(err);
-            return;
-        }
-        res.json(result.rows);
-    });
 });
 
 app.post("/api/new_absence/:camp_id", (req, res) => {
