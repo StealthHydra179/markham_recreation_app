@@ -9,6 +9,7 @@ import 'package:markham_recreation_app/globals.dart' as globals;
 
 import 'package:markham_recreation_app/pages/fetch_absences/absence.dart';
 import 'package:markham_recreation_app/pages/fetch_absences/absence_details.dart';
+import 'package:markham_recreation_app/pages/new_absence.dart';
 
 // global variable to store the request to the server (for FutureBuilder)
 late Future<List<Absence>> futureAbsences;
@@ -36,7 +37,7 @@ Future<List<Absence>> futureFetchAbsences() async {
 // Format datetime string into a date and a time
 String dateTimeFormatter(String date) {
   // Import form yyyy-mm-ddThh:mm:ss.000Z to mm/dd/yyyy hh:mm
-  
+
   // timzone offset
   int offset = DateTime.now().timeZoneOffset.inHours;
   // adjust time
@@ -90,6 +91,31 @@ class _FetchAbsencesState extends State<FetchAbsences> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text('Absences', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
+        actions: <Widget>[
+          // New absence button
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NewAbsence()),
+              ).then((value) {
+                // Refresh the list of absences after returning from the new absence page
+                futureAbsences = futureFetchAbsences();
+                setState(() {});
+              });
+            },
+          ),
+          // Refresh button
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              // Refresh the list of absences
+              futureAbsences = futureFetchAbsences();
+              setState(() {});
+            },
+          ),
+        ],
       ),
       drawer: drawer.drawer(context),
       body: Column(

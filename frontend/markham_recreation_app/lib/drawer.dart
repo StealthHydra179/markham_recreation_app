@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:markham_recreation_app/pages/weekly_checklist.dart';
-import 'package:markham_recreation_app/pages/new_absence.dart';
 import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
 
 
@@ -52,7 +51,7 @@ Drawer drawer(BuildContext context) {
           leading: const Icon(
             Icons.chevron_right,
           ),
-          title: const Text('Absent Campers'),
+          title: const Text('Absences'),
           onTap: () {
             Navigator.push(
               context,
@@ -60,18 +59,18 @@ Drawer drawer(BuildContext context) {
             );
           },
         ),
-        ListTile(
-          leading: const Icon(
-            Icons.add,
-          ),
-          title: const Text('New Absence'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const NewAbsence()),
-            );
-          },
-        ),
+        // ListTile(
+        //   leading: const Icon(
+        //     Icons.add,
+        //   ),
+        //   title: const Text('New Absence'),
+        //   onTap: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => const NewAbsence()),
+        //     );
+        //   },
+        // ),
         ListTile(
           leading: const Icon(
             Icons.chevron_right,

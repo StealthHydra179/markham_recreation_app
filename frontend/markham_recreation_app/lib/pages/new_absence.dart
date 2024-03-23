@@ -39,7 +39,6 @@ class _NewAbsenceState extends State<NewAbsence> {
         ),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
-      drawer: drawer.drawer(context),
       body: Column(
         children: <Widget>[
           Container( 
@@ -150,6 +149,7 @@ class _NewAbsenceState extends State<NewAbsence> {
               );
               response.then((http.Response response) {
                 if (response.statusCode == 200) {
+                  Navigator.pop(context, true); // go back to the previous page and force a refresh
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('New Absence Saved'),
