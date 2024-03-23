@@ -22,15 +22,15 @@ class _EditAbsenceState extends State<EditAbsence> {
   bool followedUp = false;
   DateTime? selectedDate;
 
-  final TextEditingController _name_controller = TextEditingController();
-  final TextEditingController _notes_controller = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _notesController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _name_controller.text = widget.absence.camper_name;
-    _notes_controller.text = widget.absence.reason;
-    followedUp = widget.absence.followed_up;
+    _nameController.text = widget.absence.camperName;
+    _notesController.text = widget.absence.reason;
+    followedUp = widget.absence.followedUp;
     selectedDate = DateTime.parse(widget.absence.date);
   }
 
@@ -55,7 +55,7 @@ class _EditAbsenceState extends State<EditAbsence> {
             margin: const EdgeInsets.all(10),
             child:  SizedBox(
               child: TextField(
-                controller: _name_controller,
+                controller: _nameController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Camper Name',
@@ -97,7 +97,7 @@ class _EditAbsenceState extends State<EditAbsence> {
               margin: const EdgeInsets.all(10),
               child:  SizedBox(
                 child: TextField(
-                  controller: _notes_controller,
+                  controller: _notesController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Notes',
@@ -114,7 +114,7 @@ class _EditAbsenceState extends State<EditAbsence> {
             ),
             onPressed: () {
               // TODO input validation
-              if (_name_controller.text.isEmpty) {
+              if (_nameController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please enter a name'),
@@ -134,7 +134,7 @@ class _EditAbsenceState extends State<EditAbsence> {
                 return;
               }
 
-              if (followedUp && _notes_controller.text.isEmpty) {
+              if (followedUp && _notesController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please enter notes'),
@@ -144,7 +144,7 @@ class _EditAbsenceState extends State<EditAbsence> {
                 return;
               }
 
-              print(widget.absence.absent_id);
+              print(widget.absence.absentId);
 
               // Send the checklist to the server
               Future<http.Response> response = http.post(
@@ -162,12 +162,12 @@ class _EditAbsenceState extends State<EditAbsence> {
             'date_modified': String date_modified,
             */
                 body: jsonEncode(<String, String>{
-                  'absent_id': widget.absence.absent_id.toString(), 
-                  'camp_id': widget.absence.camp_id.toString(),
-                  'camper_name': _name_controller.text,
+                  'absent_id': widget.absence.absentId.toString(), 
+                  'camp_id': widget.absence.campId.toString(),
+                  'camper_name': _nameController.text,
                   'date': selectedDate.toString(),
                   'followed_up': followedUp.toString(),
-                  'reason': _notes_controller.text,
+                  'reason': _notesController.text,
                   'date_modified': DateTime.now().toString(),
                 }),
               );
@@ -184,10 +184,10 @@ class _EditAbsenceState extends State<EditAbsence> {
                     Navigator.pop(context); //TODO not sure if this works yet
                     Navigator.pop(context);
                     //readd the current absence page
-                    Absence absence = new Absence(absent_id: 0, camp_id: 0, camper_name: '', date: '', followed_up: false, reason: '', date_modified: '', modified_by: '');
+                    Absence absence = new Absence(absentId: 0, campId: 0, camperName: '', date: '', followedUp: false, reason: '', dateModified: '', modifiedBy: '');
                     //find the absence in the list
                     for (int i = 0; i < absences.length; i++) {
-                      if (absences[i].absent_id == widget.absence.absent_id) {
+                      if (absences[i].absentId == widget.absence.absentId) {
                         absence = absences[i];
                         break;
                       }

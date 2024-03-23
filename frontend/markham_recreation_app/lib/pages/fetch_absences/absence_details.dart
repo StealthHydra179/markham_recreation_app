@@ -58,7 +58,7 @@ class AbsenceDetails extends StatelessWidget {
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode(<String, String>{
-                  'absent_id': absence.absent_id.toString(),
+                  'absent_id': absence.absentId.toString(),
                 }),
               );
 
@@ -96,25 +96,25 @@ class AbsenceDetails extends StatelessWidget {
       body: Column(
         children: <Widget>[
           ListTile(
-            title: Text('Camper Name: ${absence.camper_name}'),
+            title: Text('Camper Name: ${absence.camperName}'),
           ),
           ListTile(
             title: Text('Date: ${dateFormatter(absence.date)}'),
           ),
           ListTile(
-            title: Text('Followed Up: ${absence.followed_up ? 'yes' : 'no'}'),
+            title: Text('Followed Up: ${absence.followedUp ? 'yes' : 'no'}'),
             // if not followed up change the background color to a light red
-            tileColor: absence.followed_up ? null : Color.fromARGB(255, 255, 230, 233),
+            tileColor: absence.followedUp ? null : Color.fromARGB(255, 255, 230, 233),
           ),
-          if (absence.followed_up)
+          if (absence.followedUp)
             ListTile(
               title: Text('Reason: ${absence.reason}'),
             ),
           ListTile(
-            title: Text('Date Modified: ${dateTimeFormatter(absence.date_modified)}'),
+            title: Text('Date Modified: ${dateTimeFormatter(absence.dateModified)}'),
           ),
           ListTile(
-            title: Text('Modified By: ${absence.modified_by}'),
+            title: Text('Modified By: ${absence.modifiedBy}'),
           ),
         ],
       ),

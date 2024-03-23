@@ -84,12 +84,12 @@ class _FetchAbsencesState extends State<FetchAbsences> {
                     itemBuilder: (context, index) {
                       // For each absence, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text(snapshot.data![index].camper_name),
+                        title: Text(snapshot.data![index].camperName),
                         subtitle: Text(dateFormatter(snapshot.data![index].date)),
                         trailing: const Icon(Icons.chevron_right),
 
                         // If not followed up change the background color to a light red
-                        tileColor: snapshot.data![index].followed_up ? null : const Color.fromARGB(255, 255, 230, 233),
+                        tileColor: snapshot.data![index].followedUp ? null : const Color.fromARGB(255, 255, 230, 233),
                         onTap: () {
                           // Display the absence details page when the absence is tapped
                           Navigator.push(

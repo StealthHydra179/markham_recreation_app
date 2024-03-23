@@ -1,50 +1,48 @@
 class Absence {
-  final int absent_id;
-  final int camp_id;
-  final String camper_name;
+  final int absentId;
+  final int campId;
+  final String camperName;
   final String date;
-  final bool followed_up;
+  final bool followedUp;
   final String reason;
-  final String date_modified;
-  final String modified_by; //Index of who modfied the absence
+  final String dateModified;
+  final String modifiedBy; //Index of who modfied the absence
 
   const Absence({
-    required this.absent_id,
-    required this.camp_id,
-    required this.camper_name,
+    required this.absentId,
+    required this.campId,
+    required this.camperName,
     required this.date,
-    required this.followed_up,
+    required this.followedUp,
     required this.reason,
-    required this.date_modified,
-    required this.modified_by,
+    required this.dateModified,
+    required this.modifiedBy,
   });
 
   factory Absence.fromJson(Map<String, dynamic> json) {
-    //log the json
-    print(json);
-    print(json['date']);
-    print(json['followed_up'] is bool);
+    // Create an absence from a JSON object
     return switch (json) {
       {
-            'absent_id': int absent_id,
-            'camp_id': int camp_id,
-            'camper_name': String camper_name,
-            'date': String date,
-            'followed_up': bool followed_up,
-            'reason': String reason,
-            'date_modified': String date_modified,
-            'upd_by': String modified_by,
-      } => 
-      Absence(
-        absent_id: absent_id,
-        camp_id: camp_id,
-        camper_name: camper_name,
-        date: date,
-        followed_up: followed_up,
-        reason: reason,
-        date_modified: date_modified,
-        modified_by: modified_by,
-      ), 
+        // TODO change the JSON object keys server-side to camelCase
+        'absent_id': int absentId,
+        'camp_id': int campId,
+        'camper_name': String camperName,
+        'date': String date,
+        'followed_up': bool followedUp,
+        'reason': String reason,
+        'date_modified': String dateModified,
+        'upd_by': String modifiedBy,
+      } =>
+        Absence(
+          absentId: absentId,
+          campId: campId,
+          camperName: camperName,
+          date: date,
+          followedUp: followedUp,
+          reason: reason,
+          dateModified: dateModified,
+          modifiedBy: modifiedBy,
+        ),
       _ => throw const FormatException('Unexpected JSON type'),
     };
   }
