@@ -36,7 +36,28 @@ Future<List<Absence>> futureFetchAbsences() async {
 // Format datetime string into a date and a time
 String dateTimeFormatter(String date) {
   // Import form yyyy-mm-ddThh:mm:ss.000Z to mm/dd/yyyy hh:mm
-  return '${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)} ${date.substring(11, 16)}';
+  
+  // timzone offset
+  int offset = DateTime.now().timeZoneOffset.inHours;
+  // adjust time
+  int hour = int.parse(date.substring(11, 13)) + offset;
+  int day = int.parse(date.substring(8, 10));
+  int month = int.parse(date.substring(5, 7));
+  int year = int.parse(date.substring(0, 4));
+
+  if (hour > 23) {
+    hour -= 24;
+    day++;
+  }
+  if (day > 31) {
+    day -= 31;
+    month++;
+  }
+  if (month > 12) {
+    month -= 12;
+    year++;
+  }
+  return '$month/$day/$year $hour:${date.substring(14, 16)}';
 }
 
 // Format datetime string into a date
