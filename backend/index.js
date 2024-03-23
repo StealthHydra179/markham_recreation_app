@@ -123,7 +123,7 @@ app.get('/api/get_absences/:camp_id', (req, res) => {
   }
   const camp_id = req.params.camp_id
 
-  const query = 'SELECT * FROM absent WHERE camp_id = $1'
+  const query = 'SELECT * FROM absent WHERE camp_id = $1 ORDER BY date DESC'
   const values = [camp_id]
   client.query(query, values, (err, result) => {
     if (err) {
@@ -162,6 +162,48 @@ app.post('/api/new_absence/:camp_id', (req, res) => {
     logger.info('Added to database')
   })
   res.json(req.body)
+})
+
+app.post('/api/edit_absence/:camp_id', (req, res) => {
+    if (!connected) {
+        res.status(500).send({ message: 'Database not connected' })
+        logger.warn('Database not connected')
+        return
+    }
+    const camp_id = req.params.camp_id
+    logger.debug('POST /api/edit_absence/:camp_id ' + camp_id + ' ' + req.body.camper_name + ' ' + req.body.date + ' ' + req.body.followed_up + ' ' + req.body.reason)
+    logger.warn('TODO do input data validation') // TODO
+
+    // if followed up is false, change notes to empty string
+    if (req.body.followed_up === 'false') {
+        req.body.reason = ''
+    }
+
+  /*
+  body: jsonEncode(<String, String>{
+                  'absent_id': widget.absence.absent_id.toString(),
+                  'camp_id': widget.absence.camp_id.toString(),
+                  'camper_name': _name_controller.text,
+                  'date': selectedDate.toString(),
+                  'followed_up': followedUp.toString(),
+                  'reason': _notes_controller.text,
+                  'date_modified': DateTime.now().toString(),
+                }),
+   */
+
+    // update specific query
+    const updateQuery = 'UPDATE absent SET camper_name = $1, date = $2, followed_up = $3, reason = $4, date_modified = $5, upd_by = $6 WHERE absent_id = $7'
+    const updateQueryValues = [req.body.camper_name, req.body.date, req.body.followed_up, req.body.reason, (new Date()).toISOString(), 0, req.body.absent_id]
+    console.log(updateQueryValues)
+    client
+          .query(updateQuery, updateQueryValues)
+            .then(res => {
+                console.log('Updated')
+            })
+            .catch(e => {
+                console.error(e.stack)
+            })
+    res.json(req.body)
 })
 
 app.listen(port, () => {
