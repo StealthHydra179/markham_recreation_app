@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:markham_recreation_app/pages/fetch_absences/absence_details.dart';
 import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
 import 'absence.dart';
 
+// Edit an absence
 class EditAbsence extends StatefulWidget {
   final Absence absence;
 
@@ -18,6 +20,7 @@ class EditAbsence extends StatefulWidget {
   State<EditAbsence> createState() => _EditAbsenceState();
 }
 
+// Edit absence page content
 class _EditAbsenceState extends State<EditAbsence> {
   bool followedUp = false;
   DateTime? selectedDate;
@@ -25,6 +28,7 @@ class _EditAbsenceState extends State<EditAbsence> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
+  // Initialize the text fields with the absence's data
   @override
   void initState() {
     super.initState();
@@ -36,24 +40,17 @@ class _EditAbsenceState extends State<EditAbsence> {
 
   @override
   Widget build(BuildContext context) {
-    // Update checkbox state
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        
-        title: const Text(
-          'Edit Absence',
-          style: TextStyle(color: globals.secondaryColor) 
-        ),
+        title: const Text('Edit Absence', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
-      // drawer: drawer.drawer(context),
       body: Column(
         children: <Widget>[
-          Container( 
+          Container(
             margin: const EdgeInsets.all(10),
-            child:  SizedBox(
+            child: SizedBox(
               child: TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(
@@ -63,24 +60,25 @@ class _EditAbsenceState extends State<EditAbsence> {
               ),
             ),
           ),
-            Container( 
-              margin: const EdgeInsets.all(10),
-              child: SizedBox(
-                child: DateTimeFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Enter Date',
-                  ),
-                  mode: DateTimeFieldPickerMode.date,
-                  firstDate: DateTime.now().add(const Duration(days: -7)),
-                  lastDate: DateTime.now().add(const Duration(days: 7)),
-                  initialPickerDateTime: DateTime.now().add(const Duration(days: 0)),
-                  onChanged: (DateTime? value) {
-                    selectedDate = value;
-                  },
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: SizedBox(
+              child: DateTimeFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Enter Date',
                 ),
+                mode: DateTimeFieldPickerMode.date,
+                // TODO replace with week processing
+                // firstDate: DateTime.now().add(const Duration(days: -7)),
+                // lastDate: DateTime.now().add(const Duration(days: 7)),
+                initialPickerDateTime: selectedDate,
+                initialValue: selectedDate,
+                onChanged: (DateTime? value) {
+                  selectedDate = value;
+                },
               ),
             ),
-            
+          ),
           CheckboxListTile(
             value: followedUp,
             onChanged: (bool? value) {
@@ -88,14 +86,12 @@ class _EditAbsenceState extends State<EditAbsence> {
                 followedUp = value!;
               });
             },
-            // TODO add descriptions to make it clear what each checkbox is for?
             title: const Text('Followed Up?'),
           ),
           if (followedUp)
-            //Text entry widget
-            Container( 
+            Container(
               margin: const EdgeInsets.all(10),
-              child:  SizedBox(
+              child: SizedBox(
                 child: TextField(
                   controller: _notesController,
                   decoration: const InputDecoration(
@@ -105,15 +101,12 @@ class _EditAbsenceState extends State<EditAbsence> {
                 ),
               ),
             ),
-
           const Divider(height: 0),
-        
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(10),
             ),
             onPressed: () {
-              // TODO input validation
               if (_nameController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -144,25 +137,16 @@ class _EditAbsenceState extends State<EditAbsence> {
                 return;
               }
 
-              print(widget.absence.absentId);
+              // TODO check if date is out of bounds
 
               // Send the checklist to the server
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/edit_absence/${globals.camp_id}'),//+globals.camp_id.toString()
+                Uri.parse('${globals.serverUrl}/api/edit_absence/${globals.camp_id}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
-                /*
-                'absent_id': int absent_id,
-            'camp_id': int camp_id,
-            'camper_name': String camper_name,
-            'date': String date,
-            'followed_up': bool followed_up,
-            'reason': String reason,
-            'date_modified': String date_modified,
-            */
                 body: jsonEncode(<String, String>{
-                  'absent_id': widget.absence.absentId.toString(), 
+                  'absent_id': widget.absence.absentId.toString(),
                   'camp_id': widget.absence.campId.toString(),
                   'camper_name': _nameController.text,
                   'date': selectedDate.toString(),
@@ -181,10 +165,11 @@ class _EditAbsenceState extends State<EditAbsence> {
                   );
 
                   futureFetchAbsences().then((absences) {
-                    Navigator.pop(context); //TODO not sure if this works yet
+                    // move back 2 pages
                     Navigator.pop(context);
-                    //readd the current absence page
-                    Absence absence = new Absence(absentId: 0, campId: 0, camperName: '', date: '', followedUp: false, reason: '', dateModified: '', modifiedBy: '');
+                    Navigator.pop(context);
+                    //readd the current absence page (refreshing it's contents)
+                    Absence absence = const Absence(absentId: 0, campId: 0, camperName: '', date: '', followedUp: false, reason: '', dateModified: '', modifiedBy: '');
                     //find the absence in the list
                     for (int i = 0; i < absences.length; i++) {
                       if (absences[i].absentId == widget.absence.absentId) {
@@ -192,11 +177,9 @@ class _EditAbsenceState extends State<EditAbsence> {
                         break;
                       }
                     }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AbsenceDetails(absence: absence)),);
+                    // Navigate to the page
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AbsenceDetails(absence: absence)));
                   });
-                  
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

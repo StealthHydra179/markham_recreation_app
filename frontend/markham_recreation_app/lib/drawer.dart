@@ -25,7 +25,7 @@ Drawer drawer(BuildContext context) {
               fontWeight: FontWeight.bold,
             ),
           ),
-          currentAccountPicture: FlutterLogo(),
+          currentAccountPicture: const FlutterLogo(),
         ),
         ListTile(
           leading: const Icon(

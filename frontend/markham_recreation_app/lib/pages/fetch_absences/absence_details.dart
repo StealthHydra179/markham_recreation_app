@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
 
 import 'absence.dart';
 import 'edit_absence.dart';
 
+// Details of an absence
 class AbsenceDetails extends StatelessWidget {
   final Absence absence;
 
@@ -14,8 +16,6 @@ class AbsenceDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -25,33 +25,30 @@ class AbsenceDetails extends StatelessWidget {
           style: TextStyle(color: globals.secondaryColor) 
         ),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
-        //add edit and delete buttons
+        
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context, true);// TODO figure out why it doesnt force build anymore
+            // go back to the previous page and force a refresh
+            Navigator.pop(context, true);
           },
         ),
         actions: <Widget>[
+          // Edit current absence
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              // edit page
-              // open a new version of new_absence but with the fields filled in and the error messages be tailored towards editing
-              // send put request to server
-              // if successful, update the page
-              // if not, show error message 
-
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => EditAbsence(absence: absence)),
               );
             },
           ),
+          // Delete current absence
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              //post request to delete_absence
+              // Send a request to the server to delete the absence
               Future<http.Response> response = http.post(
                 Uri.parse('${globals.serverUrl}/api/delete_absence/${globals.camp_id}'),
                 headers: <String, String>{
@@ -71,6 +68,7 @@ class AbsenceDetails extends StatelessWidget {
                     ),
                   );
 
+                  // go back to the previous page and force a refresh
                   Navigator.pop(context, true);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -93,6 +91,8 @@ class AbsenceDetails extends StatelessWidget {
           ),
         ],
       ),
+
+      // Display absence details
       body: Column(
         children: <Widget>[
           ListTile(
@@ -103,8 +103,9 @@ class AbsenceDetails extends StatelessWidget {
           ),
           ListTile(
             title: Text('Followed Up: ${absence.followedUp ? 'yes' : 'no'}'),
+            
             // if not followed up change the background color to a light red
-            tileColor: absence.followedUp ? null : Color.fromARGB(255, 255, 230, 233),
+            tileColor: absence.followedUp ? null : const Color.fromARGB(255, 255, 230, 233),
           ),
           if (absence.followedUp)
             ListTile(
