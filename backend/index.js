@@ -125,10 +125,18 @@ app.get('/api/get_absences/:camp_id', (req, res) => {
 
   const query = 'SELECT * FROM absent WHERE camp_id = $1 ORDER BY date DESC'
   const values = [camp_id]
-  client.query(query, values, (err, result) => {
+  client.query(query, values, async (err, result) => {
     if (err) {
       logger.error(err)
       return
+    }
+
+    // for every row change the upd_by to the name of the person who updated it
+    for (let i = 0; i < result.rows.length; i++) {
+      const query = 'SELECT * FROM users WHERE user_id = $1'
+      const values = [result.rows[i].upd_by]
+      const res = await client.query(query, values)
+      result.rows[i]['upd_by'] = res.rows[0].first_name + " " + res.rows[0].last_name
     }
     res.json(result.rows)
   })

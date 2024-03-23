@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:markham_recreation_app/pages/weekly_checklist.dart';
 import 'package:markham_recreation_app/pages/new_absence.dart';
-import 'package:markham_recreation_app/pages/fetch_absences.dart';
+import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
 
 
 Drawer drawer(BuildContext context) {
