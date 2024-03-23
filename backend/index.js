@@ -164,6 +164,7 @@ app.post('/api/new_absence/:camp_id', (req, res) => {
   res.json(req.body)
 })
 
+//TODO sanitize before putting into logger
 app.post('/api/edit_absence/:camp_id', (req, res) => {
     if (!connected) {
         res.status(500).send({ message: 'Database not connected' })

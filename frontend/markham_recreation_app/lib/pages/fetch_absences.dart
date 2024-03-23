@@ -79,13 +79,22 @@ class _FetchAbsencesState extends State<FetchAbsences> {
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(snapshot.data![index].camper_name),
-                        subtitle: Text(snapshot.data![index].date.toString()),
+                        subtitle: Text(dateFormatter(snapshot.data![index].date)),
                         trailing: Icon(Icons.chevron_right),
+                        // if not followed up change the background color to a light red
+                        tileColor: snapshot.data![index].followed_up ? null : Color.fromARGB(255, 255, 230, 233),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => AbsenceDetails(absence: snapshot.data![index])),
-                          );
+                          ).then((value) {
+                            // if value is not null
+                            // reload the page
+                            print(value);
+                            futureAbsences = futureFetchAbsences();
+                            
+                            setState(() {});
+                          });
                         },
                       );
                     },
@@ -123,6 +132,12 @@ class AbsenceDetails extends StatelessWidget {
         ),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
         //add edit and delete buttons
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context, true);// TODO figure out why it doesnt force build anymore
+          },
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.edit),
@@ -161,6 +176,8 @@ class AbsenceDetails extends StatelessWidget {
           ),
           ListTile(
             title: Text('Followed Up: ${absence.followed_up ? 'yes' : 'no'}'),
+            // if not followed up change the background color to a light red
+            tileColor: absence.followed_up ? null : Color.fromARGB(255, 255, 230, 233),
           ),
           ListTile(
             title: Text('Reason: ${absence.reason}'),
