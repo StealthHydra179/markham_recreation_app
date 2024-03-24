@@ -29,11 +29,10 @@ jobs:
         with:
           flutter-version: '2.5.3'
 
-      - name: Check Flutter
-        run: flutter doctor -v
-
-      - name: Install flutter
-        run: flutter pub get
+      - name: Install flutter Dependencies
+        run: |
+          cd frontend/markham_recreation_app
+          flutter pub get
 
       - name: Run Dart Analyze
         run: dart analyze ./frontend/markham_recreation_app > dart_analyze.txt || true
