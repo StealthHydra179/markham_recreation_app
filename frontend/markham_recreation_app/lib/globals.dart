@@ -10,3 +10,4 @@ const String serverUrl = 'http://10.0.2.2:3000'; //localhost is 10.0.2.2 in the 
 
 
 int camp_id = 1; //TODO: change this to be dynamic based on the user's camp
+String campName = 'Example Camp'; //TODO: change this to be dynamic based on the user's camp

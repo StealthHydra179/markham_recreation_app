@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:markham_recreation_app/pages/weekly_checklist.dart';
 import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
+import 'package:markham_recreation_app/globals.dart' as globals;
 
 Drawer drawer(BuildContext context) {
   return Drawer(
@@ -11,15 +12,15 @@ Drawer drawer(BuildContext context) {
       children: [
          UserAccountsDrawerHeader(
           decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary), // Can use global color here, and make the whole header constant for performance
-          accountName: Text(
+          accountName: const Text(
             "User Name",
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
-          accountEmail: const Text(
-            "{current camp}", // TODO add current camp
-            style: TextStyle(
+          accountEmail: Text(
+            globals.campName, // TODO add current camp
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -66,18 +67,6 @@ Drawer drawer(BuildContext context) {
             );
           },
         ),
-        // ListTile(
-        //   leading: const Icon(
-        //     Icons.add,
-        //   ),
-        //   title: const Text('New Absence'),
-        //   onTap: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(builder: (context) => const NewAbsence()),
-        //     );
-        //   },
-        // ),
         ListTile(
           leading: const Icon(
             Icons.chevron_right,
