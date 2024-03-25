@@ -290,4 +290,3 @@ app.post("/api/delete_absence/:camp_id", (req, res) => {
 app.listen(port, () => {
     logger.info(`Server running on port ${port}`);
 });
-
