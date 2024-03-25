@@ -181,6 +181,8 @@ app.post("/api/new_absence/:camp_id", (req, res) => {
         dataSanitization(req.body.notes) = "";
     }
 
+    // TODO check if values are correct
+
     // Add to database
     const addQuery =
         "INSERT INTO absent (camp_id, camper_name, date, followed_up, reason, date_modified,upd_by) VALUES ($1, $2, $3, $4, $5, $6, $7)";
@@ -191,7 +193,7 @@ app.post("/api/new_absence/:camp_id", (req, res) => {
         dataSanitization(req.body.date),
         dataSanitization(req.body.notes),
         new Date().toISOString(),
-        0,
+        dataSanitization(req.body.upd_by),
     ];
     console.log(addQueryValues);
     client.query(addQuery, addQueryValues, (err, res) => {

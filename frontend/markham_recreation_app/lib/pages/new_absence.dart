@@ -53,23 +53,23 @@ class _NewAbsenceState extends State<NewAbsence> {
               ),
             ),
           ),
-            Container( 
-              margin: const EdgeInsets.all(10),
-              child: SizedBox(
-                child: DateTimeFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Enter Date',
-                  ),
-                  mode: DateTimeFieldPickerMode.date,
-                  firstDate: DateTime.now().add(const Duration(days: -7)),
-                  lastDate: DateTime.now().add(const Duration(days: 7)),
-                  initialPickerDateTime: DateTime.now().add(const Duration(days: 0)),
-                  onChanged: (DateTime? value) {
-                    selectedDate = value;
-                  },
+          Container( 
+            margin: const EdgeInsets.all(10),
+            child: SizedBox(
+              child: DateTimeFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Enter Date',
                 ),
+                mode: DateTimeFieldPickerMode.date,
+                firstDate: DateTime.now().add(const Duration(days: -7)),
+                lastDate: DateTime.now().add(const Duration(days: 7)),
+                initialPickerDateTime: DateTime.now().add(const Duration(days: 0)),
+                onChanged: (DateTime? value) {
+                  selectedDate = value;
+                },
               ),
             ),
+          ),
             
           CheckboxListTile(
             value: followedUp,
