@@ -94,6 +94,7 @@ app.get("/api/weekly_checklist", async (req, res) => {
     res.json(rows);
     console.log(rows);
 });
+
 app.post("/api/weekly_checklist/:camp_id", async (req, res) => {
     if (!connected) {
         res.status(500).send({ message: "Database not connected" });
@@ -110,18 +111,18 @@ app.post("/api/weekly_checklist/:camp_id", async (req, res) => {
     res.json(req.body);
 });
 
-app.post("/api/new_absence", (req, res) => {
-    if (!connected) {
-        res.status(500).send({ message: "Database not connected" });
-        logger.warn("Database not connected");
-        return;
-    }
-    // let camp_id = req.params.camp_id
-    // console.log(camp_id)
-    console.log(req.body);
-    res.json(req.body);
-    logger.warn("soon to be deprecated new_absence: use get_absence instead");
-});
+// app.post("/api/new_absence", (req, res) => {
+//     if (!connected) {
+//         res.status(500).send({ message: "Database not connected" });
+//         logger.warn("Database not connected");
+//         return;
+//     }
+//     // let camp_id = req.params.camp_id
+//     // console.log(camp_id)
+//     console.log(req.body);
+//     res.json(req.body);
+//     logger.warn("soon to be deprecated new_absence: use get_absence instead");
+// });
 
 app.get("/api/get_absences/:camp_id", (req, res) => {
     if (!connected) {
@@ -151,41 +152,44 @@ app.get("/api/get_absences/:camp_id", (req, res) => {
     });
 });
 
+function dataSanitization(input) {
+    return input
+}
+
 app.post("/api/new_absence/:camp_id", (req, res) => {
     if (!connected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
     }
-    const camp_id = req.params.camp_id;
     logger.debug(
         "POST /api/new_absence/:camp_id " +
-            camp_id +
+            dataSanitization(req.params.camp_id) +
             " " +
-            req.body.name +
+            dataSanitization(req.body.name) +
             " " +
-            req.body.date +
+            dataSanitization(req.body.date) +
             " " +
-            req.body.followedUp +
+            dataSanitization(req.body.followedUp) +
             " " +
-            req.body.notes,
+            dataSanitization(req.body.notes),
     );
     logger.warn("TODO do input data validation"); // TODO
 
     // if followed up is false, change notes to empty string
-    if (req.body.followedUp === "false") {
-        req.body.notes = "";
+    if (dataSanitization(req.body.followedUp) === "false") {
+        dataSanitization(req.body.notes) = "";
     }
 
     // Add to database
     const addQuery =
         "INSERT INTO absent (camp_id, camper_name, date, followed_up, reason, date_modified,upd_by) VALUES ($1, $2, $3, $4, $5, $6, $7)";
     const addQueryValues = [
-        camp_id,
-        req.body.name,
-        req.body.date,
-        req.body.followedUp,
-        req.body.notes,
+        dataSanitization(req.params.camp_id),
+        dataSanitization(req.body.name),
+        dataSanitization(req.body.followedUp),
+        dataSanitization(req.body.date),
+        dataSanitization(req.body.notes),
         new Date().toISOString(),
         0,
     ];
@@ -196,7 +200,7 @@ app.post("/api/new_absence/:camp_id", (req, res) => {
             console.log(err);
             return;
         }
-        logger.info("Added to database");
+        logger.info("Added new absence to database");
     });
     res.json(req.body);
 });

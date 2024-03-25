@@ -7,15 +7,15 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "camp_user_role" (
-  "user_id" int,
-  "camp_id" int,
-  "role" int,
+  "user_id" INTEGER,
+  "camp_id" INTEGER,
+  "role" INTEGER,
   PRIMARY KEY ("user_id", "camp_id")
 );
 
 CREATE TABLE "camps" (
   "camp_id" INTEGER PRIMARY KEY,
-  "name" VARCHAR(256),
+  "camp_name" VARCHAR(256),
   "start_date" TIMESTAMP,
   "end_date" TIMESTAMP
 );
