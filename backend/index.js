@@ -122,19 +122,6 @@ expressServer.post("/api/weekly_checklist/:camp_id", async (req, res) => {
     res.json(req.body);
 });
 
-// app.post("/api/new_absence", (req, res) => {
-//     if (!connected) {
-//         res.status(500).send({ message: "Database not connected" });
-//         logger.warn("Database not connected");
-//         return;
-//     }
-//     // let camp_id = req.params.camp_id
-//     // console.log(camp_id)
-//     console.log(req.body);
-//     res.json(req.body);
-//     logger.warn("soon to be deprecated new_absence: use get_absence instead");
-// });
-
 expressServer.get("/api/get_absences/:camp_id", (req, res) => {
     if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
@@ -143,7 +130,7 @@ expressServer.get("/api/get_absences/:camp_id", (req, res) => {
     }
     const camp_id = req.params.camp_id;
 
-    const query = "SELECT * FROM absent WHERE camp_id = $1 ORDER BY date DESC";
+    const query = "SELECT * FROM absent WHERE camp_id = $1 ORDER BY absent_date DESC";
     const values = [camp_id];
     postgresClient.query(query, values, async (err, result) => {
         if (err) {
@@ -191,7 +178,7 @@ expressServer.post("/api/new_absence/:camp_id", (req, res) => {
 
     // if followed up is false, change notes to empty string
     if (dataSanitization(req.body.followed_Up) === "false") {
-        dataSanitization(req.body.reason) = "";
+        req.body.reason = "";
     }
 
     // TODO check if values are correct
