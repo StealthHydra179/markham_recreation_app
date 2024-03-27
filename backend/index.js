@@ -6,16 +6,22 @@ const DailyRotateFile = require("winston-daily-rotate-file");
 require("dotenv").config();
 
 // Express Server
-const app = express();
-const port = 3000;
-app.use(express.json());
+const expressServer = express();
+const serverPort = 3000;
+expressServer.use(express.json());
 
 // Database Connection
-const client = new postgres_client({
+const postgresClient = new postgres_client({
     application_name: "Markham Recreation Summer Camp Server",
 });
-let connected = false;
+let postgresConnected = false;
 
+const loggerFormat = winston.format.printf(({ level, message, label, timestamp, ...args }) => {
+    let dateTime = new Date(timestamp).toLocaleString();
+    dateTime = dateTime.split(",")[0] + dateTime.split(",")[1];
+
+    return `${dateTime} [${label}] ${level}: ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
+})
 // Logger setup
 // Winston Log with logging to console and file, rotating logs
 // TODO setup a format function to log the date and time and the application name
@@ -26,8 +32,10 @@ const logger = winston.createLogger({
 });
 logger.configure({
     format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.label({ label: "Server" }),
         winston.format.timestamp(),
-        winston.format.json(),
+        loggerFormat
     ),
     transports: [
         new DailyRotateFile({
@@ -50,19 +58,24 @@ if (process.env.NODE_ENV !== "production" || process.env.NODE_ENV == null) {
     console.log("Logging to console");
     logger.add(
         new winston.transports.Console({
-            format: winston.format.simple(),
+            format: winston.format.combine(
+                winston.format.colorize(),
+                winston.format.label({ label: "Server" }),
+                winston.format.timestamp(),
+                loggerFormat
+            ),
             level: "debug",
         }),
     );
 }
 logger.info("Server started");
 
-async function connect() {
-    await client.connect();
-    connected = true;
+async function postgresConnect() {
+    await postgresClient.connect();
+    postgresConnected = true;
 }
 
-connect()
+postgresConnect()
     .then((r) => {
         logger.info("Connected to database");
     })
@@ -71,12 +84,12 @@ connect()
         logger.error(e);
     });
 
-app.get("/", (req, res) => {
+expressServer.get("/", (req, res) => {
     res.send("Hello World");
 });
 
-app.get("/api", (req, res) => {
-    if (!connected) {
+expressServer.get("/api", (req, res) => {
+    if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
@@ -84,18 +97,18 @@ app.get("/api", (req, res) => {
     res.send({ message: "Hello World" });
 });
 
-app.get("/api/weekly_checklist", async (req, res) => {
-    if (!connected) {
+expressServer.get("/api/weekly_checklist", async (req, res) => {
+    if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
     }
-    const { rows } = await client.query("SELECT * FROM checklist");
+    const { rows } = await postgresClient.query("SELECT * FROM checklist");
     res.json(rows);
     console.log(rows);
 });
-app.post("/api/weekly_checklist/:camp_id", async (req, res) => {
-    if (!connected) {
+expressServer.post("/api/weekly_checklist/:camp_id", async (req, res) => {
+    if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
@@ -104,14 +117,14 @@ app.post("/api/weekly_checklist/:camp_id", async (req, res) => {
     const campid = req.params.camp_id;
     console.log(req.body);
 
-    const { rows } = await client.query(
+    const { rows } = await postgresClient.query(
         "SELECT * FROM checklist WHERE camp_id = " + campid,
     );
     res.json(req.body);
 });
 
-app.post("/api/new_absence", (req, res) => {
-    if (!connected) {
+expressServer.post("/api/new_absence", (req, res) => {
+    if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
@@ -123,8 +136,8 @@ app.post("/api/new_absence", (req, res) => {
     logger.warn("soon to be deprecated new_absence: use get_absence instead");
 });
 
-app.get("/api/get_absences/:camp_id", (req, res) => {
-    if (!connected) {
+expressServer.get("/api/get_absences/:camp_id", (req, res) => {
+    if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
@@ -133,7 +146,7 @@ app.get("/api/get_absences/:camp_id", (req, res) => {
 
     const query = "SELECT * FROM absent WHERE camp_id = $1 ORDER BY date DESC";
     const values = [camp_id];
-    client.query(query, values, async (err, result) => {
+    postgresClient.query(query, values, async (err, result) => {
         if (err) {
             logger.error(err);
             return;
@@ -143,7 +156,7 @@ app.get("/api/get_absences/:camp_id", (req, res) => {
         for (let i = 0; i < result.rows.length; i++) {
             const query = "SELECT * FROM users WHERE user_id = $1";
             const values = [result.rows[i].upd_by];
-            const res = await client.query(query, values);
+            const res = await postgresClient.query(query, values);
             result.rows[i]["upd_by"] =
                 res.rows[0].first_name + " " + res.rows[0].last_name;
         }
@@ -151,8 +164,8 @@ app.get("/api/get_absences/:camp_id", (req, res) => {
     });
 });
 
-app.post("/api/new_absence/:camp_id", (req, res) => {
-    if (!connected) {
+expressServer.post("/api/new_absence/:camp_id", (req, res) => {
+    if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
@@ -190,7 +203,7 @@ app.post("/api/new_absence/:camp_id", (req, res) => {
         0,
     ];
     console.log(addQueryValues);
-    client.query(addQuery, addQueryValues, (err, res) => {
+    postgresClient.query(addQuery, addQueryValues, (err, res) => {
         if (err) {
             logger.error(err); // TODO send an error to the client // TODO figure out why logger.error gave undefined?
             console.log(err);
@@ -202,8 +215,8 @@ app.post("/api/new_absence/:camp_id", (req, res) => {
 });
 
 // TODO sanitize before putting into logger
-app.post("/api/edit_absence/:camp_id", (req, res) => {
-    if (!connected) {
+expressServer.post("/api/edit_absence/:camp_id", (req, res) => {
+    if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
@@ -240,7 +253,7 @@ app.post("/api/edit_absence/:camp_id", (req, res) => {
         req.body.absent_id,
     ];
     console.log(updateQueryValues);
-    client
+    postgresClient
         .query(updateQuery, updateQueryValues)
         .then((res) => {
             console.log("Updated");
@@ -251,8 +264,8 @@ app.post("/api/edit_absence/:camp_id", (req, res) => {
     res.json(req.body);
 });
 
-app.post("/api/delete_absence/:camp_id", (req, res) => {
-    if (!connected) {
+expressServer.post("/api/delete_absence/:camp_id", (req, res) => {
+    if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
@@ -270,7 +283,7 @@ app.post("/api/delete_absence/:camp_id", (req, res) => {
     const deleteQuery = "DELETE FROM absent WHERE absent_id = $1";
     const deleteQueryValues = [req.body.absent_id];
     console.log(deleteQueryValues);
-    client
+    postgresClient
         .query(deleteQuery, deleteQueryValues)
         .then((res) => {
             console.log("Deleted");
@@ -281,6 +294,6 @@ app.post("/api/delete_absence/:camp_id", (req, res) => {
     res.json(req.body);
 });
 
-app.listen(port, () => {
-    logger.info(`Server running on port ${port}`);
+expressServer.listen(serverPort, () => {
+    logger.info(`Server running on port ${serverPort}`);
 });
