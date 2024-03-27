@@ -16,12 +16,14 @@ const postgresClient = new postgres_client({
 });
 let postgresConnected = false;
 
-const loggerFormat = winston.format.printf(({ level, message, label, timestamp, ...args }) => {
-    let dateTime = new Date(timestamp).toLocaleString();
-    dateTime = dateTime.split(",")[0] + dateTime.split(",")[1];
+const loggerFormat = winston.format.printf(
+    ({ level, message, label, timestamp, ...args }) => {
+        let dateTime = new Date(timestamp).toLocaleString();
+        dateTime = dateTime.split(",")[0] + dateTime.split(",")[1];
 
-    return `${dateTime} [${label}] ${level}: ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
-})
+        return `${dateTime} [${label}] ${level}: ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
+    },
+);
 // Logger setup
 // Winston Log with logging to console and file, rotating logs
 // TODO setup a format function to log the date and time and the application name
@@ -35,7 +37,7 @@ logger.configure({
         winston.format.colorize(),
         winston.format.label({ label: "Server" }),
         winston.format.timestamp(),
-        loggerFormat
+        loggerFormat,
     ),
     transports: [
         new DailyRotateFile({
@@ -62,7 +64,7 @@ if (process.env.NODE_ENV !== "production" || process.env.NODE_ENV == null) {
                 winston.format.colorize(),
                 winston.format.label({ label: "Server" }),
                 winston.format.timestamp(),
-                loggerFormat
+                loggerFormat,
             ),
             level: "debug",
         }),
