@@ -102,11 +102,10 @@ app.post("/api/weekly_checklist/:camp_id", async (req, res) => {
         return;
     }
     logger.debug("POST /api/weekly_checklist/:camp_id"); // TODO, add camp ID and request body to the log
-    const campid = req.params.camp_id;
     console.log(req.body);
 
     const { rows } = await client.query(
-        "SELECT * FROM checklist WHERE camp_id = " + campid,
+        "SELECT * FROM checklist WHERE camp_id = " + req.params.camp_id,
     );
     res.json(req.body);
 });
@@ -143,10 +142,10 @@ app.get("/api/get_absences/:camp_id", (req, res) => {
         // for every row change the upd_by to the name of the person who updated it
         for (let i = 0; i < result.rows.length; i++) {
             const query = "SELECT * FROM users WHERE user_id = $1";
-            const values = [result.rows[i].upd_by];
+            const values = [result.rows[i].absent_upd_by];
             const res = await client.query(query, values);
-            result.rows[i]["upd_by"] =
-                res.rows[0].first_name + " " + res.rows[0].last_name;
+            result.rows[i]["absent_upd_by"] =
+                res.rows[0].camper_first_name + " " + res.rows[0].camper_last_name;
         }
         res.json(result.rows);
     });
@@ -166,34 +165,37 @@ app.post("/api/new_absence/:camp_id", (req, res) => {
         "POST /api/new_absence/:camp_id " +
             dataSanitization(req.params.camp_id) +
             " " +
-            dataSanitization(req.body.name) +
+            dataSanitization(req.body.camper_first_name) +
             " " +
-            dataSanitization(req.body.date) +
+            dataSanitization(req.body.camper_last_name) +
             " " +
-            dataSanitization(req.body.followedUp) +
+            dataSanitization(req.body.absent_date) +
             " " +
-            dataSanitization(req.body.notes),
+            dataSanitization(req.body.followed_Up) +
+            " " +
+            dataSanitization(req.body.reason),
     );
     logger.warn("TODO do input data validation"); // TODO
 
     // if followed up is false, change notes to empty string
-    if (dataSanitization(req.body.followedUp) === "false") {
-        dataSanitization(req.body.notes) = "";
+    if (dataSanitization(req.body.followed_Up) === "false") {
+        dataSanitization(req.body.reason) = "";
     }
 
     // TODO check if values are correct
 
     // Add to database
     const addQuery =
-        "INSERT INTO absent (camp_id, camper_name, date, followed_up, reason, date_modified,upd_by) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+        "INSERT INTO absent (camp_id, camper_first_name, camper_last_name, absent_date, followed_up, reason, absent_date_modified, absent_upd_by) VALUES ($1, $2, $3, $4, $5, $6, $7,$8)";
     const addQueryValues = [
         dataSanitization(req.params.camp_id),
-        dataSanitization(req.body.name),
-        dataSanitization(req.body.followedUp),
-        dataSanitization(req.body.date),
-        dataSanitization(req.body.notes),
+        dataSanitization(req.body.camper_first_name),
+        dataSanitization(req.body.camper_last_name),
+        dataSanitization(req.body.absent_date),
+        dataSanitization(req.body.followed_Up),
+        dataSanitization(req.body.reason),
         new Date().toISOString(),
-        dataSanitization(req.body.upd_by),
+        dataSanitization(req.body.absent_upd_by),
     ];
     console.log(addQueryValues);
     client.query(addQuery, addQueryValues, (err, res) => {
@@ -214,18 +216,19 @@ app.post("/api/edit_absence/:camp_id", (req, res) => {
         logger.warn("Database not connected");
         return;
     }
-    const camp_id = req.params.camp_id;
     logger.debug(
         "POST /api/edit_absence/:camp_id " +
-            camp_id +
+            dataSanitization(req.params.camp_id) +
             " " +
-            req.body.camper_name +
+            dataSanitization(req.body.camper_first_name) +
             " " +
-            req.body.date +
+            dataSanitization(req.body.camper_last_name) +
             " " +
-            req.body.followed_up +
+            dataSanitization(req.body.absent_date) +
             " " +
-            req.body.reason,
+            dataSanitization(req.body.followed_up) +
+            " " +
+            dataSanitization(req.body.reason),
     );
     logger.warn("TODO do input data validation"); // TODO
 
@@ -235,15 +238,16 @@ app.post("/api/edit_absence/:camp_id", (req, res) => {
     }
     // update specific query
     const updateQuery =
-        "UPDATE absent SET camper_name = $1, date = $2, followed_up = $3, reason = $4, date_modified = $5, upd_by = $6 WHERE absent_id = $7";
+        "UPDATE absent SET camper_first_name = $1, camper_last_name = $2, absent_date = $3, followed_up = $4, reason = $5, absent_date_modified = $6, absent_upd_by = $7 WHERE absent_id = $8";
     const updateQueryValues = [
-        req.body.camper_name,
-        req.body.date,
-        req.body.followed_up,
-        req.body.reason,
+        dataSanitization(req.body.camper_first_name),
+        dataSanitization(req.body.camper_last_name),
+        dataSanitization(req.body.absent_date),
+        dataSanitization(req.body.followed_up),
+        dataSanitization(req.body.reason),
         new Date().toISOString(),
-        0,
-        req.body.absent_id,
+        0, //TODO absent_upd_by
+        dataSanitization(req.body.absent_id),
     ];
     console.log(updateQueryValues);
     client
@@ -263,12 +267,8 @@ app.post("/api/delete_absence/:camp_id", (req, res) => {
         logger.warn("Database not connected");
         return;
     }
-    const camp_id = req.params.camp_id;
     logger.debug(
-        "POST /api/delete_absence/:camp_id " +
-            camp_id +
-            " " +
-            req.body.absent_id,
+        `POST /api/delete_absence/:camp_id ${req.params.camp_id} ${req.body.absent_id}`,
     );
     logger.warn("TODO do input data validation"); // TODO
 
