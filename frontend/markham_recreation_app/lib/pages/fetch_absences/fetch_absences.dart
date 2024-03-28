@@ -131,8 +131,8 @@ class _FetchAbsencesState extends State<FetchAbsences> {
                     itemBuilder: (context, index) {
                       // For each absence, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text(snapshot.data![index].camperName),
-                        subtitle: Text(dateFormatter(snapshot.data![index].date)),
+                        title: Text("${snapshot.data![index].camperFirstName} ${snapshot.data![index].camperLastName}"),
+                        subtitle: Text(dateFormatter(snapshot.data![index].absentDate)),
                         trailing: const Icon(Icons.chevron_right),
 
                         // If not followed up change the background color to a light red

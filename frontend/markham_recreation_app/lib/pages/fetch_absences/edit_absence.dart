@@ -25,17 +25,19 @@ class _EditAbsenceState extends State<EditAbsence> {
   bool followedUp = false;
   DateTime? selectedDate;
 
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
   // Initialize the text fields with the absence's data
   @override
   void initState() {
     super.initState();
-    _nameController.text = widget.absence.camperName;
+    _firstNameController.text = widget.absence.camperFirstName;
+    _lastNameController.text = widget.absence.camperLastName;
     _notesController.text = widget.absence.reason;
     followedUp = widget.absence.followedUp;
-    selectedDate = DateTime.parse(widget.absence.date);
+    selectedDate = DateTime.parse(widget.absence.absentDate);
   }
 
   @override
@@ -52,10 +54,22 @@ class _EditAbsenceState extends State<EditAbsence> {
             margin: const EdgeInsets.all(10),
             child: SizedBox(
               child: TextField(
-                controller: _nameController,
+                controller: _firstNameController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Camper Name',
+                  labelText: 'Camper First Name',
+                ),
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: SizedBox(
+              child: TextField(
+                controller: _lastNameController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Camper Last Name',
                 ),
               ),
             ),
@@ -96,7 +110,7 @@ class _EditAbsenceState extends State<EditAbsence> {
                   controller: _notesController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Notes',
+                    labelText: 'Reason',
                   ),
                 ),
               ),
@@ -107,10 +121,20 @@ class _EditAbsenceState extends State<EditAbsence> {
               padding: const EdgeInsets.all(10),
             ),
             onPressed: () {
-              if (_nameController.text.isEmpty) {
+              if (_firstNameController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Please enter a name'),
+                    content: Text('Please enter first name'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+                return;
+              }
+
+              if (_lastNameController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please enter last name'),
                     duration: Duration(seconds: 3),
                   ),
                 );
@@ -130,7 +154,7 @@ class _EditAbsenceState extends State<EditAbsence> {
               if (followedUp && _notesController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Please enter notes'),
+                    content: Text('Please enter a reason'),
                     duration: Duration(seconds: 3),
                   ),
                 );
@@ -148,11 +172,12 @@ class _EditAbsenceState extends State<EditAbsence> {
                 body: jsonEncode(<String, String>{
                   'absent_id': widget.absence.absentId.toString(),
                   'camp_id': widget.absence.campId.toString(),
-                  'camper_name': _nameController.text,
-                  'date': selectedDate.toString(),
+                  'camper_first_name': _firstNameController.text,
+                  'camper_last_name': _lastNameController.text,
+                  'absent_date': selectedDate.toString(),
                   'followed_up': followedUp.toString(),
                   'reason': _notesController.text,
-                  'date_modified': DateTime.now().toString(),
+                  'absent_date_modified': DateTime.now().toString(),
                 }),
               );
               response.then((http.Response response) {
@@ -169,7 +194,7 @@ class _EditAbsenceState extends State<EditAbsence> {
                     Navigator.pop(context);
                     Navigator.pop(context);
                     //readd the current absence page (refreshing it's contents)
-                    Absence absence = const Absence(absentId: 0, campId: 0, camperName: '', date: '', followedUp: false, reason: '', dateModified: '', modifiedBy: '');
+                    Absence absence = const Absence(absentId: 0, campId: 0, camperFirstName: '', camperLastName: '', absentDate: '', followedUp: false, reason: '', dateModified: '', modifiedBy: '');
                     //find the absence in the list
                     for (int i = 0; i < absences.length; i++) {
                       if (absences[i].absentId == widget.absence.absentId) {

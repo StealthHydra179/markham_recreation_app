@@ -96,10 +96,10 @@ class AbsenceDetails extends StatelessWidget {
       body: Column(
         children: <Widget>[
           ListTile(
-            title: Text('Camper Name: ${absence.camperName}'),
+            title: Text('Camper Name: ${absence.camperFirstName} ${absence.camperLastName}'),
           ),
           ListTile(
-            title: Text('Date: ${dateFormatter(absence.date)}'),
+            title: Text('Date: ${dateFormatter(absence.absentDate)}'),
           ),
           ListTile(
             title: Text('Followed Up: ${absence.followedUp ? 'yes' : 'no'}'),

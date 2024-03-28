@@ -20,7 +20,8 @@ class _NewAbsenceState extends State<NewAbsence> {
   bool followedUp = false;
   DateTime? selectedDate;
 
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
   @override
@@ -44,10 +45,22 @@ class _NewAbsenceState extends State<NewAbsence> {
             margin: const EdgeInsets.all(10),
             child:  SizedBox(
               child: TextField(
-                controller: _nameController,
+                controller: _firstNameController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Camper Name',
+                  labelText: 'Camper First Name',
+                ),
+              ),
+            ),
+          ),
+          Container( 
+            margin: const EdgeInsets.all(10),
+            child:  SizedBox(
+              child: TextField(
+                controller: _lastNameController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Camper Last Name',
                 ),
               ),
             ),
@@ -103,10 +116,20 @@ class _NewAbsenceState extends State<NewAbsence> {
             ),
             onPressed: () {
               // TODO input validation
-              if (_nameController.text.isEmpty) {
+              if (_firstNameController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Please enter a name'),
+                    content: Text('Please enter first name'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+                return;
+              }
+
+              if (_lastNameController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please enter last name'),
                     duration: Duration(seconds: 3),
                   ),
                 );
@@ -126,7 +149,7 @@ class _NewAbsenceState extends State<NewAbsence> {
               if (followedUp && _notesController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Please enter notes'),
+                    content: Text('Please enter a reason'),
                     duration: Duration(seconds: 3),
                   ),
                 );
@@ -140,7 +163,8 @@ class _NewAbsenceState extends State<NewAbsence> {
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode(<String, String>{
-                  'name': _nameController.text,
+                  'name': _firstNameController.text,
+                  'name': _lastNameController.text,
                   'date': selectedDate.toString(),
                   'followedUp': followedUp.toString(),
                   'notes': _notesController.text,
