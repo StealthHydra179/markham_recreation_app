@@ -24,7 +24,6 @@ const loggerFormat = winston.format.printf(({ level, message, label, timestamp, 
 })
 // Logger setup
 // Winston Log with logging to console and file, rotating logs
-// TODO setup a format function to log the date and time and the application name
 const logger = winston.createLogger({
     level: "debug",
     format: winston.format.json(),
@@ -54,6 +53,7 @@ logger.configure({
         }),
     ],
 });
+// Development environment
 if (process.env.NODE_ENV !== "production" || process.env.NODE_ENV == null) {
     console.log("Logging to console");
     logger.add(
@@ -84,6 +84,11 @@ postgresConnect()
         logger.error(e);
     });
 
+function dataSanitization(input) {
+    return input
+}
+
+// Webserver/API Routes
 expressServer.get("/", (req, res) => {
     res.send("Hello World");
 });
@@ -97,15 +102,31 @@ expressServer.get("/api", (req, res) => {
     res.send({ message: "Hello World" });
 });
 
-expressServer.get("/api/weekly_checklist", async (req, res) => {
+expressServer.get("/api/weekly_checklist/:camp_id", async (req, res) => {
     if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
     }
-    const { rows } = await postgresClient.query("SELECT * FROM checklist");
-    res.json(rows);
-    console.log(rows);
+    logger.debug(`GET /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`);
+
+    const { rows } = await postgresClient.query(
+        `SELECT * FROM checklist WHERE camp_id = ${dataSanitization(req.params.camp_id)}`,
+    );
+    if (rows.length === 0) {
+        // create a new checklist
+        logger.debug(`Creating new checklist ${dataSanitization(req.params.camp_id)}`);
+        const insertQuery = "INSERT INTO checklist (camp_id) VALUES ($1)";
+        const insertValues = [dataSanitization(req.params.camp_id)];
+        await postgresClient.query(insertQuery, insertValues);
+        const { rows } = await postgresClient.query(
+            `SELECT * FROM checklist WHERE camp_id = ${dataSanitization(req.params.camp_id)}`,
+        );
+        res.json(rows[0]);
+    } else {
+        res.json(rows[0]);
+    }
+
 });
 expressServer.post("/api/weekly_checklist/:camp_id", async (req, res) => {
     if (!postgresConnected) {
@@ -113,13 +134,34 @@ expressServer.post("/api/weekly_checklist/:camp_id", async (req, res) => {
         logger.warn("Database not connected");
         return;
     }
-    logger.debug("POST /api/weekly_checklist/:camp_id"); // TODO, add camp ID and request body to the log
-    console.log(req.body);
+    logger.debug(`POST /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
-    const { rows } = await postgresClient.query(
-        "SELECT * FROM checklist WHERE camp_id = " + req.params.camp_id,
-    );
-    res.json(req.body);
+    const updateQuery = `UPDATE checklist SET camper_info_form = $1, camper_info_form_upd_by = $2, camper_info_form_upd_date = $3, allergy_medical_info = $4, allergy_medical_info_upd_by = $5, allergy_medical_info_upd_date = $6, swim_test_records = $7, swim_test_records_upd_by = $8, swim_test_records_upd_date = $9, weekly_plans = $10, weekly_plans_upd_by = $11, weekly_plans_upd_date = $12, director_check = $13, director_check_upd_by = $14, director_check_upd_date = $15, counsellor_check = $16, counsellor_check_upd_by = $17, counsellor_check_upd_date = $18 WHERE camp_id = $19`;
+    let user_id = 0; // TODO get user id
+    const updateValues = [
+        dataSanitization(req.body.camper_info_form),
+        user_id,
+        new Date().toISOString(),
+        dataSanitization(req.body.allergy_medical_info),
+        user_id,
+        new Date().toISOString(),
+        dataSanitization(req.body.swim_test_records),
+        user_id,
+        new Date().toISOString(),
+        dataSanitization(req.body.weekly_plans),
+        user_id,
+        new Date().toISOString(),
+        dataSanitization(req.body.director_check),
+        user_id,
+        new Date().toISOString(),
+        dataSanitization(req.body.counsellor_check),
+        user_id,
+        new Date().toISOString(),
+        dataSanitization(req.params.camp_id),
+    ];
+    await postgresClient.query(updateQuery, updateValues);
+    res.json({});
+
 });
 
 expressServer.get("/api/get_absences/:camp_id", (req, res) => {
@@ -128,10 +170,10 @@ expressServer.get("/api/get_absences/:camp_id", (req, res) => {
         logger.warn("Database not connected");
         return;
     }
-    const camp_id = req.params.camp_id;
+    logger.debug(`GET /api/get_absences/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
     const query = "SELECT * FROM absent WHERE camp_id = $1 ORDER BY absent_date DESC";
-    const values = [camp_id];
+    const values = [dataSanitization(req.params.camp_id)];
     postgresClient.query(query, values, async (err, result) => {
         if (err) {
             logger.error(err);
@@ -150,29 +192,14 @@ expressServer.get("/api/get_absences/:camp_id", (req, res) => {
     });
 });
 
-function dataSanitization(input) {
-    return input
-}
-
 expressServer.post("/api/new_absence/:camp_id", (req, res) => {
-    if (!connected) {
+    if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
     }
     logger.debug(
-        "POST /api/new_absence/:camp_id " +
-            dataSanitization(req.params.camp_id) +
-            " " +
-            dataSanitization(req.body.camper_first_name) +
-            " " +
-            dataSanitization(req.body.camper_last_name) +
-            " " +
-            dataSanitization(req.body.absent_date) +
-            " " +
-            dataSanitization(req.body.followed_Up) +
-            " " +
-            dataSanitization(req.body.reason),
+        `POST /api/new_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.camper_first_name)} ${dataSanitization(req.body.camper_last_name)} ${dataSanitization(req.body.absent_date)} ${dataSanitization(req.body.followed_Up)} ${dataSanitization(req.body.reason)}`,
     );
     logger.warn("TODO do input data validation"); // TODO
 
@@ -216,18 +243,7 @@ expressServer.post("/api/edit_absence/:camp_id", (req, res) => {
         return;
     }
     logger.debug(
-        "POST /api/edit_absence/:camp_id " +
-            dataSanitization(req.params.camp_id) +
-            " " +
-            dataSanitization(req.body.camper_first_name) +
-            " " +
-            dataSanitization(req.body.camper_last_name) +
-            " " +
-            dataSanitization(req.body.absent_date) +
-            " " +
-            dataSanitization(req.body.followed_up) +
-            " " +
-            dataSanitization(req.body.reason),
+        `POST /api/edit_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.camper_first_name)} ${dataSanitization(req.body.camper_last_name)} ${dataSanitization(req.body.absent_date)} ${dataSanitization(req.body.followed_up)} ${dataSanitization(req.body.reason)}`,
     );
     logger.warn("TODO do input data validation"); // TODO
 
@@ -252,10 +268,10 @@ expressServer.post("/api/edit_absence/:camp_id", (req, res) => {
     postgresClient
         .query(updateQuery, updateQueryValues)
         .then((res) => {
-            console.log("Updated");
+            logger.info("Updated absence in database");
         })
         .catch((e) => {
-            console.error(e.stack);
+            logger.error(e.stack);
         });
     res.json(req.body);
 });
@@ -267,13 +283,15 @@ expressServer.post("/api/delete_absence/:camp_id", (req, res) => {
         return;
     }
     logger.debug(
-        `POST /api/delete_absence/:camp_id ${req.params.camp_id} ${req.body.absent_id}`,
+        `POST /api/delete_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.absent_id)}`,
     );
     logger.warn("TODO do input data validation"); // TODO
 
     // delete specific query
     const deleteQuery = "DELETE FROM absent WHERE absent_id = $1";
-    const deleteQueryValues = [req.body.absent_id];
+    const deleteQueryValues = [
+        dataSanitization(req.body.absent_id)
+    ];
     console.log(deleteQueryValues);
     postgresClient
         .query(deleteQuery, deleteQueryValues)
