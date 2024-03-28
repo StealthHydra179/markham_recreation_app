@@ -183,7 +183,7 @@ expressServer.get("/api/get_absences/:camp_id", (req, res) => {
         // for every row change the upd_by to the name of the person who updated it
         for (let i = 0; i < result.rows.length; i++) {
             const query = "SELECT * FROM users WHERE user_id = $1";
-            const values = [result.rows[i].upd_by];
+            const values = [result.rows[i].absent_upd_by];
             const res = await postgresClient.query(query, values);
             result.rows[i]["absent_upd_by"] =
                 res.rows[0].first_name + " " + res.rows[0].last_name;
@@ -221,7 +221,7 @@ expressServer.post("/api/new_absence/:camp_id", (req, res) => {
         dataSanitization(req.body.followed_Up),
         dataSanitization(req.body.reason),
         new Date().toISOString(),
-        dataSanitization(req.body.absent_upd_by),
+        0, // dataSanitization(req.body.absent_upd_by),
     ];
     console.log(addQueryValues);
     postgresClient.query(addQuery, addQueryValues, (err, res) => {

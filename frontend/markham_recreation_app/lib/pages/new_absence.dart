@@ -163,11 +163,11 @@ class _NewAbsenceState extends State<NewAbsence> {
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode(<String, String>{
-                  'name': _firstNameController.text,
-                  'name': _lastNameController.text,
-                  'date': selectedDate.toString(),
-                  'followedUp': followedUp.toString(),
-                  'notes': _notesController.text,
+                  'camper_first_name': _firstNameController.text,
+                  'camper_last_name': _lastNameController.text,
+                  'absent_date': selectedDate.toString(),
+                  'followed_Up': followedUp.toString(),
+                  'reason': _notesController.text,
                 }),
               );
               response.then((http.Response response) {

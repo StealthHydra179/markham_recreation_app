@@ -116,6 +116,7 @@ CREATE TABLE "staff_performance_notes" (
   "st_note_date" TIMESTAMP,
   "camp_id" INTEGER,
   "st_note" TEXT,
+  "st_note_upd_date" TIMESTAMP,
   "st_note_upd_by" INTEGER
 );
 
@@ -124,6 +125,7 @@ CREATE TABLE "parent_notes" (
   "pa_note_date" TIMESTAMP,
   "camp_id" INTEGER,
   "pa_note" TEXT,
+  "pa_note_upd_date" TIMESTAMP,
   "pa_note_upd_by" INTEGER
 );
 
@@ -132,6 +134,7 @@ CREATE TABLE "incident_notes" (
   "in_note_date" TIMESTAMP,
   "camp_id" INTEGER,
   "in_note" TEXT,
+  "in_note_upd_date" TIMESTAMP,
   "in_note_upd_by" INTEGER
 );
 
@@ -197,6 +200,23 @@ ALTER TABLE "parent_notes" ADD FOREIGN KEY ("pa_note_upd_by") REFERENCES "users"
 ALTER TABLE "incident_notes" ADD FOREIGN KEY ("camp_id") REFERENCES "camps" ("camp_id");
 
 ALTER TABLE "incident_notes" ADD FOREIGN KEY ("in_note_upd_by") REFERENCES "users" ("user_id");
+
+
+ALTER TABLE public.absent OWNER to markham_rec;
+ALTER TABLE public.attendance OWNER to markham_rec;
+ALTER TABLE public.camp_user_role OWNER to markham_rec;
+ALTER TABLE public.camps OWNER to markham_rec;
+ALTER TABLE public.checklist OWNER to markham_rec;
+ALTER TABLE public.daily_notes OWNER to markham_rec;
+ALTER TABLE public.equipment_supplies_notes OWNER to markham_rec;
+ALTER TABLE public.incident_notes OWNER to markham_rec;
+ALTER TABLE public.message OWNER to markham_rec;
+ALTER TABLE public.parent_notes OWNER to markham_rec;
+ALTER TABLE public.roles OWNER to markham_rec;
+ALTER TABLE public.staff_performance_notes OWNER to markham_rec;
+ALTER TABLE public.users OWNER to markham_rec;
+ALTER TABLE public.weekly_counsellor_meeting_notes OWNER to markham_rec;
+ALTER TABLE public.weekly_supervisor_meeting_notes OWNER to markham_rec;
 
 
 
