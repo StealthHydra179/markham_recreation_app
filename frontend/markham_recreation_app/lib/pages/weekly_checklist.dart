@@ -25,16 +25,27 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
 
   void _fetch_checklist() async {
     Future<http.Response> response = http.get(
-      Uri.parse('${globals.serverUrl}/api/weekly_checklist'),
+      Uri.parse('${globals.serverUrl}/api/weekly_checklist/${globals.camp_id}'),
     );
     response.then((http.Response response) {
       if (response.statusCode == 200) {
+        Map<String, dynamic> data = jsonDecode(response.body);
+        setState(() {
+          camperInformationForms = data['camper_info_form']??false;
+          allergyAndMedicalInformation = data['allergy_medical_info']??false;
+          swimTest = data['swim_test_records']??false;
+          programPlans = data['weekly_plans']??false;
+          campDirectorMeeting = data['director_check']??false;
+          campCounsellorMeeting = data['counsellor_check']??false;
+        });
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Weekly Checklist Loaded'),
             duration: Duration(seconds: 3),
             //TODO edit the state of the checkboxes to match the response
           ),
+
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -48,7 +59,7 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         ),
       );
     });
@@ -146,17 +157,17 @@ class _WeeklyChecklistState extends State<WeeklyChecklist> {
             onPressed: () {
               // Send the checklist to the server
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/weekly_checklist/'+globals.camp_id.toString()),
+                Uri.parse('${globals.serverUrl}/api/weekly_checklist/${globals.camp_id}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode(<String, bool>{
-                  'camperInformationForms': camperInformationForms,
-                  'allergyAndMedicalInformation': allergyAndMedicalInformation,
-                  'swimTest': swimTest,
-                  'programPlans': programPlans,
-                  'campDirectorMeeting': campDirectorMeeting,
-                  'campCounsellorMeeting': campCounsellorMeeting,
+                  'camper_info_form': camperInformationForms,
+                  'allergy_medical_info': allergyAndMedicalInformation,
+                  'swim_test_records': swimTest,
+                  'weekly_plans': programPlans,
+                  'director_check': campDirectorMeeting,
+                  'counsellor_check': campCounsellorMeeting,
                 }),
               );
               response.then((http.Response response) {
