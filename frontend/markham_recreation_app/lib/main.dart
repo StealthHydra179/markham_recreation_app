@@ -4,11 +4,15 @@ import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
 
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  findSystemLocale().whenComplete(() => runApp(const MyApp()));
+  globals.fetchCamps().whenComplete(() {
+    findSystemLocale().whenComplete(() {
+      runApp(const MyApp());
+    });
+  });
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -70,11 +74,7 @@ class _LandingPageState extends State<LandingPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        
-        title: Text(
-          widget.title,
-          style: const TextStyle(color: globals.secondaryColor) 
-        ),
+        title: Text(widget.title, style: const TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       drawer: drawer.drawer(context),
