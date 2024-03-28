@@ -26,13 +26,19 @@ bool campsLoaded = false;
 
 // Fetch camps from server
 Future<void> fetchCamps() async {
-  final response = await http.get(Uri.parse('$serverUrl/api/camps/0'));
+  final response = await http.get(Uri.parse('$serverUrl/api/camps/0')).catchError(
+    (error) {
+      throw Exception('Failed to load camps');
+    },
+  );
   if (response.statusCode == 200) {
     List<dynamic> data = jsonDecode(response.body);
     camps = data.map((camp) => Camp.fromJson(camp)).toList();
     campsLoaded = true;
-    camp_id = camps[0].id;
-    campName = camps[0].name;
+    if (camp_id == -1) {
+      camp_id = camps[0].id;
+      campName = camps[0].name;
+    }
   } else {
     throw Exception('Failed to load camps');
   }
