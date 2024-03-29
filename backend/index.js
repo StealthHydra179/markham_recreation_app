@@ -102,6 +102,32 @@ expressServer.get("/api", (req, res) => {
     res.send({ message: "Hello World" });
 });
 
+expressServer.get("/api/camps/:user_id", (req, res) => {
+    if (!postgresConnected) {
+        res.status(500).send({message: "Database not connected"});
+        logger.warn("Database not connected");
+        return;
+    }
+    logger.debug(`GET /api/camps/:user_id ${dataSanitization(req.params.user_id)}`);
+
+    const query = "SELECT * FROM camp_user_role WHERE user_id = $1";
+    const values = [dataSanitization(req.params.user_id)];
+    postgresClient.query(query, values, async (err, result) => {
+        if (err) {
+            logger.error(err);
+            return;
+        }
+        // get name of camp
+        for (let i = 0; i < result.rows.length; i++) {
+            const query = "SELECT * FROM camps WHERE camp_id = $1";
+            const values = [result.rows[i].camp_id];
+            const res = await postgresClient.query(query, values);
+            result.rows[i]["camp_name"] = res.rows[0].camp_name;
+        }
+        res.json(result.rows);
+    });
+});
+
 expressServer.get("/api/weekly_checklist/:camp_id", async (req, res) => {
     if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
@@ -199,12 +225,12 @@ expressServer.post("/api/new_absence/:camp_id", (req, res) => {
         return;
     }
     logger.debug(
-        `POST /api/new_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.camper_first_name)} ${dataSanitization(req.body.camper_last_name)} ${dataSanitization(req.body.absent_date)} ${dataSanitization(req.body.followed_Up)} ${dataSanitization(req.body.reason)}`,
+        `POST /api/new_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.camper_first_name)} ${dataSanitization(req.body.camper_last_name)} ${dataSanitization(req.body.absent_date)} ${dataSanitization(req.body.followed_up)} ${dataSanitization(req.body.reason)}`,
     );
     logger.warn("TODO do input data validation"); // TODO
 
     // if followed up is false, change notes to empty string
-    if (dataSanitization(req.body.followed_Up) === "false") {
+    if (dataSanitization(req.body.followed_up) === "false") {
         req.body.reason = "";
     }
 
@@ -218,7 +244,7 @@ expressServer.post("/api/new_absence/:camp_id", (req, res) => {
         dataSanitization(req.body.camper_first_name),
         dataSanitization(req.body.camper_last_name),
         dataSanitization(req.body.absent_date),
-        dataSanitization(req.body.followed_Up),
+        dataSanitization(req.body.followed_up),
         dataSanitization(req.body.reason),
         new Date().toISOString(),
         0, // dataSanitization(req.body.absent_upd_by),
