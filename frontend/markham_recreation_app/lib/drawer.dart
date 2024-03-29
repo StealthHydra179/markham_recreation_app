@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:markham_recreation_app/globals.dart';
+import 'package:markham_recreation_app/main.dart';
+import 'package:markham_recreation_app/pages/fetch_parent_notes/fetch_parent_notes.dart';
 
 import 'package:markham_recreation_app/pages/weekly_checklist.dart';
 import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
+
 Drawer drawer(BuildContext context) {
+  globals.fetchCamps();
   return Drawer(
     child: ListView(
       // Important: Remove any padding from the ListView.
@@ -27,11 +32,48 @@ Drawer drawer(BuildContext context) {
           currentAccountPicture: FlutterLogo(),
           onDetailsPressed: () {
             // snack bar
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Camp switching is not implemented'), // TODO
-              ),
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   const SnackBar(
+            //     content: Text('Camp switching is not implemented'), // TODO
+            //   ),
+            // );
+
+            //List the camps from the global variable in a small dialog
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Select Camp'),
+                  content: Container(
+                    width: double.maxFinite,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: globals.camps.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Text(globals.camps[index].name),
+                          onTap: () {
+                            globals.camp_id = globals.camps[index].id;
+                            globals.campName = globals.camps[index].name;
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.popUntil(context, (_) => false);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const LandingPage(title: globals.title)),
+                            );
+                            //update drawer widget with new camp name
+                          },
+                        );
+                      },
+                    )
+                    //TODO add reload action (for when a new camp is added)
+                  ),
+                );
+              },
             );
+
+            //reset show details arrow
           },
         ),
         ListTile(
@@ -91,7 +133,10 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Parent Comments/Concerns'),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchParentNotes()),
+            );
           },
         ),
         ListTile(

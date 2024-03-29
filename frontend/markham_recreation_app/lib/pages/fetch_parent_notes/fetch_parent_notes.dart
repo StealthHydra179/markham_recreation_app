@@ -7,30 +7,30 @@ import 'dart:convert';
 import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'package:markham_recreation_app/pages/fetch_absences/absence.dart';
-import 'package:markham_recreation_app/pages/fetch_absences/absence_details.dart';
-import 'package:markham_recreation_app/pages/new_absence.dart';
+import 'package:markham_recreation_app/pages/fetch_parent_notes/parent_notes.dart';
+import 'package:markham_recreation_app/pages/fetch_parent_notes/parent_notes_details.dart';
+import 'package:markham_recreation_app/pages/new_parent_note.dart';
 
 // global variable to store the request to the server (for FutureBuilder)
-late Future<List<Absence>> futureAbsences;
+late Future<List<ParentNote>> futureParentNotes;
 
-// Fetch absences from the server
-Future<List<Absence>> futureFetchAbsences() async {
+// Fetch parent notes from the server
+Future<List<ParentNote>> futureFetchParentNotes() async {
   final response = await http.get(
-    Uri.parse('${globals.serverUrl}/api/get_absences/${globals.camp_id}'),
+    Uri.parse('${globals.serverUrl}/api/get_parent_notes/${globals.camp_id}'),
   );
 
-  // Create List of absences
-  List<Absence> absences = [];
+  // Create List of parent notes
+  List<ParentNote> parentNotes = [];
 
   if (response.statusCode == 200) {
-    // If server returns an OK response, parse the JSON and store the absences
-    List<dynamic> absencesJson = jsonDecode(response.body);
-    absences = absencesJson.map((dynamic json) => Absence.fromJson(json)).toList();
-    return absences;
+    // If server returns an OK response, parse the JSON and store the parent notes
+    List<dynamic> parentNotesJson = jsonDecode(response.body);
+    parentNotes = parentNotesJson.map((dynamic json) => ParentNote.fromJson(json)).toList();
+    return parentNotes;
   } else {
     // If that response was not OK, throw an error.
-    throw Exception('Failed to load absences');
+    throw Exception('Failed to load parent notes');
   }
 }
 
@@ -67,21 +67,21 @@ String dateFormatter(String date) {
   return '${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}';
 }
 
-// List absences page wrapper
-class FetchAbsences extends StatefulWidget {
-  const FetchAbsences({super.key});
+// List parent notes page wrapper
+class FetchParentNotes extends StatefulWidget {
+  const FetchParentNotes({super.key});
 
   @override
-  State<FetchAbsences> createState() => _FetchAbsencesState();
+  State<FetchParentNotes> createState() => _FetchParentNotesState();
 }
 
-// List absences page content
-class _FetchAbsencesState extends State<FetchAbsences> {
-  // Fetch list of absences from the server
+// List parent notes page content
+class _FetchParentNotesState extends State<FetchParentNotes> {
+  // Fetch list of parent notes from the server
   @override
   void initState() {
     super.initState();
-    futureAbsences = futureFetchAbsences();
+    futureParentNotes = futureFetchParentNotes();
   }
 
   @override
@@ -89,19 +89,19 @@ class _FetchAbsencesState extends State<FetchAbsences> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Absences', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('Parent notes', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
         actions: <Widget>[
-          // New absence button
+          // New parent note button
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const NewAbsence()),
+                MaterialPageRoute(builder: (context) => const NewParentNote()),
               ).then((value) {
-                // Refresh the list of absences after returning from the new absence page
-                futureAbsences = futureFetchAbsences();
+                // Refresh the list of parent notes after returning from the new parent note page
+                futureParentNotes = futureFetchParentNotes();
                 setState(() {});
               });
             },
@@ -110,8 +110,8 @@ class _FetchAbsencesState extends State<FetchAbsences> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              // Refresh the list of absences
-              futureAbsences = futureFetchAbsences();
+              // Refresh the list of parent notes
+              futureParentNotes = futureFetchParentNotes();
               setState(() {});
             },
           ),
@@ -120,31 +120,28 @@ class _FetchAbsencesState extends State<FetchAbsences> {
       drawer: drawer.drawer(context),
       body: Column(
         children: <Widget>[
-          // Display absences in a list view, future builder waits for the server to return the data
-          FutureBuilder<List<Absence>>(
-            future: futureAbsences,
+          // Display parent notes in a list view, future builder waits for the server to return the data
+          FutureBuilder<List<ParentNote>>(
+            future: futureParentNotes,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Expanded(
                   child: ListView.builder(
                     itemCount: snapshot.data?.length,
                     itemBuilder: (context, index) {
-                      // For each absence, display the camper name, date, and a chevron icon
+                      // For each parent note, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text("${snapshot.data![index].camperFirstName} ${snapshot.data![index].camperLastName}"),
-                        subtitle: Text(dateFormatter(snapshot.data![index].absentDate)),
+                        title: Text("${snapshot.data![index].parentNote}"),
                         trailing: const Icon(Icons.chevron_right),
-
-                        // If not followed up change the background color to a light red
-                        tileColor: snapshot.data![index].followedUp ? null : const Color.fromARGB(255, 255, 230, 233),
+                     
                         onTap: () {
-                          // Display the absence details page when the absence is tapped
+                          // Display the parent note details page when the parent note is tapped
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => AbsenceDetails(absence: snapshot.data![index])),
+                            MaterialPageRoute(builder: (context) => ParentNoteDetails(parentNote: snapshot.data![index])),
                           ).then((value) {
-                            // Refresh the list of absences after returning from the absence details page
-                            futureAbsences = futureFetchAbsences();
+                            // Refresh the list of parent notes after returning from the parent note details page
+                            futureParentNotes = futureFetchParentNotes();
                             setState(() {});
                           });
                         },
