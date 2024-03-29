@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:markham_recreation_app/globals.dart' as globals;
-import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
+import 'package:markham_recreation_app/pages/fetch_parent_notes/fetch_parent_notes.dart';
 
-import 'absence.dart';
+import 'parent_notes.dart';
 import 'edit_parent_notes.dart';
 
-// Details of an absence
-class AbsenceDetails extends StatelessWidget {
-  final Absence absence;
+// Details of an parent notes
+class ParentNoteDetails extends StatelessWidget {
+  final ParentNote parentNote;
 
-  const AbsenceDetails({super.key, required this.absence});
+  const ParentNoteDetails({super.key, required this.parentNote});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class AbsenceDetails extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
         
         title: const Text(
-          'Absence Details',
+          'Parent Note Details',
           style: TextStyle(color: globals.secondaryColor) 
         ),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
@@ -34,28 +34,28 @@ class AbsenceDetails extends StatelessWidget {
           },
         ),
         actions: <Widget>[
-          // Edit current absence
+          // Edit current parentNote
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EditAbsence(absence: absence)),
+                MaterialPageRoute(builder: (context) => EditParentNote(parentNote: ParentNote)),
               );
             },
           ),
-          // Delete current absence
+          // Delete current parent note
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              // Send a request to the server to delete the absence
+              // Send a request to the server to delete the parent note
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/delete_absence/${globals.camp_id}'),
+                Uri.parse('${globals.serverUrl}/api/delete_parent_note/${globals.camp_id}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode(<String, String>{
-                  'absent_id': absence.absentId.toString(),
+                  'parentnote_id': parentNote.parentNoteId.toString(),
                 }),
               );
 
@@ -63,7 +63,7 @@ class AbsenceDetails extends StatelessWidget {
                 if (response.statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Deleted Absence'),
+                      content: Text('Deleted Parent Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );
@@ -73,7 +73,7 @@ class AbsenceDetails extends StatelessWidget {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to Delete Absence'),
+                      content: Text('Failed to Delete Parent Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );
@@ -82,7 +82,7 @@ class AbsenceDetails extends StatelessWidget {
                 // Runs when the server is down
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Failed to Delete Absence'),
+                    content: Text('Failed to Delete Parent Note'),
                     duration: Duration(seconds: 3),
                   ),
                 );
@@ -92,30 +92,20 @@ class AbsenceDetails extends StatelessWidget {
         ],
       ),
 
-      // Display absence details
+      // Display parent note details
       body: Column(
         children: <Widget>[
           ListTile(
-            title: Text('Camper Name: ${absence.camperFirstName} ${absence.camperLastName}'),
+            title: Text('Date: ${dateFormatter(parentNote.parentNoteDate)}'),
           ),
           ListTile(
-            title: Text('Date: ${dateFormatter(absence.absentDate)}'),
-          ),
-          ListTile(
-            title: Text('Followed Up: ${absence.followedUp ? 'yes' : 'no'}'),
-            
-            // if not followed up change the background color to a light red
-            tileColor: absence.followedUp ? null : const Color.fromARGB(255, 255, 230, 233),
-          ),
-          if (absence.followedUp)
-            ListTile(
-              title: Text('Reason: ${absence.reason}'),
+              title: Text('Reason: ${parentNote.parentNote}'),
             ),
           ListTile(
-            title: Text('Date Modified: ${dateTimeFormatter(absence.dateModified)}'),
+            title: Text('Date Modified: ${dateTimeFormatter(parentNote.updatedDate)}'),
           ),
           ListTile(
-            title: Text('Modified By: ${absence.modifiedBy}'),
+            title: Text('Modified By: ${parentNote.updatedBy}'),
           ),
         ],
       ),
