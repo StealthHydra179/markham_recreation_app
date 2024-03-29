@@ -99,7 +99,7 @@ class ParentNoteDetails extends StatelessWidget {
             title: Text('Date: ${dateFormatter(parentNote.parentNoteDate)}'),
           ),
           ListTile(
-              title: Text('Reason: ${parentNote.parentNote}'),
+              title: Text('Parent Note: ${parentNote.parentNote}'),
             ),
           ListTile(
             title: Text('Date Modified: ${dateTimeFormatter(parentNote.updatedDate)}'),
