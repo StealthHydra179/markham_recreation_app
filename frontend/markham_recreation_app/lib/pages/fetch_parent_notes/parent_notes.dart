@@ -1,12 +1,12 @@
-class Absence {
+class ParentNote {
   final int parentNoteId;
   final int campId;
   final String parentNoteDate;
   final String parentNote;
   final String updatedDate;
-  final String updatedBy; //Index of who modfied the absence
+  final String updatedBy; //Index of who modfied the parent note
 
-  const Absence({
+  const ParentNote({
     required this.parentNoteId,
     required this.campId,
     required this.parentNoteDate,
@@ -15,8 +15,8 @@ class Absence {
     required this.updatedBy,
   });
 
-  factory Absence.fromJson(Map<String, dynamic> json) {
-    // Create an absence from a JSON object
+  factory ParentNote.fromJson(Map<String, dynamic> json) {
+    // Create an parent note from a JSON object
     return switch (json) {
       {
         // TODO change the JSON object keys server-side to camelCase
@@ -27,7 +27,7 @@ class Absence {
         'parent_note_upd_date': String updatedDate,
         'parent_note_upd_by': String updatedBy,
       } =>
-        Absence(
+        ParentNote(
           parentNoteId: parentNoteId,
           campId: campId,
           parentNoteDate: parentNoteDate,

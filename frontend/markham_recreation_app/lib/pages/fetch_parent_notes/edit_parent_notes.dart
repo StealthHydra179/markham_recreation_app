@@ -4,24 +4,24 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:markham_recreation_app/pages/fetch_absences/absence_details.dart';
-import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
+import 'package:markham_recreation_app/pages/fetch_parent_notes/parent_notes_details.dart';
+import 'package:markham_recreation_app/pages/fetch_parent_notes/fetch_parent_notes.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'absence.dart';
+import 'parent_notes.dart';
 
-// Edit an absence
-class EditAbsence extends StatefulWidget {
-  final Absence absence;
+// Edit an parent_notes
+class EditParentNote extends StatefulWidget {
+  final ParentNote parentNote;
 
-  const EditAbsence({super.key, required this.absence});
+  const EditParentNote({super.key, required this.parentNote});
 
   @override
-  State<EditAbsence> createState() => _EditAbsenceState();
+  State<EditParentNote> createState() => _EditParentNoteState();
 }
 
-// Edit absence page content
-class _EditAbsenceState extends State<EditAbsence> {
+// Edit parent note page content
+class _EditParentNoteState extends State<EditParentNote> {
   bool followedUp = false;
   DateTime? selectedDate;
 
@@ -29,15 +29,12 @@ class _EditAbsenceState extends State<EditAbsence> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
-  // Initialize the text fields with the absence's data
+  // Initialize the text fields with the parent note's data
   @override
   void initState() {
     super.initState();
-    _firstNameController.text = widget.absence.camperFirstName;
-    _lastNameController.text = widget.absence.camperLastName;
-    _notesController.text = widget.absence.reason;
-    followedUp = widget.absence.followedUp;
-    selectedDate = DateTime.parse(widget.absence.absentDate);
+    _notesController.text = widget.parentNote.parentNote;
+      selectedDate = DateTime.parse(widget.parentNote.parentNoteDate);
   }
 
   @override
@@ -45,7 +42,7 @@ class _EditAbsenceState extends State<EditAbsence> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Edit Absence', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('Edit Parent Note', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       body: Column(
@@ -165,50 +162,47 @@ class _EditAbsenceState extends State<EditAbsence> {
 
               // Send the checklist to the server
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/edit_absence/${globals.camp_id}'),
+                Uri.parse('${globals.serverUrl}/api/edit_parent_note/${globals.camp_id}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode(<String, String>{
-                  'absent_id': widget.absence.absentId.toString(),
-                  'camp_id': widget.absence.campId.toString(),
-                  'camper_first_name': _firstNameController.text,
-                  'camper_last_name': _lastNameController.text,
-                  'absent_date': selectedDate.toString(),
-                  'followed_up': followedUp.toString(),
-                  'reason': _notesController.text,
-                  'absent_date_modified': DateTime.now().toString(),
+                  'parent_note_id': widget.parentNote.parentNoteId.toString(),
+                  'camp_id': widget.parentNote.campId.toString(),
+                  'parent_note_date': selectedDate.toString(),
+                  'parent_note': _notesController.text,
+                  'pa_note_upd_date': DateTime.now().toString(),
                 }),
               );
               response.then((http.Response response) {
                 if (response.statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Edited Absence'),
+                      content: Text('Edited Parent Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );
 
-                  futureFetchAbsences().then((absences) {
+                  futureFetchParentNotes().then((parentNotes) {
                     // move back 2 pages
                     Navigator.pop(context);
                     Navigator.pop(context);
-                    //readd the current absence page (refreshing it's contents)
-                    Absence absence = const Absence(absentId: 0, campId: 0, camperFirstName: '', camperLastName: '', absentDate: '', followedUp: false, reason: '', dateModified: '', modifiedBy: '');
-                    //find the absence in the list
-                    for (int i = 0; i < absences.length; i++) {
-                      if (absences[i].absentId == widget.absence.absentId) {
-                        absence = absences[i];
+                    //readd the current parent note page (refreshing it's contents)
+                    ParentNote parentNote = const ParentNote(parentNoteId: 0, campId: 0, parentNoteDate: '', parentNote: '', updatedDate: '', updatedBy: '');
+                    //find the parent note in the list
+                    for (int i = 0; i < parentNotes.length; i++) {
+                      if (parentNotes[i].parentNoteId == widget.parentNote.parentNoteId) {
+                        parentNote = parentNotes[i];
                         break;
                       }
                     }
                     // Navigate to the page
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AbsenceDetails(absence: absence)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ParentNoteDetails(parentNote: parentNote)));
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to Edit Absence'),
+                      content: Text('Failed to Edit Parent Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );
@@ -217,7 +211,7 @@ class _EditAbsenceState extends State<EditAbsence> {
                 // Runs when the server is down
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Failed to Edit Absence'),
+                    content: Text('Failed to Edit Parent Note'),
                     duration: Duration(seconds: 3),
                   ),
                 );

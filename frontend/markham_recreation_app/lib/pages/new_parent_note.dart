@@ -9,14 +9,14 @@ import 'package:date_field/date_field.dart';
 
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-class NewAbsence extends StatefulWidget {
-  const NewAbsence({super.key});
+class NewParentNote extends StatefulWidget {
+  const NewParentNote({super.key});
 
   @override
-  State<NewAbsence> createState() => _NewAbsenceState();
+  State<NewParentNote> createState() => _NewParentNoteState();
 }
 
-class _NewAbsenceState extends State<NewAbsence> {
+class _NewParentNoteState extends State<NewParentNote> {
   bool followedUp = false;
   DateTime? selectedDate;
 
