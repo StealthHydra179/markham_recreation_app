@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/globals.dart';
 import 'package:markham_recreation_app/main.dart';
+import 'package:markham_recreation_app/pages/fetch_parent_notes/fetch_parent_notes.dart';
 
 import 'package:markham_recreation_app/pages/weekly_checklist.dart';
 import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
@@ -132,7 +133,10 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Parent Comments/Concerns'),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchParentNotes()),
+            );
           },
         ),
         ListTile(

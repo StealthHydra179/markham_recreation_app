@@ -20,12 +20,12 @@ class ParentNote {
     return switch (json) {
       {
         // TODO change the JSON object keys server-side to camelCase
-        'parent_note_id': int parentNoteId,
+        'pa_note_id': int parentNoteId,
         'camp_id': int campId,
-        'parent_note_date': String parentNoteDate,
-        'parent_note': String parentNote,
-        'parent_note_upd_date': String updatedDate,
-        'parent_note_upd_by': String updatedBy,
+        'pa_note_date': String parentNoteDate,
+        'pa_note': String parentNote,
+        'pa_note_upd_date': String updatedDate,
+        'pa_note_upd_by': String updatedBy,
       } =>
         ParentNote(
           parentNoteId: parentNoteId,

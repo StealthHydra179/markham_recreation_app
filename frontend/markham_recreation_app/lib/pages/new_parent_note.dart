@@ -32,7 +32,7 @@ class _NewParentNoteState extends State<NewParentNote> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         
         title: const Text(
-          'New Absence',
+          'New Parent Note',
           style: TextStyle(color: globals.secondaryColor) 
         ),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
@@ -56,10 +56,20 @@ class _NewParentNoteState extends State<NewParentNote> {
               ),
             ),
           ),
-            
-  
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: SizedBox(
+              child: TextField(
+                controller: _notesController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Parent Notes',
+                ),
+              ),
+            ),
+          ),
+
           const Divider(height: 0),
-        
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(10),
@@ -89,7 +99,7 @@ class _NewParentNoteState extends State<NewParentNote> {
 
               // Send the checklist to the server
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/new_absence/${globals.camp_id}'),//+globals.camp_id.toString()
+                Uri.parse('${globals.serverUrl}/api/new_parent_notes/${globals.camp_id}'),//+globals.camp_id.toString()
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },

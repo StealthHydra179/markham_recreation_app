@@ -81,14 +81,14 @@ CREATE TABLE "equipment_supplies_notes" (
 );
 
 CREATE TABLE "message" (
-  "message_id" INTEGER PRIMARY KEY,
+  "message_id" SERIAL PRIMARY KEY,
   "camp_id" INTEGER,
   "message" TEXT,
   "message_upd_by" INTEGER
 );
 
 CREATE TABLE "daily_notes" (
-  "daily_note_id" INTEGER PRIMARY KEY,
+  "daily_note_id" SERIAL PRIMARY KEY,
   "daily_note_date" TIMESTAMP,
   "camp_id" INTEGER,
   "daily_note" TEXT,
@@ -96,7 +96,7 @@ CREATE TABLE "daily_notes" (
 );
 
 CREATE TABLE "weekly_supervisor_meeting_notes" (
-  "s_meet_note_id" INTEGER PRIMARY KEY,
+  "s_meet_note_id" SERIAL PRIMARY KEY,
   "s_meet_note_date" TIMESTAMP,
   "camp_id" INTEGER,
   "s_meet_note" TEXT,
@@ -104,7 +104,7 @@ CREATE TABLE "weekly_supervisor_meeting_notes" (
 );
 
 CREATE TABLE "weekly_counsellor_meeting_notes" (
-  "c_meet_note_id" INTEGER PRIMARY KEY,
+  "c_meet_note_id" SERIAL PRIMARY KEY,
   "c_meet_note_date" TIMESTAMP,
   "camp_id" INTEGER,
   "c_meet_note" TEXT,
@@ -112,7 +112,7 @@ CREATE TABLE "weekly_counsellor_meeting_notes" (
 );
 
 CREATE TABLE "staff_performance_notes" (
-  "st_note_id" INTEGER PRIMARY KEY,
+  "st_note_id" SERIAL PRIMARY KEY,
   "st_note_date" TIMESTAMP,
   "camp_id" INTEGER,
   "st_note" TEXT,
@@ -121,7 +121,7 @@ CREATE TABLE "staff_performance_notes" (
 );
 
 CREATE TABLE "parent_notes" (
-  "pa_note_id" INTEGER PRIMARY KEY,
+  "pa_note_id" SERIAL PRIMARY KEY,
   "pa_note_date" TIMESTAMP,
   "camp_id" INTEGER,
   "pa_note" TEXT,
@@ -130,7 +130,7 @@ CREATE TABLE "parent_notes" (
 );
 
 CREATE TABLE "incident_notes" (
-  "in_note_id" INTEGER PRIMARY KEY,
+  "in_note_id" SERIAL PRIMARY KEY,
   "in_note_date" TIMESTAMP,
   "camp_id" INTEGER,
   "in_note" TEXT,

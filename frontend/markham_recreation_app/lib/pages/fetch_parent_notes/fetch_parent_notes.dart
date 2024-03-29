@@ -131,7 +131,7 @@ class _FetchParentNotesState extends State<FetchParentNotes> {
                     itemBuilder: (context, index) {
                       // For each parent note, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text("${snapshot.data![index].parentNoteDate}"),
+                        title: Text("${snapshot.data![index].parentNote}"),
                         trailing: const Icon(Icons.chevron_right),
                      
                         onTap: () {

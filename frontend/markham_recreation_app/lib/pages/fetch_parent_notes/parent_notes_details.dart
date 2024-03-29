@@ -40,7 +40,7 @@ class ParentNoteDetails extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EditParentNote(parentNote: ParentNote)),
+                MaterialPageRoute(builder: (context) => EditParentNote(parentNote: parentNote)),
               );
             },
           ),
@@ -50,12 +50,12 @@ class ParentNoteDetails extends StatelessWidget {
             onPressed: () {
               // Send a request to the server to delete the parent note
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/delete_parent_note/${globals.camp_id}'),
+                Uri.parse('${globals.serverUrl}/api/delete_parent_notes/${globals.camp_id}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode(<String, String>{
-                  'parentnote_id': parentNote.parentNoteId.toString(),
+                  'parent_note_id': parentNote.parentNoteId.toString(),
                 }),
               );
 

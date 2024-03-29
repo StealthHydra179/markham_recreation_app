@@ -25,8 +25,6 @@ class _EditParentNoteState extends State<EditParentNote> {
   bool followedUp = false;
   DateTime? selectedDate;
 
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
   // Initialize the text fields with the parent note's data
@@ -50,30 +48,6 @@ class _EditParentNoteState extends State<EditParentNote> {
           Container(
             margin: const EdgeInsets.all(10),
             child: SizedBox(
-              child: TextField(
-                controller: _firstNameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Camper First Name',
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: SizedBox(
-              child: TextField(
-                controller: _lastNameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Camper Last Name',
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: SizedBox(
               child: DateTimeFormField(
                 decoration: const InputDecoration(
                   labelText: 'Enter Date',
@@ -90,54 +64,25 @@ class _EditParentNoteState extends State<EditParentNote> {
               ),
             ),
           ),
-          CheckboxListTile(
-            value: followedUp,
-            onChanged: (bool? value) {
-              setState(() {
-                followedUp = value!;
-              });
-            },
-            title: const Text('Followed Up?'),
-          ),
-          if (followedUp)
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: SizedBox(
-                child: TextField(
-                  controller: _notesController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Reason',
-                  ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: SizedBox(
+              child: TextField(
+                controller: _notesController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Parent Notes',
                 ),
               ),
             ),
+          ),
           const Divider(height: 0),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(10),
             ),
             onPressed: () {
-              if (_firstNameController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please enter first name'),
-                    duration: Duration(seconds: 3),
-                  ),
-                );
-                return;
-              }
-
-              if (_lastNameController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please enter last name'),
-                    duration: Duration(seconds: 3),
-                  ),
-                );
-                return;
-              }
-
+              
               if (selectedDate == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -151,7 +96,7 @@ class _EditParentNoteState extends State<EditParentNote> {
               if (followedUp && _notesController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Please enter a reason'),
+                    content: Text('Please enter a note'),
                     duration: Duration(seconds: 3),
                   ),
                 );
@@ -162,7 +107,7 @@ class _EditParentNoteState extends State<EditParentNote> {
 
               // Send the checklist to the server
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/edit_parent_note/${globals.camp_id}'),
+                Uri.parse('${globals.serverUrl}/api/edit_parent_notes/${globals.camp_id}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
