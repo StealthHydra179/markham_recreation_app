@@ -1,5 +1,5 @@
 const express = require("express");
-const { Client: postgres_client } = require("pg");
+const {Client: postgres_client} = require("pg");
 const winston = require("winston");
 const DailyRotateFile = require("winston-daily-rotate-file");
 // Load environment variables
@@ -16,23 +16,23 @@ const postgresClient = new postgres_client({
 });
 let postgresConnected = false;
 
-const loggerFormat = winston.format.printf(({ level, message, label, timestamp, ...args }) => {
+const loggerFormat = winston.format.printf(({level, message, label, timestamp, ...args}) => {
     let dateTime = new Date(timestamp).toLocaleString();
     dateTime = dateTime.split(",")[0] + dateTime.split(",")[1];
 
-    return `${dateTime} [${label}] ${level}: ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
+    return `${dateTime} [${label}] ${level}: ${message} ${Object.keys(args).length ? "\n" + JSON.stringify(args, null, 2) : ""}`;
 })
 // Logger setup
 // Winston Log with logging to console and file, rotating logs
 const logger = winston.createLogger({
     level: "debug",
     format: winston.format.json(),
-    defaultMeta: { service: "Markham Recreation Summer Camp Server" },
+    defaultMeta: {service: "Markham Recreation Summer Camp Server"},
 });
 logger.configure({
     format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.label({ label: "Server" }),
+        winston.format.label({label: "Server"}),
         winston.format.timestamp(),
         loggerFormat
     ),
@@ -60,7 +60,7 @@ if (process.env.NODE_ENV !== "production" || process.env.NODE_ENV == null) {
         new winston.transports.Console({
             format: winston.format.combine(
                 winston.format.colorize(),
-                winston.format.label({ label: "Server" }),
+                winston.format.label({label: "Server"}),
                 winston.format.timestamp(),
                 loggerFormat
             ),
@@ -91,24 +91,25 @@ function dataSanitization(input) {
 // Webserver/API Routes
 expressServer.get("/", (req, res) => {
     res.send("Hello World");
+    logger.info("json", {"test": "json"})
 });
 
 expressServer.get("/api", (req, res) => {
-    if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
-        logger.warn("Database not connected");
-        return;
-    }
-    res.send({ message: "Hello World" });
-});
-
-expressServer.get("/api/camps/:user_id", (req, res) => {
     if (!postgresConnected) {
         res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
-    logger.debug(`GET /api/camps/:user_id ${dataSanitization(req.params.user_id)}`);
+    res.send({message: "Hello World"});
+});
+
+expressServer.get("/api/camp/:user_id", (req, res) => {
+    if (!postgresConnected) {
+        res.status(500).send({message: "Database not connected"});
+        logger.warn("Database not connected");
+        return;
+    }
+    logger.debug(`GET /api/camp/:user_id ${dataSanitization(req.params.user_id)}`);
 
     const query = "SELECT * FROM camp_user_role WHERE user_id = $1";
     const values = [dataSanitization(req.params.user_id)];
@@ -119,7 +120,7 @@ expressServer.get("/api/camps/:user_id", (req, res) => {
         }
         // get name of camp
         for (let i = 0; i < result.rows.length; i++) {
-            const query = "SELECT * FROM camps WHERE camp_id = $1";
+            const query = "SELECT * FROM camp WHERE camp_id = $1";
             const values = [result.rows[i].camp_id];
             const res = await postgresClient.query(query, values);
             result.rows[i]["camp_name"] = res.rows[0].camp_name;
@@ -130,14 +131,16 @@ expressServer.get("/api/camps/:user_id", (req, res) => {
 
 expressServer.get("/api/weekly_checklist/:camp_id", async (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
+        res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
     logger.debug(`GET /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
-    const { rows } = await postgresClient.query(
-        `SELECT * FROM checklist WHERE camp_id = ${dataSanitization(req.params.camp_id)}`,
+    const {rows} = await postgresClient.query(
+        `SELECT *
+         FROM checklist
+         WHERE camp_id = ${dataSanitization(req.params.camp_id)}`,
     );
     if (rows.length === 0) {
         // create a new checklist
@@ -145,8 +148,10 @@ expressServer.get("/api/weekly_checklist/:camp_id", async (req, res) => {
         const insertQuery = "INSERT INTO checklist (camp_id) VALUES ($1)";
         const insertValues = [dataSanitization(req.params.camp_id)];
         await postgresClient.query(insertQuery, insertValues);
-        const { rows } = await postgresClient.query(
-            `SELECT * FROM checklist WHERE camp_id = ${dataSanitization(req.params.camp_id)}`,
+        const {rows} = await postgresClient.query(
+            `SELECT *
+             FROM checklist
+             WHERE camp_id = ${dataSanitization(req.params.camp_id)}`,
         );
         res.json(rows[0]);
     } else {
@@ -156,13 +161,32 @@ expressServer.get("/api/weekly_checklist/:camp_id", async (req, res) => {
 });
 expressServer.post("/api/weekly_checklist/:camp_id", async (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
+        res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
     logger.debug(`POST /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
-    const updateQuery = `UPDATE checklist SET camper_info_form = $1, camper_info_form_upd_by = $2, camper_info_form_upd_date = $3, allergy_medical_info = $4, allergy_medical_info_upd_by = $5, allergy_medical_info_upd_date = $6, swim_test_records = $7, swim_test_records_upd_by = $8, swim_test_records_upd_date = $9, weekly_plans = $10, weekly_plans_upd_by = $11, weekly_plans_upd_date = $12, director_check = $13, director_check_upd_by = $14, director_check_upd_date = $15, counsellor_check = $16, counsellor_check_upd_by = $17, counsellor_check_upd_date = $18 WHERE camp_id = $19`;
+    const updateQuery = `UPDATE checklist
+                         SET camper_info_form              = $1,
+                             camper_info_form_upd_by       = $2,
+                             camper_info_form_upd_date     = $3,
+                             allergy_medical_info          = $4,
+                             allergy_medical_info_upd_by   = $5,
+                             allergy_medical_info_upd_date = $6,
+                             swim_test_records             = $7,
+                             swim_test_records_upd_by      = $8,
+                             swim_test_records_upd_date    = $9,
+                             weekly_plans                  = $10,
+                             weekly_plans_upd_by           = $11,
+                             weekly_plans_upd_date         = $12,
+                             director_check                = $13,
+                             director_check_upd_by         = $14,
+                             director_check_upd_date       = $15,
+                             counsellor_check              = $16,
+                             counsellor_check_upd_by       = $17,
+                             counsellor_check_upd_date     = $18
+                         WHERE camp_id = $19`;
     let user_id = 0; // TODO get user id
     const updateValues = [
         dataSanitization(req.body.camper_info_form),
@@ -192,13 +216,13 @@ expressServer.post("/api/weekly_checklist/:camp_id", async (req, res) => {
 
 expressServer.get("/api/get_absences/:camp_id", (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
+        res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
     logger.debug(`GET /api/get_absences/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
-    const query = "SELECT * FROM absent WHERE camp_id = $1 ORDER BY absent_date DESC";
+    const query = "SELECT * FROM absence WHERE camp_id = $1 ORDER BY absence_date DESC";
     const values = [dataSanitization(req.params.camp_id)];
     postgresClient.query(query, values, async (err, result) => {
         if (err) {
@@ -208,10 +232,10 @@ expressServer.get("/api/get_absences/:camp_id", (req, res) => {
 
         // for every row change the upd_by to the name of the person who updated it
         for (let i = 0; i < result.rows.length; i++) {
-            const query = "SELECT * FROM users WHERE user_id = $1";
-            const values = [result.rows[i].absent_upd_by];
+            const query = "SELECT * FROM app_user WHERE user_id = $1";
+            const values = [result.rows[i].absence_upd_by];
             const res = await postgresClient.query(query, values);
-            result.rows[i]["absent_upd_by"] =
+            result.rows[i]["absence_upd_by"] =
                 res.rows[0].first_name + " " + res.rows[0].last_name;
         }
         res.json(result.rows);
@@ -220,12 +244,12 @@ expressServer.get("/api/get_absences/:camp_id", (req, res) => {
 
 expressServer.post("/api/new_absence/:camp_id", (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
+        res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
     logger.debug(
-        `POST /api/new_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.camper_first_name)} ${dataSanitization(req.body.camper_last_name)} ${dataSanitization(req.body.absent_date)} ${dataSanitization(req.body.followed_up)} ${dataSanitization(req.body.reason)}`,
+        `POST /api/new_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.camper_first_name)} ${dataSanitization(req.body.camper_last_name)} ${dataSanitization(req.body.absence_date)} ${dataSanitization(req.body.followed_up)} ${dataSanitization(req.body.reason)}`,
     );
     logger.warn("TODO do input data validation"); // TODO
 
@@ -238,22 +262,22 @@ expressServer.post("/api/new_absence/:camp_id", (req, res) => {
 
     // Add to database
     const addQuery =
-        "INSERT INTO absent (camp_id, camper_first_name, camper_last_name, absent_date, followed_up, reason, absent_date_modified, absent_upd_by) VALUES ($1, $2, $3, $4, $5, $6, $7,$8)";
+        "INSERT INTO absence (camp_id, camper_first_name, camper_last_name, absence_date, followed_up, reason, absence_upd_date, absence_upd_by) VALUES ($1, $2, $3, $4, $5, $6, $7,$8)";
     const addQueryValues = [
         dataSanitization(req.params.camp_id),
         dataSanitization(req.body.camper_first_name),
         dataSanitization(req.body.camper_last_name),
-        dataSanitization(req.body.absent_date),
+        dataSanitization(req.body.absence_date),
         dataSanitization(req.body.followed_up),
         dataSanitization(req.body.reason),
         new Date().toISOString(),
-        0, // dataSanitization(req.body.absent_upd_by),
+        0, // dataSanitization(req.body.absence_upd_by),
     ];
-    console.log(addQueryValues);
+    // console.log(addQueryValues);
     postgresClient.query(addQuery, addQueryValues, (err, res) => {
         if (err) {
-            logger.error(err); // TODO send an error to the client // TODO figure out why logger.error gave undefined?
-            console.log(err);
+            logger.error("New absence error: ", err); // TODO send an error to the client // TODO figure out why logger.error gave undefined?
+            // console.log(err);
             return;
         }
         logger.info("Added new absence to database");
@@ -264,12 +288,12 @@ expressServer.post("/api/new_absence/:camp_id", (req, res) => {
 // TODO sanitize before putting into logger
 expressServer.post("/api/edit_absence/:camp_id", (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
+        res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
     logger.debug(
-        `POST /api/edit_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.camper_first_name)} ${dataSanitization(req.body.camper_last_name)} ${dataSanitization(req.body.absent_date)} ${dataSanitization(req.body.followed_up)} ${dataSanitization(req.body.reason)}`,
+        `POST /api/edit_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.camper_first_name)} ${dataSanitization(req.body.camper_last_name)} ${dataSanitization(req.body.absence_date)} ${dataSanitization(req.body.followed_up)} ${dataSanitization(req.body.reason)}`,
     );
     logger.warn("TODO do input data validation"); // TODO
 
@@ -279,16 +303,16 @@ expressServer.post("/api/edit_absence/:camp_id", (req, res) => {
     }
     // update specific query
     const updateQuery =
-        "UPDATE absent SET camper_first_name = $1, camper_last_name = $2, absent_date = $3, followed_up = $4, reason = $5, absent_date_modified = $6, absent_upd_by = $7 WHERE absent_id = $8";
+        "UPDATE absence SET camper_first_name = $1, camper_last_name = $2, absence_date = $3, followed_up = $4, reason = $5, absence_upd_date = $6, absence_upd_by = $7 WHERE absence_id = $8";
     const updateQueryValues = [
         dataSanitization(req.body.camper_first_name),
         dataSanitization(req.body.camper_last_name),
-        dataSanitization(req.body.absent_date),
+        dataSanitization(req.body.absence_date),
         dataSanitization(req.body.followed_up),
         dataSanitization(req.body.reason),
         new Date().toISOString(),
-        0, //TODO absent_upd_by
-        dataSanitization(req.body.absent_id),
+        0, //TODO absence_upd_by
+        dataSanitization(req.body.absence_id),
     ];
     console.log(updateQueryValues);
     postgresClient
@@ -297,26 +321,26 @@ expressServer.post("/api/edit_absence/:camp_id", (req, res) => {
             logger.info("Updated absence in database");
         })
         .catch((e) => {
-            logger.error(e.stack);
+            logger.error("Edit absence error: ", e.stack);
         });
     res.json(req.body);
 });
 
 expressServer.post("/api/delete_absence/:camp_id", (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
+        res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
     logger.debug(
-        `POST /api/delete_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.absent_id)}`,
+        `POST /api/delete_absence/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.absence_id)}`,
     );
     logger.warn("TODO do input data validation"); // TODO
 
     // delete specific query
-    const deleteQuery = "DELETE FROM absent WHERE absent_id = $1";
+    const deleteQuery = "DELETE FROM absence WHERE absence_id = $1";
     const deleteQueryValues = [
-        dataSanitization(req.body.absent_id)
+        dataSanitization(req.body.absence_id)
     ];
     console.log(deleteQueryValues);
     postgresClient
@@ -325,7 +349,7 @@ expressServer.post("/api/delete_absence/:camp_id", (req, res) => {
             console.log("Deleted");
         })
         .catch((e) => {
-            console.error(e.stack);
+            logger.error("Delete absence error: ", e.stack);
         });
     res.json(req.body);
 });
@@ -335,7 +359,7 @@ expressServer.post("/api/delete_absence/:camp_id", (req, res) => {
 
 expressServer.get("/api/get_parent_notes/:camp_id", (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
+        res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
@@ -345,26 +369,26 @@ expressServer.get("/api/get_parent_notes/:camp_id", (req, res) => {
     const values = [dataSanitization(req.params.camp_id)];
     postgresClient.query(query, values, async (err, result) => {
         if (err) {
-            logger.error(err);
+            logger.error("Get parent notes error: ", err);
             return;
         }
 
         // for every row change the upd_by to the name of the person who updated it
         for (let i = 0; i < result.rows.length; i++) {
-            const query = "SELECT * FROM users WHERE user_id = $1";
+            const query = "SELECT * FROM app_user WHERE user_id = $1";
             const values = [result.rows[i].pa_note_upd_by];
             const res = await postgresClient.query(query, values);
             result.rows[i]["pa_note_upd_by"] =
                 res.rows[0].first_name + " " + res.rows[0].last_name;
         }
-        console.log(result.rows)
+        // console.log(result.rows)
         res.json(result.rows);
     });
 });
 
 expressServer.post("/api/new_parent_notes/:camp_id", (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
+        res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
@@ -405,7 +429,7 @@ expressServer.post("/api/new_parent_notes/:camp_id", (req, res) => {
 // TODO sanitize before putting into logger
 expressServer.post("/api/edit_parent_notes/:camp_id", (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
+        res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
@@ -429,6 +453,7 @@ expressServer.post("/api/edit_parent_notes/:camp_id", (req, res) => {
         .query(updateQuery, updateQueryValues)
         .then((res) => {
             logger.info("Updated parent note in database");
+            logger.debug("Parent note update: ", res);
         })
         .catch((e) => {
             logger.error(e.stack);
@@ -438,7 +463,7 @@ expressServer.post("/api/edit_parent_notes/:camp_id", (req, res) => {
 
 expressServer.post("/api/delete_parent_notes/:camp_id", (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({ message: "Database not connected" });
+        res.status(500).send({message: "Database not connected"});
         logger.warn("Database not connected");
         return;
     }
@@ -456,10 +481,10 @@ expressServer.post("/api/delete_parent_notes/:camp_id", (req, res) => {
     postgresClient
         .query(deleteQuery, deleteQueryValues)
         .then((res) => {
-            console.log("Deleted");
+            console.log("Deleted parent note");
         })
         .catch((e) => {
-            console.error(e.stack);
+            logger.error("Delete parent notes error:", e.stack);
         });
     res.json(req.body);
 });

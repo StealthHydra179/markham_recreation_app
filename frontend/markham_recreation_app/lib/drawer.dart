@@ -9,7 +9,7 @@ import 'package:markham_recreation_app/globals.dart' as globals;
 
 
 Drawer drawer(BuildContext context) {
-  globals.fetchCamps();
+  globals.fetchcamp();
   return Drawer(
     child: ListView(
       // Important: Remove any padding from the ListView.
@@ -38,7 +38,7 @@ Drawer drawer(BuildContext context) {
             //   ),
             // );
 
-            //List the camps from the global variable in a small dialog
+            //List the camp from the global variable in a small dialog
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -48,13 +48,13 @@ Drawer drawer(BuildContext context) {
                     width: double.maxFinite,
                     child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: globals.camps.length,
+                      itemCount: globals.campList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
-                          title: Text(globals.camps[index].name),
+                          title: Text(globals.campList[index].name),
                           onTap: () {
-                            globals.camp_id = globals.camps[index].id;
-                            globals.campName = globals.camps[index].name;
+                            globals.camp_id = globals.campList[index].id;
+                            globals.campName = globals.campList[index].name;
                             Navigator.pop(context);
                             Navigator.pop(context);
                             Navigator.popUntil(context, (_) => false);

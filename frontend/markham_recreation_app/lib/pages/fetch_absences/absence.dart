@@ -1,24 +1,24 @@
 class Absence {
-  final int absentId;
+  final int absenceId;
   final int campId;
   final String camperFirstName;
   final String camperLastName;
-  final String absentDate;
+  final String absenceDate;
   final bool followedUp;
   final String reason;
-  final String dateModified;
-  final String modifiedBy; //Index of who modfied the absence
+  final String updDate;
+  final String updBy; //Index of who modfied the absence
 
   const Absence({
-    required this.absentId,
+    required this.absenceId,
     required this.campId,
     required this.camperFirstName,
     required this.camperLastName,
-    required this.absentDate,
+    required this.absenceDate,
     required this.followedUp,
     required this.reason,
-    required this.dateModified,
-    required this.modifiedBy,
+    required this.updDate,
+    required this.updBy,
   });
 
   factory Absence.fromJson(Map<String, dynamic> json) {
@@ -26,26 +26,26 @@ class Absence {
     return switch (json) {
       {
         // TODO change the JSON object keys server-side to camelCase
-        'absent_id': int absentId,
+        'absence_id': int absenceId,
         'camp_id': int campId,
         'camper_first_name': String camperFirstName,
         'camper_last_name': String camperLastName,
-        'absent_date': String absentDate,
+        'absence_date': String absenceDate,
         'followed_up': bool followedUp,
         'reason': String reason,
-        'absent_date_modified': String dateModified,
-        'absent_upd_by': String modifiedBy,
+        'absence_upd_date': String updDate,
+        'absence_upd_by': String updBy,
       } =>
         Absence(
-          absentId: absentId,
+          absenceId: absenceId,
           campId: campId,
           camperFirstName: camperFirstName,
           camperLastName: camperLastName,
-          absentDate: absentDate,
+          absenceDate: absenceDate,
           followedUp: followedUp,
           reason: reason,
-          dateModified: dateModified,
-          modifiedBy: modifiedBy,
+          updDate: updDate,
+          updBy: updBy,
         ),
       _ => throw const FormatException('Unexpected JSON type'),
     };

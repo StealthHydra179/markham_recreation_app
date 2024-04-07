@@ -26,16 +26,16 @@ CREATE TABLE "camp_user_role" (
   PRIMARY KEY ("user_id", "camp_id")
 );
 
-CREATE TABLE "absent" (
-  "absent_id" SERIAL PRIMARY KEY,
+CREATE TABLE "absence" (
+  "absence" SERIAL PRIMARY KEY,
   "camp_id" INTEGER,
   "camper_first_name" VARCHAR(64),
   "camper_last_name" VARCHAR(64),
-  "absent_date" TIMESTAMP,
+  "absence_date" TIMESTAMP,
   "followed_up" BOOLEAN,
   "reason" TEXT,
-  "absent_date_modified" TIMESTAMP,
-  "absent_upd_by" INTEGER
+  "absence_upd_date" TIMESTAMP,
+  "absence_upd_by" INTEGER
 );
 
 CREATE TABLE "checklist" (

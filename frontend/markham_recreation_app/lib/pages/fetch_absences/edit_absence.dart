@@ -37,7 +37,7 @@ class _EditAbsenceState extends State<EditAbsence> {
     _lastNameController.text = widget.absence.camperLastName;
     _notesController.text = widget.absence.reason;
     followedUp = widget.absence.followedUp;
-    selectedDate = DateTime.parse(widget.absence.absentDate);
+    selectedDate = DateTime.parse(widget.absence.absenceDate);
   }
 
   @override
@@ -171,14 +171,14 @@ class _EditAbsenceState extends State<EditAbsence> {
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
                   body: jsonEncode(<String, String>{
-                    'absent_id': widget.absence.absentId.toString(),
+                    'absence_id': widget.absence.absenceId.toString(),
                     'camp_id': widget.absence.campId.toString(),
                     'camper_first_name': _firstNameController.text,
                     'camper_last_name': _lastNameController.text,
-                    'absent_date': selectedDate.toString(),
+                    'absence_date': selectedDate.toString(),
                     'followed_up': followedUp.toString(),
                     'reason': _notesController.text,
-                    'absent_date_modified': DateTime.now().toString(),
+                    'absence_upd_date': DateTime.now().toString(),
                   }),
                 );
                 response.then((http.Response response) {
@@ -195,10 +195,10 @@ class _EditAbsenceState extends State<EditAbsence> {
                       Navigator.pop(context);
                       Navigator.pop(context);
                       //readd the current absence page (refreshing it's contents)
-                      Absence absence = const Absence(absentId: 0, campId: 0, camperFirstName: '', camperLastName: '', absentDate: '', followedUp: false, reason: '', dateModified: '', modifiedBy: '');
+                      Absence absence = const Absence(absenceId: 0, campId: 0, camperFirstName: '', camperLastName: '', absenceDate: '', followedUp: false, reason: '', updDate: '', updBy: '');
                       //find the absence in the list
                       for (int i = 0; i < absences.length; i++) {
-                        if (absences[i].absentId == widget.absence.absentId) {
+                        if (absences[i].absenceId == widget.absence.absenceId) {
                           absence = absences[i];
                           break;
                         }

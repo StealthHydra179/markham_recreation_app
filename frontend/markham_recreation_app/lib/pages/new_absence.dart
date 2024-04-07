@@ -159,7 +159,7 @@ class _NewAbsenceState extends State<NewAbsence> {
                   body: jsonEncode(<String, String>{
                     'camper_first_name': _firstNameController.text,
                     'camper_last_name': _lastNameController.text,
-                    'absent_date': selectedDate.toString(),
+                    'absence_date': selectedDate.toString(),
                     'followed_up': followedUp.toString(),
                     'reason': _notesController.text,
                   }),

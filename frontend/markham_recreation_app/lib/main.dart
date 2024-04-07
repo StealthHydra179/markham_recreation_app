@@ -6,7 +6,7 @@ import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  globals.fetchCamps().whenComplete(() {
+  globals.fetchcamp().whenComplete(() {
     findSystemLocale().whenComplete(() {
       runApp(const MyApp());
     });
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Markham Recreation Summer Camps',
+      title: 'Markham Recreation Summer camp',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: globals.primaryColor),
         useMaterial3: true,
