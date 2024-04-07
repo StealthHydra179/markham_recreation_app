@@ -1,8 +1,14 @@
-module.exports = function (expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
+module.exports = function (
+    expressServer,
+    logger,
+    postgresClient,
+    dataSanitization,
+    getPostgresConnected,
+) {
     expressServer.get("/api/get_parent_notes/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
@@ -30,7 +36,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     expressServer.post("/api/new_parent_notes/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
@@ -71,7 +77,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     expressServer.post("/api/edit_parent_notes/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
@@ -106,7 +112,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     expressServer.post("/api/delete_parent_notes/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }

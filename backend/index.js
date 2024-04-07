@@ -110,7 +110,13 @@ expressServer.get("/api", (req, res) => {
     res.send({ message: "Hello World" });
 });
 
-let routePassthrough = [expressServer, logger, postgresClient, dataSanitization, getPostgresConnected];
+let routePassthrough = [
+    expressServer,
+    logger,
+    postgresClient,
+    dataSanitization,
+    getPostgresConnected,
+];
 
 require("./express/campRoutes")(...routePassthrough);
 require("./express/weeklyChecklistRoutes")(...routePassthrough);

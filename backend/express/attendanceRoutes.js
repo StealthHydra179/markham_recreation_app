@@ -1,3 +1,9 @@
-module.exports = function (expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
+module.exports = function (
+    expressServer,
+    logger,
+    postgresClient,
+    dataSanitization,
+    getPostgresConnected,
+) {
     logger.warn("attendanceRoutes.js not implemented");
-}
+};
