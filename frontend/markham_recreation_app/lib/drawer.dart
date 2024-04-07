@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:markham_recreation_app/globals.dart';
 import 'package:markham_recreation_app/main.dart';
 import 'package:markham_recreation_app/pages/fetch_parent_notes/fetch_parent_notes.dart';
 

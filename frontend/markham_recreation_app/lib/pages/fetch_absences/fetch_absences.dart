@@ -9,7 +9,7 @@ import 'package:markham_recreation_app/globals.dart' as globals;
 
 import 'package:markham_recreation_app/pages/fetch_absences/absence.dart';
 import 'package:markham_recreation_app/pages/fetch_absences/absence_details.dart';
-import 'package:markham_recreation_app/pages/new_absence.dart';
+import 'package:markham_recreation_app/pages/fetch_absences/new_absence.dart';
 
 // global variable to store the request to the server (for FutureBuilder)
 late Future<List<Absence>> futureAbsences;
