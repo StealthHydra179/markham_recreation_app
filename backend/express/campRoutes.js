@@ -1,0 +1,31 @@
+module.exports = function(expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
+    expressServer.get("/api/camp/:user_id", (req, res) => {
+        let postgresConnected = getPostgresConnected();
+
+        if (!postgresConnected) {
+            res.status(500).send({message: "Database not connected"});
+            logger.warn("Database not connected");
+            return;
+        }
+        logger.debug(`GET /api/camp/:user_id ${dataSanitization(req.params.user_id)}`);
+
+        const query = "SELECT * FROM camp_user_role WHERE user_id = $1";
+        const values = [dataSanitization(req.params.user_id)];
+        postgresClient.query(query, values, async (err, result) => {
+            if (err) {
+                logger.error(err);
+                return;
+            }
+            // get name of camp
+            for (let i = 0; i < result.rows.length; i++) {
+                const query = "SELECT * FROM camp WHERE camp_id = $1";
+                const values = [result.rows[i].camp_id];
+                const res = await postgresClient.query(query, values);
+                result.rows[i]["camp_name"] = res.rows[0].camp_name;
+            }
+            res.json(result.rows);
+        });
+    });
+
+    logger.log("info", "campRoutes.js loaded");
+}

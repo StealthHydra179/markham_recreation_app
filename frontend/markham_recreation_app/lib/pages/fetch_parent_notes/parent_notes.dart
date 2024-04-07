@@ -25,7 +25,8 @@ class ParentNote {
         'pa_note_date': String parentNoteDate,
         'pa_note': String parentNote,
         'pa_note_upd_date': String updatedDate,
-        'pa_note_upd_by': String updatedBy,
+        'first_name': String updatedByFirstName,
+        'last_name': String updatedByLastName,
       } =>
         ParentNote(
           parentNoteId: parentNoteId,
@@ -33,7 +34,7 @@ class ParentNote {
           parentNoteDate: parentNoteDate,
           parentNote: parentNote,
           updatedDate: updatedDate,
-          updatedBy: updatedBy,
+          updatedBy: '$updatedByFirstName $updatedByLastName',
         ),
       _ => throw const FormatException('Unexpected JSON type'),
     };

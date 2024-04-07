@@ -34,7 +34,8 @@ class Absence {
         'followed_up': bool followedUp,
         'reason': String reason,
         'absence_upd_date': String updDate,
-        'absence_upd_by': String updBy,
+        'first_name': String updByFirstName,
+        'last_name': String updByLastName,
       } =>
         Absence(
           absenceId: absenceId,
@@ -45,7 +46,7 @@ class Absence {
           followedUp: followedUp,
           reason: reason,
           updDate: updDate,
-          updBy: updBy,
+          updBy: '$updByFirstName $updByLastName',
         ),
       _ => throw const FormatException('Unexpected JSON type'),
     };

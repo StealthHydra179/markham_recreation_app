@@ -7,7 +7,7 @@ import 'package:markham_recreation_app/pages/weekly_checklist.dart';
 import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-
+// TODO so when a page openned pop both the drawer and the previous page before navigating to a new page
 Drawer drawer(BuildContext context) {
   globals.fetchcamp();
   return Drawer(
