@@ -1,13 +1,20 @@
-module.exports = function(expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
-
+module.exports = function (
+    expressServer,
+    logger,
+    postgresClient,
+    dataSanitization,
+    getPostgresConnected,
+) {
     expressServer.get("/api/get_absences/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
-        logger.debug(`GET /api/get_absences/:camp_id ${dataSanitization(req.params.camp_id)}`);
+        logger.debug(
+            `GET /api/get_absences/:camp_id ${dataSanitization(req.params.camp_id)}`,
+        );
 
         // Rewriting using a join statement
         const query = `SELECT absence.*, app_user.first_name, app_user.last_name
@@ -28,7 +35,7 @@ module.exports = function(expressServer, logger, postgresClient, dataSanitizatio
     expressServer.post("/api/new_absence/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
@@ -73,7 +80,7 @@ module.exports = function(expressServer, logger, postgresClient, dataSanitizatio
     expressServer.post("/api/edit_absence/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
@@ -114,7 +121,7 @@ module.exports = function(expressServer, logger, postgresClient, dataSanitizatio
     expressServer.post("/api/delete_absence/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
@@ -125,9 +132,7 @@ module.exports = function(expressServer, logger, postgresClient, dataSanitizatio
 
         // delete specific query
         const deleteQuery = "DELETE FROM absence WHERE absence_id = $1";
-        const deleteQueryValues = [
-            dataSanitization(req.body.absence_id)
-        ];
+        const deleteQueryValues = [dataSanitization(req.body.absence_id)];
         console.log(deleteQueryValues);
         postgresClient
             .query(deleteQuery, deleteQueryValues)
@@ -141,4 +146,4 @@ module.exports = function(expressServer, logger, postgresClient, dataSanitizatio
     });
 
     logger.log("info", "absenceRoutes.js loaded");
-}
+};

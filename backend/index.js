@@ -1,5 +1,5 @@
 const express = require("express");
-const {Client: postgres_client} = require("pg");
+const { Client: postgres_client } = require("pg");
 const winston = require("winston");
 const DailyRotateFile = require("winston-daily-rotate-file");
 
@@ -17,26 +17,28 @@ const postgresClient = new postgres_client({
 });
 let postgresConnected = false;
 
-const loggerFormat = winston.format.printf(({level, message, label, timestamp, ...args}) => {
-    let dateTime = new Date(timestamp).toLocaleString();
-    dateTime = dateTime.split(",")[0] + dateTime.split(",")[1];
+const loggerFormat = winston.format.printf(
+    ({ level, message, label, timestamp, ...args }) => {
+        let dateTime = new Date(timestamp).toLocaleString();
+        dateTime = dateTime.split(",")[0] + dateTime.split(",")[1];
 
-    return `${dateTime} [${label}] ${level}: ${message} ${Object.keys(args).length ? "\n" + JSON.stringify(args, null, 2) : ""}`;
-})
+        return `${dateTime} [${label}] ${level}: ${message} ${Object.keys(args).length ? "\n" + JSON.stringify(args, null, 2) : ""}`;
+    },
+);
 
 // Logger setup
 // Winston Log with logging to console and file, rotating logs
 const logger = winston.createLogger({
     level: "debug",
     format: winston.format.json(),
-    defaultMeta: {service: "Markham Recreation Summer Camp Server"},
+    defaultMeta: { service: "Markham Recreation Summer Camp Server" },
 });
 logger.configure({
     format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.label({label: "Server"}),
+        winston.format.label({ label: "Server" }),
         winston.format.timestamp(),
-        loggerFormat
+        loggerFormat,
     ),
     transports: [
         new DailyRotateFile({
@@ -62,9 +64,9 @@ if (process.env.NODE_ENV !== "production" || process.env.NODE_ENV == null) {
         new winston.transports.Console({
             format: winston.format.combine(
                 winston.format.colorize(),
-                winston.format.label({label: "Server"}),
+                winston.format.label({ label: "Server" }),
                 winston.format.timestamp(),
-                loggerFormat
+                loggerFormat,
             ),
             level: "debug",
         }),
@@ -90,28 +92,52 @@ postgresConnect()
     });
 
 function dataSanitization(input) {
-    return input
+    return input;
 }
 
 // Webserver/API Routes
 expressServer.get("/", (req, res) => {
     res.send("Hello World");
-    logger.info("json", {"test": "json"})
+    logger.info("json", { test: "json" });
 });
 
 expressServer.get("/api", (req, res) => {
     if (!postgresConnected) {
-        res.status(500).send({message: "Database not connected"});
+        res.status(500).send({ message: "Database not connected" });
         logger.warn("Database not connected");
         return;
     }
-    res.send({message: "Hello World"});
+    res.send({ message: "Hello World" });
 });
 
-require("./express/campRoutes")(expressServer, logger, postgresClient, dataSanitization, getPostgresConnected);
-require("./express/weeklyChecklistRoutes")(expressServer, logger, postgresClient, dataSanitization, getPostgresConnected);
-require("./express/absenceRoutes")(expressServer, logger, postgresClient, dataSanitization, getPostgresConnected);
-require("./express/parentNotesRoutes")(expressServer, logger, postgresClient, dataSanitization, getPostgresConnected);
+require("./express/campRoutes")(
+    expressServer,
+    logger,
+    postgresClient,
+    dataSanitization,
+    getPostgresConnected,
+);
+require("./express/weeklyChecklistRoutes")(
+    expressServer,
+    logger,
+    postgresClient,
+    dataSanitization,
+    getPostgresConnected,
+);
+require("./express/absenceRoutes")(
+    expressServer,
+    logger,
+    postgresClient,
+    dataSanitization,
+    getPostgresConnected,
+);
+require("./express/parentNotesRoutes")(
+    expressServer,
+    logger,
+    postgresClient,
+    dataSanitization,
+    getPostgresConnected,
+);
 
 expressServer.listen(serverPort, () => {
     logger.info(`Server running on port ${serverPort}`);
