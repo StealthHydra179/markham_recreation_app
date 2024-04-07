@@ -1,13 +1,21 @@
-module.exports = function(expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
+module.exports = function (
+    expressServer,
+    logger,
+    postgresClient,
+    dataSanitization,
+    getPostgresConnected,
+) {
     expressServer.get("/api/camp/:user_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
 
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
-        logger.debug(`GET /api/camp/:user_id ${dataSanitization(req.params.user_id)}`);
+        logger.debug(
+            `GET /api/camp/:user_id ${dataSanitization(req.params.user_id)}`,
+        );
 
         const query = "SELECT * FROM camp_user_role WHERE user_id = $1";
         const values = [dataSanitization(req.params.user_id)];
@@ -28,4 +36,4 @@ module.exports = function(expressServer, logger, postgresClient, dataSanitizatio
     });
 
     logger.log("info", "campRoutes.js loaded");
-}
+};
