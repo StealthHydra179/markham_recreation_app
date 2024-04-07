@@ -8,6 +8,7 @@ import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart'
 import 'package:markham_recreation_app/globals.dart' as globals;
 
 // TODO so when a page openned pop both the drawer and the previous page before navigating to a new page
+// TODO figure out why when restart server this doesnt open until the server responds
 Drawer drawer(BuildContext context) {
   globals.fetchcamp();
   return Drawer(
