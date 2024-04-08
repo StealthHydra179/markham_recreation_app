@@ -1,10 +1,4 @@
-module.exports = function (
-    expressServer,
-    logger,
-    postgresClient,
-    dataSanitization,
-    getPostgresConnected,
-) {
+module.exports = function (expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
     expressServer.get("/api/weekly_checklist/:camp_id", async (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
@@ -12,9 +6,7 @@ module.exports = function (
             logger.error("Database not connected");
             return;
         }
-        logger.debug(
-            `GET /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`,
-        );
+        logger.debug(`GET /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
         const { rows } = await postgresClient.query(
             `SELECT *
@@ -23,9 +15,7 @@ module.exports = function (
         );
         if (rows.length === 0) {
             // create a new checklist
-            logger.debug(
-                `Creating new checklist ${dataSanitization(req.params.camp_id)}`,
-            );
+            logger.debug(`Creating new checklist ${dataSanitization(req.params.camp_id)}`);
             const insertQuery = "INSERT INTO checklist (camp_id) VALUES ($1)";
             const insertValues = [dataSanitization(req.params.camp_id)];
             await postgresClient.query(insertQuery, insertValues);
@@ -47,9 +37,7 @@ module.exports = function (
             logger.error("Database not connected");
             return;
         }
-        logger.debug(
-            `POST /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`,
-        );
+        logger.debug(`POST /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
         const updateQuery = `UPDATE checklist
                          SET camper_info_form              = $1,
