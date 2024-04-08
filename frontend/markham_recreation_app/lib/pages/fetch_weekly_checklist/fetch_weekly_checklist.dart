@@ -8,14 +8,14 @@ import 'dart:convert';
 
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-class WeeklyChecklist extends StatefulWidget {
-  const WeeklyChecklist({super.key});
+class FetchWeeklyChecklist extends StatefulWidget {
+  const FetchWeeklyChecklist({super.key});
 
   @override
-  State<WeeklyChecklist> createState() => _WeeklyChecklistState();
+  State<FetchWeeklyChecklist> createState() => _FetchWeeklyChecklistState();
 }
 
-class _WeeklyChecklistState extends State<WeeklyChecklist> {
+class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
   bool camperInformationForms = false;
   bool allergyAndMedicalInformation = false;
   bool swimTest = false;

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/main.dart';
+import 'package:markham_recreation_app/pages/fetch_attendance/fetch_attendance.dart';
+import 'package:markham_recreation_app/pages/fetch_daily_notes/fetch_daily_notes.dart';
+import 'package:markham_recreation_app/pages/fetch_equipment_notes/fetch_equipment_notes.dart';
+import 'package:markham_recreation_app/pages/fetch_incident_notes/fetch_incident_notes.dart';
 import 'package:markham_recreation_app/pages/fetch_parent_notes/fetch_parent_notes.dart';
+import 'package:markham_recreation_app/pages/fetch_staff_performance_notes/fetch_staff_performance_notes.dart';
 
-import 'package:markham_recreation_app/pages/weekly_checklist.dart';
+import 'package:markham_recreation_app/pages/fetch_weekly_checklist/fetch_weekly_checklist.dart';
 import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
+import 'package:markham_recreation_app/pages/fetch_weekly_meeting_notes/fetch_weekly_meeting_notes.dart';
 
 // TODO so when a page openned pop both the drawer and the previous page before navigating to a new page
 // TODO figure out why when restart server this doesnt open until the server responds
@@ -75,9 +81,11 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Weekly Checklist'),
           onTap: () {
+            //Pop until at landing page
+            Navigator.popUntil(context, (route)=>route.isFirst);
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const WeeklyChecklist()),
+              MaterialPageRoute(builder: (context) => const FetchWeeklyChecklist()),
             );
           },
         ),
@@ -87,7 +95,11 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Attendance'),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchAttendance()),
+            );
           },
         ),
         ListTile(
@@ -96,6 +108,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Absences'),
           onTap: () {
+            Navigator.popUntil(context, (route)=>route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchAbsences()),
@@ -108,7 +121,11 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Daily Notes'),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchDailyNotes()),
+            );
           },
         ),
         ListTile(
@@ -117,7 +134,11 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Incident/Accident Report'),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchIncidentNotes()),
+            );
           },
         ),
         ListTile(
@@ -126,6 +147,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Parent Comments/Concerns'),
           onTap: () {
+            Navigator.popUntil(context, (route)=>route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchParentNotes()),
@@ -138,7 +160,11 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Equipment and Supplies'),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchEquipmentNotes()),
+            );
           },
         ),
         ListTile(
@@ -147,7 +173,11 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Staff Performance'),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchStaffPerformanceNotes()),
+            );
           },
         ),
         ListTile(
@@ -156,7 +186,11 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Weekly Meeting Notes'),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchWeeklyMeetingNotes()),
+            );
           },
         ),
         ListTile(
