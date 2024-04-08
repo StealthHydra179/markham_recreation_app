@@ -98,7 +98,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                 logger.debug("Parent note update: ", res);
             })
             .catch((e) => {
-                logger.error(e.stack);
+                logger.error("Edit parent note error: ", e);
             });
         res.json(req.body);
     });
@@ -125,7 +125,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                 console.log("Deleted parent note");
             })
             .catch((e) => {
-                logger.error("Delete parent notes error:", e.stack);
+                logger.error("Delete parent notes error:", e);
             });
         res.json(req.body);
     });

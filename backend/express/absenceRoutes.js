@@ -113,7 +113,7 @@ module.exports = function (
                 logger.info("Updated absence in database");
             })
             .catch((e) => {
-                logger.error("Edit absence error: ", e.stack);
+                logger.error("Edit absence error: ", e);
             });
         res.json(req.body);
     });
@@ -140,7 +140,7 @@ module.exports = function (
                 logger.info("Deleted absence from database");
             })
             .catch((e) => {
-                logger.error("Delete absence error: ", e.stack);
+                logger.error("Delete absence error: ", e);
             });
         res.json(req.body);
     });
