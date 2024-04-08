@@ -87,8 +87,7 @@ postgresConnect()
         logger.info("Connected to database");
     })
     .catch((e) => {
-        logger.error("Error connecting to database");
-        logger.error(e);
+        logger.error("Error connecting to database", e);
     });
 
 function dataSanitization(input) {

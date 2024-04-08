@@ -35,5 +35,5 @@ module.exports = function (
         });
     });
 
-    logger.log("info", "campRoutes.js loaded");
+    logger.info("campRoutes.js loaded");
 };

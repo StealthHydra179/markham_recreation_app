@@ -79,7 +79,7 @@ module.exports = function (
             dataSanitization(req.body.allergy_medical_info),
             user_id,
             new Date().toISOString(),
-            dataSanitization(req.body.swim_test_records),
+            dataSanitization(req.body.swim_test_records), // TODO ask if every camp has swim test records
             user_id,
             new Date().toISOString(),
             dataSanitization(req.body.weekly_plans),
@@ -93,9 +93,10 @@ module.exports = function (
             new Date().toISOString(),
             dataSanitization(req.params.camp_id),
         ];
+        // TODO only update fields that have changed (and the associated user/date fields)
         await postgresClient.query(updateQuery, updateValues);
         res.json({});
     });
 
-    logger.log("info", "weeklyChecklistRoutes.js loaded");
+    logger.info("weeklyChecklistRoutes.js loaded");
 };

@@ -25,7 +25,7 @@ module.exports = function (
 
         postgresClient.query(query, values, (err, result) => {
             if (err) {
-                logger.error(err);
+                logger.error("Get absences error: ", err);
                 return;
             }
             res.json(result.rows);
@@ -64,11 +64,10 @@ module.exports = function (
             new Date().toISOString(),
             0, // dataSanitization(req.body.absence_upd_by),
         ];
-        // console.log(addQueryValues);
+
         postgresClient.query(addQuery, addQueryValues, (err, res) => {
             if (err) {
                 logger.error("New absence error: ", err); // TODO send an error to the client // TODO figure out why logger.error gave undefined?
-                // console.log(err);
                 return;
             }
             logger.info("Added new absence to database");
@@ -106,7 +105,7 @@ module.exports = function (
             0, //TODO absence_upd_by
             dataSanitization(req.body.absence_id),
         ];
-        console.log(updateQueryValues);
+
         postgresClient
             .query(updateQuery, updateQueryValues)
             .then((res) => {
@@ -133,7 +132,7 @@ module.exports = function (
         // delete specific query
         const deleteQuery = "DELETE FROM absence WHERE absence_id = $1";
         const deleteQueryValues = [dataSanitization(req.body.absence_id)];
-        console.log(deleteQueryValues);
+
         postgresClient
             .query(deleteQuery, deleteQueryValues)
             .then((res) => {
@@ -145,5 +144,5 @@ module.exports = function (
         res.json(req.body);
     });
 
-    logger.log("info", "absenceRoutes.js loaded");
+    logger.info("absenceRoutes.js loaded");
 };

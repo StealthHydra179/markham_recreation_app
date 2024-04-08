@@ -19,10 +19,9 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
 
         postgresClient.query(query, values, (err, result) => {
             if (err) {
-                logger.error(err);
+                logger.error("Get parent notes error: ", err);
                 return;
             }
-            console.log(result.rows);
             res.json(result.rows);
         });
     });
@@ -56,7 +55,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             new Date().toISOString(),
             0, // dataSanitization(req.body.pa_note_upd_by),
         ];
-        console.log(addQueryValues);
+
         postgresClient.query(addQuery, addQueryValues, (err, res) => {
             if (err) {
                 logger.error("Add parent notes error: ", err); // TODO send an error to the client
@@ -90,7 +89,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             0, //TODO pa_note_upd_by
             dataSanitization(req.body.parent_note_id),
         ];
-        console.log(updateQueryValues);
+
         postgresClient
             .query(updateQuery, updateQueryValues)
             .then((res) => {
@@ -118,11 +117,11 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         // delete specific query
         const deleteQuery = "DELETE FROM parent_note WHERE pa_note_id = $1";
         const deleteQueryValues = [dataSanitization(req.body.parent_note_id)];
-        console.log(deleteQueryValues);
+
         postgresClient
             .query(deleteQuery, deleteQueryValues)
             .then((res) => {
-                console.log("Deleted parent note");
+               logger.info("Deleted parent note");
             })
             .catch((e) => {
                 logger.error("Delete parent notes error:", e);
@@ -130,5 +129,5 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         res.json(req.body);
     });
 
-    logger.log("info", "parentNoteRoutes.js loaded");
+    logger.info("parentNoteRoutes.js loaded");
 };
