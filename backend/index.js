@@ -17,14 +17,12 @@ const postgresClient = new postgres_client({
 });
 let postgresConnected = false;
 
-const loggerFormat = winston.format.printf(
-    ({ level, message, label, timestamp, ...args }) => {
-        let dateTime = new Date(timestamp).toLocaleString();
-        dateTime = dateTime.split(",")[0] + dateTime.split(",")[1];
+const loggerFormat = winston.format.printf(({ level, message, label, timestamp, ...args }) => {
+    let dateTime = new Date(timestamp).toLocaleString();
+    dateTime = dateTime.split(",")[0] + dateTime.split(",")[1];
 
-        return `${dateTime} [${label}] ${level}: ${message} ${Object.keys(args).length ? "\n" + JSON.stringify(args, null, 2) : ""}`;
-    },
-);
+    return `${dateTime} [${label}] ${level}: ${message} ${Object.keys(args).length ? "\n" + JSON.stringify(args, null, 2) : ""}`;
+});
 
 // Logger setup
 // Winston Log with logging to console and file, rotating logs
@@ -112,8 +110,8 @@ expressServer.get("/api", (req, res) => {
 let routePassthrough = [expressServer, logger, postgresClient, dataSanitization, getPostgresConnected];
 
 require("./express/campRoutes")(...routePassthrough);
-require("./express/weeklyChecklistRoutes")(...routePassthrough)
-require("./express/attendanceRoutes")(...routePassthrough)
+require("./express/weeklyChecklistRoutes")(...routePassthrough);
+require("./express/attendanceRoutes")(...routePassthrough);
 require("./express/absenceRoutes")(...routePassthrough);
 require("./express/dailyNoteRoutes")(...routePassthrough);
 require("./express/incidentNoteRoutes")(...routePassthrough);
