@@ -1,10 +1,4 @@
-module.exports = function (
-    expressServer,
-    logger,
-    postgresClient,
-    dataSanitization,
-    getPostgresConnected,
-) {
+module.exports = function (expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
     expressServer.get("/api/get_absences/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
@@ -12,9 +6,7 @@ module.exports = function (
             logger.error("Database not connected");
             return;
         }
-        logger.debug(
-            `GET /api/get_absences/:camp_id ${dataSanitization(req.params.camp_id)}`,
-        );
+        logger.debug(`GET /api/get_absences/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
         // Rewriting using a join statement
         const query = `SELECT absence.*, app_user.first_name, app_user.last_name

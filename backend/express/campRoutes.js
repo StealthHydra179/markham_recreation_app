@@ -1,10 +1,4 @@
-module.exports = function (
-    expressServer,
-    logger,
-    postgresClient,
-    dataSanitization,
-    getPostgresConnected,
-) {
+module.exports = function (expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
     expressServer.get("/api/camp/:user_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
 
@@ -13,9 +7,7 @@ module.exports = function (
             logger.error("Database not connected");
             return;
         }
-        logger.debug(
-            `GET /api/camp/:user_id ${dataSanitization(req.params.user_id)}`,
-        );
+        logger.debug(`GET /api/camp/:user_id ${dataSanitization(req.params.user_id)}`);
 
         const query = "SELECT * FROM camp_user_role WHERE user_id = $1";
         const values = [dataSanitization(req.params.user_id)];
