@@ -104,7 +104,7 @@ expressServer.get("/", (req, res) => {
 expressServer.get("/api", (req, res) => {
     if (!postgresConnected) {
         res.status(500).send({ message: "Database not connected" });
-        logger.warn("Database not connected");
+        logger.error("Database not connected");
         return;
     }
     res.send({ message: "Hello World" });

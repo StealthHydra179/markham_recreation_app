@@ -3,7 +3,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({message: "Database not connected"});
-            logger.warn("Database not connected");
+            logger.error("Database not connected");
             return;
         }
         logger.debug(
@@ -31,7 +31,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({message: "Database not connected"});
-            logger.warn("Database not connected");
+            logger.error("Database not connected");
             return;
         }
         logger.debug(
@@ -72,7 +72,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({message: "Database not connected"});
-            logger.warn("Database not connected");
+            logger.error("Database not connected");
             return;
         }
         logger.debug(
@@ -107,7 +107,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({message: "Database not connected"});
-            logger.warn("Database not connected");
+            logger.error("Database not connected");
             return;
         }
         logger.debug(
