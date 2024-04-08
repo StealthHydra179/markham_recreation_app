@@ -31,13 +31,6 @@ Drawer drawer(BuildContext context) {
           ),
           currentAccountPicture: FlutterLogo(),
           onDetailsPressed: () {
-            // snack bar
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   const SnackBar(
-            //     content: Text('Camp switching is not implemented'), // TODO
-            //   ),
-            // );
-
             //List the camp from the global variable in a small dialog
             showDialog(
               context: context,
