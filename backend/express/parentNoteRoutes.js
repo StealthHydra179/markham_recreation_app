@@ -130,5 +130,5 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         res.json(req.body);
     });
 
-    logger.log("info", "parentNotesRoutes.js loaded");
+    logger.log("info", "parentNoteRoutes.js loaded");
 };
