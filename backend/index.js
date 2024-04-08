@@ -113,9 +113,15 @@ expressServer.get("/api", (req, res) => {
 let routePassthrough = [expressServer, logger, postgresClient, dataSanitization, getPostgresConnected];
 
 require("./express/campRoutes")(...routePassthrough);
-require("./express/weeklyChecklistRoutes")(...routePassthrough);
+require("./express/weeklyChecklistRoutes")(...routePassthrough)
+require("./express/attendanceRoutes")(...routePassthrough)
 require("./express/absenceRoutes")(...routePassthrough);
-require("./express/parentNotesRoutes")(...routePassthrough);
+require("./express/dailyNoteRoutes")(...routePassthrough);
+require("./express/incidentNoteRoutes")(...routePassthrough);
+require("./express/parentNoteRoutes")(...routePassthrough);
+require("./express/equipmentNoteRoutes")(...routePassthrough);
+require("./express/staffPerformanceRoutes")(...routePassthrough);
+require("./express/weeklyMeetingNotes")(...routePassthrough);
 
 expressServer.listen(serverPort, () => {
     logger.info(`Server running on port ${serverPort}`);
