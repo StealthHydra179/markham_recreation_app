@@ -25,7 +25,7 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
 
   void _fetch_checklist() async {
     Future<http.Response> response = http.get(
-      Uri.parse('${globals.serverUrl}/api/weekly_checklist/${globals.camp_id}'),
+      Uri.parse('${globals.serverUrl}/api/weekly_checklist/${globals.campId}'),
     );
     response.then((http.Response response) {
       if (response.statusCode == 200) {
@@ -157,7 +157,7 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
             onPressed: () {
               // Send the checklist to the server
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/weekly_checklist/${globals.camp_id}'),
+                Uri.parse('${globals.serverUrl}/api/weekly_checklist/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },

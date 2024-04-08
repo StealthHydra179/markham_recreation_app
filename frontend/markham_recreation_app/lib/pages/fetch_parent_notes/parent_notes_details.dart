@@ -50,7 +50,7 @@ class ParentNoteDetails extends StatelessWidget {
             onPressed: () {
               // Send a request to the server to delete the parent note
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/delete_parent_notes/${globals.camp_id}'),
+                Uri.parse('${globals.serverUrl}/api/delete_parent_notes/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },

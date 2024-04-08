@@ -50,7 +50,7 @@ class AbsenceDetails extends StatelessWidget {
             onPressed: () {
               // Send a request to the server to delete the absence
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/delete_absence/${globals.camp_id}'),
+                Uri.parse('${globals.serverUrl}/api/delete_absence/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },

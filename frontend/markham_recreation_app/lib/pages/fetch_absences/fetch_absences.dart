@@ -17,7 +17,7 @@ late Future<List<Absence>> futureAbsences;
 // Fetch absences from the server
 Future<List<Absence>> futureFetchAbsences() async {
   final response = await http.get(
-    Uri.parse('${globals.serverUrl}/api/get_absences/${globals.camp_id}'),
+    Uri.parse('${globals.serverUrl}/api/get_absences/${globals.campId}'),
   );
 
   // Create List of absences

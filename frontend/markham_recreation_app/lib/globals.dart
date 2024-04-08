@@ -12,7 +12,7 @@ const String serverUrl = 'http://10.0.2.2:3000'; //localhost is 10.0.2.2 in the 
 // const String serverUrl = 'http://localhost:3000';
 
 // Current Camp
-int camp_id = -1; //TODO: change this to be dynamic based on the user's camp
+int campId = -1; //TODO: change this to be dynamic based on the user's camp
 String campName = 'Loading'; //TODO: change this to be dynamic based on the user's camp
 
 // List of available camp // TODO fetch from server
@@ -35,8 +35,8 @@ Future<void> fetchcamp() async {
     List<dynamic> data = jsonDecode(response.body);
     campList = data.map((camp) => Camp.fromJson(camp)).toList();
     campLoaded = true;
-    if (camp_id == -1) {
-      camp_id = campList[0].id;
+    if (campId == -1) {
+      campId = campList[0].id;
       campName = campList[0].name;
     }
   } else {

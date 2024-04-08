@@ -107,7 +107,7 @@ class _EditParentNoteState extends State<EditParentNote> {
 
               // Send the checklist to the server
               Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/edit_parent_notes/${globals.camp_id}'),
+                Uri.parse('${globals.serverUrl}/api/edit_parent_notes/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },

@@ -52,7 +52,7 @@ Drawer drawer(BuildContext context) {
                         return ListTile(
                           title: Text(globals.campList[index].name),
                           onTap: () {
-                            globals.camp_id = globals.campList[index].id;
+                            globals.campId = globals.campList[index].id;
                             globals.campName = globals.campList[index].name;
                             Navigator.pop(context);
                             Navigator.pop(context);

@@ -152,7 +152,7 @@ class _NewAbsenceState extends State<NewAbsence> {
 
                 // Send the checklist to the server
                 Future<http.Response> response = http.post(
-                  Uri.parse('${globals.serverUrl}/api/new_absence/${globals.camp_id}'), //+globals.camp_id.toString()
+                  Uri.parse('${globals.serverUrl}/api/new_absence/${globals.campId}'), //+globals.camp_id.toString()
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },

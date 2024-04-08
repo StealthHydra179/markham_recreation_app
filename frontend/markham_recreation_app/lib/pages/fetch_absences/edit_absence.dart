@@ -166,7 +166,7 @@ class _EditAbsenceState extends State<EditAbsence> {
 
                 // Send the checklist to the server
                 Future<http.Response> response = http.post(
-                  Uri.parse('${globals.serverUrl}/api/edit_absence/${globals.camp_id}'),
+                  Uri.parse('${globals.serverUrl}/api/edit_absence/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },

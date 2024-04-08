@@ -17,7 +17,7 @@ late Future<List<ParentNote>> futureParentNotes;
 // Fetch parent notes from the server
 Future<List<ParentNote>> futureFetchParentNotes() async {
   final response = await http.get(
-    Uri.parse('${globals.serverUrl}/api/get_parent_notes/${globals.camp_id}'),
+    Uri.parse('${globals.serverUrl}/api/get_parent_notes/${globals.campId}'),
   );
 
   // Create List of parent notes
