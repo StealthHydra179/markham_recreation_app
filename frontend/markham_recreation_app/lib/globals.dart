@@ -44,6 +44,8 @@ Future<void> fetchcamp() async {
   }
 }
 
+
+// TODO refactor to own file
 class Camp {
   final int id;
   final String name;
