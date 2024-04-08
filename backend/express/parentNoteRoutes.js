@@ -2,13 +2,11 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     expressServer.get("/api/get_parent_notes/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
-        logger.debug(
-            `GET /api/get_parent_notes/:camp_id ${dataSanitization(req.params.camp_id)}`,
-        );
+        logger.debug(`GET /api/get_parent_notes/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
         const query = `SELECT parent_note.*, app_user.first_name, app_user.last_name
                        FROM parent_note
@@ -30,7 +28,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     expressServer.post("/api/new_parent_notes/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
@@ -71,7 +69,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     expressServer.post("/api/edit_parent_notes/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
@@ -106,7 +104,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     expressServer.post("/api/delete_parent_notes/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
-            res.status(500).send({message: "Database not connected"});
+            res.status(500).send({ message: "Database not connected" });
             logger.warn("Database not connected");
             return;
         }
