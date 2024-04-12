@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/main.dart';
-import 'package:markham_recreation_app/pages/fetch_attendance/fetch_attendance.dart';
-import 'package:markham_recreation_app/pages/fetch_daily_notes/fetch_daily_notes.dart';
-import 'package:markham_recreation_app/pages/fetch_equipment_notes/fetch_equipment_notes.dart';
-import 'package:markham_recreation_app/pages/fetch_incident_notes/fetch_incident_notes.dart';
-import 'package:markham_recreation_app/pages/fetch_parent_notes/fetch_parent_notes.dart';
-import 'package:markham_recreation_app/pages/fetch_staff_performance_notes/fetch_staff_performance_notes.dart';
+import 'package:markham_recreation_app/pages/attendance/fetch_attendance.dart';
+import 'package:markham_recreation_app/pages/daily_notes/fetch_daily_notes.dart';
+import 'package:markham_recreation_app/pages/equipment_notes/fetch_equipment_notes.dart';
+import 'package:markham_recreation_app/pages/incident_notes/fetch_incident_notes.dart';
+import 'package:markham_recreation_app/pages/parent_notes/fetch_parent_notes.dart';
+import 'package:markham_recreation_app/pages/staff_performance_notes/fetch_staff_performance_notes.dart';
 
-import 'package:markham_recreation_app/pages/fetch_weekly_checklist/fetch_weekly_checklist.dart';
-import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
+import 'package:markham_recreation_app/pages/weekly_checklist/fetch_weekly_checklist.dart';
+import 'package:markham_recreation_app/pages/absences/fetch_absences.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
-import 'package:markham_recreation_app/pages/fetch_weekly_meeting_notes/fetch_weekly_meeting_notes.dart';
+import 'package:markham_recreation_app/pages/weekly_meeting_notes/fetch_weekly_meeting_notes.dart';
 
 // TODO so when a page openned pop both the drawer and the previous page before navigating to a new page
 // TODO figure out why when restart server this doesnt open until the server responds

@@ -7,9 +7,9 @@ import 'dart:convert';
 import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'package:markham_recreation_app/pages/fetch_parent_notes/parent_notes.dart';
-import 'package:markham_recreation_app/pages/fetch_parent_notes/parent_notes_details.dart';
-import 'package:markham_recreation_app/pages/fetch_parent_notes/new_parent_note.dart';
+import 'package:markham_recreation_app/pages/parent_notes/parent_notes.dart';
+import 'package:markham_recreation_app/pages/parent_notes/parent_notes_details.dart';
+import 'package:markham_recreation_app/pages/parent_notes/new_parent_note.dart';
 
 // global variable to store the request to the server (for FutureBuilder)
 late Future<List<ParentNote>> futureParentNotes;

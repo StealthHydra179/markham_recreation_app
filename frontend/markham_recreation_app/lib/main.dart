@@ -6,6 +6,7 @@ import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   globals.fetchcamp().whenComplete(() {
     findSystemLocale().whenComplete(() {
       runApp(const MyApp());
@@ -83,20 +84,20 @@ class _LandingPageState extends State<LandingPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Please select a page from the navigation.',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            // Text(
+            //   '$_counter',
+            //   style: Theme.of(context).textTheme.headlineMedium,
+            // ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _incrementCounter,
+      //   tooltip: 'Increment',
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }

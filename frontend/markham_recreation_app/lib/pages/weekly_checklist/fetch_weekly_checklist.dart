@@ -1,6 +1,9 @@
 library weekly_checklist;
-// TODO add reload action 
+
+// TODO add reload action
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:http/http.dart' as http;
 
@@ -15,13 +18,45 @@ class FetchWeeklyChecklist extends StatefulWidget {
   State<FetchWeeklyChecklist> createState() => _FetchWeeklyChecklistState();
 }
 
+class ChecklistItem {
+  final String title;
+  final String description;
+  final int checklist_id;
+  bool value;
+
+  ChecklistItem(this.title, this.description, this.checklist_id, this.value);
+
+  void setValue(bool value) {
+    this.value = value;
+  }
+
+  bool getValue() {
+    return value;
+  }
+
+  void toggleValue() {
+    value = !value;
+  }
+
+  factory ChecklistItem.fromJson(Map<String, dynamic> json) {
+    return ChecklistItem(
+      json['checklist_name'],
+      json['checklist_description'],
+      json['checklist_id'],
+      json['checklist_status'],
+    );
+  }
+
+  Map toJson() {
+    return {
+      'checklist_id': checklist_id,
+      'checklist_status': value,
+    };
+  }
+}
+
 class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
-  bool camperInformationForms = false;
-  bool allergyAndMedicalInformation = false;
-  bool swimTest = false;
-  bool programPlans = false;
-  bool campDirectorMeeting = false;
-  bool campCounsellorMeeting = false;
+  List<ChecklistItem> checklist = [];
 
   void _fetch_checklist() async {
     Future<http.Response> response = http.get(
@@ -29,15 +64,16 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
     );
     response.then((http.Response response) {
       if (response.statusCode == 200) {
-        Map<String, dynamic> data = jsonDecode(response.body);
-        setState(() {
-          camperInformationForms = data['camper_info_form']??false;
-          allergyAndMedicalInformation = data['allergy_medical_info']??false;
-          swimTest = data['swim_test_records']??false;
-          programPlans = data['weekly_plans']??false;
-          campDirectorMeeting = data['director_check']??false;
-          campCounsellorMeeting = data['counsellor_check']??false;
-        });
+        List<dynamic> data = jsonDecode(response.body);
+        checklist.clear();
+        print(data[0]['checklist_status']);
+        for (int i = 0; i < data.length; i++) {
+          if (!data[i]['checklist_active']) {
+            continue;
+          }
+          checklist.add(ChecklistItem.fromJson(data[i]));
+        }
+        setState(() {});
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -45,7 +81,6 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
             duration: Duration(seconds: 3),
             //TODO edit the state of the checkboxes to match the response
           ),
-
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -56,6 +91,7 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
         );
       }
     }).catchError((error, stackTrace) {
+      print(stackTrace);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
@@ -78,125 +114,82 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        
-        title: const Text(
-          'Weekly Checklist',
-          style: TextStyle(color: globals.secondaryColor) 
-        ),
+        title: const Text('Weekly Checklist', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       drawer: drawer.drawer(context),
       body: Column(
         children: <Widget>[
-          CheckboxListTile(
-            value: camperInformationForms,
-            onChanged: (bool? value) {
-              setState(() {
-                camperInformationForms = value!;
-              });
-            },
-            // TODO add descriptions to make it clear what each checkbox is for?
-            title: const Text('Collect and Alphebetize Camper Information Forms'),
-          ),
-          const Divider(height: 0),
-          CheckboxListTile(
-            value: allergyAndMedicalInformation,
-            onChanged: (bool? value) {
-              setState(() {
-                allergyAndMedicalInformation = value!;
-              });
-            },
-            title: const Text('Share Allergy and Medical Information with Camp Counsellors'),
-          ),
-          const Divider(height: 0),
-          CheckboxListTile(
-            value: swimTest,
-            onChanged: (bool? value) {
-              setState(() {
-                swimTest = value!;
-              });
-            },
-            title: const Text('Track and Record Swim Test Pass/Fail of Each Camper'),
-          ),
-          const Divider(height: 0),
-          CheckboxListTile(
-            value: programPlans,
-            onChanged: (bool? value) {
-              setState(() {
-                programPlans = value!;
-              });
-            },
-            title: const Text('Review and Update Weekly Program Plans'),
-          ),
-          const Divider(height: 0),
-          CheckboxListTile(
-            value: campDirectorMeeting,
-            onChanged: (bool? value) {
-              setState(() {
-                campDirectorMeeting = value!;
-              });
-            },
-            title: const Text('Meet and Check-in with Camp Director'),
-          ),
-          const Divider(height: 0),
-          CheckboxListTile(
-            value: campCounsellorMeeting,
-            onChanged: (bool? value) {
-              setState(() {
-                campCounsellorMeeting = value!;
-              });
-            },
-            title: const Text('Meet and Check-in with Camp Counsellors'),
-          ),
-          const Divider(height: 0),
-        
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(10),
-            ),
-            onPressed: () {
-              // Send the checklist to the server
-              Future<http.Response> response = http.post(
-                Uri.parse('${globals.serverUrl}/api/weekly_checklist/${globals.campId}'),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: jsonEncode(<String, bool>{
-                  'camper_info_form': camperInformationForms,
-                  'allergy_medical_info': allergyAndMedicalInformation,
-                  'swim_test_records': swimTest,
-                  'weekly_plans': programPlans,
-                  'director_check': campDirectorMeeting,
-                  'counsellor_check': campCounsellorMeeting,
-                }),
-              );
-              response.then((http.Response response) {
-                if (response.statusCode == 200) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Weekly Checklist Saved'),
-                      duration: Duration(seconds: 3),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Failed to Save Weekly Checklist'),
-                      duration: Duration(seconds: 3),
-                    ),
-                  );
-                }
-              }).catchError((error, stackTrace) {
-                // Runs when the server is down
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Failed to Load Weekly Checklist'),
-                    duration: Duration(seconds: 3),
+          // Display checklist in a list view
+          SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                ListView.builder(
+                  itemCount: checklist.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return CheckboxListTile(
+                      value: checklist[index].getValue(),
+                      onChanged: (bool? value) {
+                        setState(() {
+                          checklist[index].toggleValue();
+                        });
+                      },
+                      title: Text(checklist[index].title),
+                      subtitle: Text(checklist[index].description),
+                    );
+                  },
+                ),
+                // ),
+
+                const Divider(height: 0),
+
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(10),
                   ),
-                );
-              });
-            },
-            child: const Text('Save'),
+                  onPressed: () {
+                    // Send the checklist to the server
+                    Future<http.Response> response = http.post(
+                      Uri.parse('${globals.serverUrl}/api/weekly_checklist/${globals.campId}'),
+                      headers: <String, String>{
+                        'Content-Type': 'application/json; charset=UTF-8',
+                      },
+                      body: jsonEncode(<String, dynamic>{
+                        'camp_id': globals.campId,
+                        'checklist': checklist,
+                      }),
+                    );
+                    response.then((http.Response response) {
+                      if (response.statusCode == 200) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Weekly Checklist Saved'),
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Failed to Save Weekly Checklist'),
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                      }
+                    }).catchError((error, stackTrace) {
+                      // Runs when the server is down
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Failed to Load Weekly Checklist'),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    });
+                  },
+                  child: const Text('Save'),
+                ),
+              ],
+            ),
           ),
         ],
       ),

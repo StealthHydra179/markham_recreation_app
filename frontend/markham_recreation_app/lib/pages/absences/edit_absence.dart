@@ -4,8 +4,8 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:markham_recreation_app/pages/fetch_absences/absence_details.dart';
-import 'package:markham_recreation_app/pages/fetch_absences/fetch_absences.dart';
+import 'package:markham_recreation_app/pages/absences/absence_details.dart';
+import 'package:markham_recreation_app/pages/absences/fetch_absences.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
 import 'absence.dart';

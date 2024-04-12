@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:markham_recreation_app/globals.dart' as globals;
-import 'package:markham_recreation_app/pages/fetch_parent_notes/fetch_parent_notes.dart';
+import 'package:markham_recreation_app/pages/parent_notes/fetch_parent_notes.dart';
 
 import 'parent_notes.dart';
 import 'edit_parent_notes.dart';
