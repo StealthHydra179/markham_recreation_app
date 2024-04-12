@@ -106,9 +106,7 @@ module.exports = function (
             logger.error("Database not connected");
             return;
         }
-        logger.debug(
-            `GET /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`,
-        );
+        logger.debug(`GET /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
         let retrieve_checklist = `SELECT checklist_status.*, checklist_item.checklist_name, checklist_item.checklist_active, checklist_item.checklist_description 
             FROM checklist_status RIGHT JOIN checklist_item 
@@ -128,9 +126,7 @@ module.exports = function (
             logger.error("Database not connected");
             return;
         }
-        logger.debug(
-            `POST /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`,
-        );
+        logger.debug(`POST /api/weekly_checklist/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
         let update_checklist = `UPDATE checklist_status
             SET checklist_status = $1, checklist_upd_by = $2, checklist_upd_date = $3
