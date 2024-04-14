@@ -74,6 +74,7 @@ logger.info("Server started");
 
 async function postgresConnect() {
     await postgresClient.connect();
+    await postgresClient.query("SET SCHEMA 'markham_rec';");
     postgresConnected = true;
 }
 function getPostgresConnected() {

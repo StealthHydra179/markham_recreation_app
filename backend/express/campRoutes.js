@@ -13,7 +13,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         const values = [dataSanitization(req.params.user_id)];
         postgresClient.query(query, values, async (err, result) => {
             if (err) {
-                logger.error(err);
+                logger.error("e", err);
                 return;
             }
             // get name of camp

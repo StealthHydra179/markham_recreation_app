@@ -1,16 +1,16 @@
 module.exports = function (expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
-    expressServer.get("/api/get_equipment_note/:camp_id", (req, res) => {
+    expressServer.get("/api/get_equipment_notes/:camp_id", (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({ message: "Database not connected" });
             logger.error("Database not connected");
             return;
         }
-        logger.debug(`GET /api/get_equipment_note/:camp_id ${dataSanitization(req.params.camp_id)}`);
+        logger.debug(`GET /api/get_equipment_notes/:camp_id ${dataSanitization(req.params.camp_id)}`);
 
         // Rewriting using a join statement
         const query = `SELECT e.*, u.first_name, u.last_name
-                   FROM equipment_note e LEFT JOIN app_user u ON e.equip_note_upd_by = app_user.user_id
+                   FROM equipment_note AS e LEFT JOIN app_user AS u ON e.equip_note_upd_by = u.user_id
                    WHERE camp_id = $1
                    ORDER BY equip_note_date DESC`;
         const values = [dataSanitization(req.params.camp_id)];
@@ -99,13 +99,13 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             return;
         }
         logger.debug(
-            `POST /api/delete_equipment_note/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.equip_note_id)}`,
+            `POST /api/delete_equipment_note/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.equipment_note_id)}`,
         );
         logger.warn("TODO do input data validation"); // TODO
 
         // delete specific query
         const deleteQuery = "DELETE FROM equipment_note WHERE equip_note_id = $1";
-        const deleteQueryValues = [dataSanitization(req.body.equip_note_id)];
+        const deleteQueryValues = [dataSanitization(req.body.equipment_note_id)];
 
         postgresClient
             .query(deleteQuery, deleteQueryValues)

@@ -26,7 +26,7 @@ bool campLoaded = false;
 
 // Fetch camp from server
 Future<void> fetchcamp() async {
-  final response = await http.get(Uri.parse('$serverUrl/api/camp/0')).catchError(
+  final response = await http.get(Uri.parse('$serverUrl/api/camp/0')).catchError(// TODO error check no camp assigned
     (error) {
       throw Exception('Failed to load camp');
     },

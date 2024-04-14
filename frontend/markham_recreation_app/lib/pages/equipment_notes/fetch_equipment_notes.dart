@@ -9,6 +9,7 @@ import 'package:markham_recreation_app/globals.dart' as globals;
 
 import 'package:markham_recreation_app/pages/equipment_notes/equipment_note.dart';
 import 'package:markham_recreation_app/pages/equipment_notes/new_equipment_note.dart';
+import 'package:markham_recreation_app/pages/equipment_notes/equipment_note_details.dart';
 
 // global variable to store the request to the server (for FutureBuilder)
 late Future<List<EquipmentNote>> futureEquipmentNotes;
@@ -16,7 +17,7 @@ late Future<List<EquipmentNote>> futureEquipmentNotes;
 // Fetch equipment notes from the server
 Future<List<EquipmentNote>> futureFetchEquipmentNotes() async {
   final response = await http.get(
-    Uri.parse('${globals.serverUrl}/api/get_equipmentNotes/${globals.campId}'),
+    Uri.parse('${globals.serverUrl}/api/get_equipment_notes/${globals.campId}'),
   );
 
   // Create List of equipment notes
@@ -130,12 +131,22 @@ class _FetchEquipmentNotesState extends State<FetchEquipmentNotes> {
                     itemBuilder: (context, index) {
                       // For each equipment note, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text("${snapshot.data![index].equipNoteDate}"),
-                        subtitle: Text(dateFormatter(snapshot.data![index].equipNote)),
+                        title: Text("${dateTimeFormatter(snapshot.data![index].equipNoteDate)}"),
+                        subtitle: Text(snapshot.data![index].equipNote),
                         trailing: const Icon(Icons.chevron_right),
 
                         // If not followed up change the background color to a light red
-                        
+                        onTap: () {
+                          // Display the absence details page when the absence is tapped
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => EquipmentNoteDetails(equipmentNote: snapshot.data![index])),
+                          ).then((value) {
+                            // Refresh the list of absences after returning from the absence details page
+                            futureEquipmentNotes = futureFetchEquipmentNotes();
+                            setState(() {});
+                          });
+                        },
                       );
                     },
                   ),
