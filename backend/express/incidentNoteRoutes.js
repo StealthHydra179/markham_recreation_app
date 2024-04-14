@@ -1,3 +1,122 @@
 module.exports = function (expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
-    logger.warn("incidentNoteRoutes.js not implemented");
-}
+    expressServer.get("/api/get_incident_notes/:camp_id", (req, res) => {
+        let postgresConnected = getPostgresConnected();
+        if (!postgresConnected) {
+            res.status(500).send({ message: "Database not connected" });
+            logger.error("Database not connected");
+            return;
+        }
+        logger.debug(`GET /api/get_incident_notes/:camp_id ${dataSanitization(req.params.camp_id)}`);
+
+        // Rewriting using a join statement
+        const query = `SELECT e.*, u.first_name, u.last_name
+                   FROM incident_note AS e LEFT JOIN app_user AS u ON e.in_note_upd_by = u.user_id
+                   WHERE camp_id = $1
+                   ORDER BY in_note_date DESC`;
+        const values = [dataSanitization(req.params.camp_id)];
+
+        postgresClient.query(query, values, (err, result) => {
+            if (err) {
+                logger.error("Get incident notes error: ", err);
+                return;
+            }
+            res.json(result.rows);
+        });
+    });
+
+    expressServer.post("/api/new_incident_note/:camp_id", (req, res) => {
+        let postgresConnected = getPostgresConnected();
+        if (!postgresConnected) {
+            res.status(500).send({ message: "Database not connected" });
+            logger.error("Database not connected");
+            return;
+        }
+        logger.debug(
+            `POST /api/new_incident_note/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.in_note)} ${dataSanitization(req.body.in_note_date)} ${dataSanitization(req.body.absence_date)} ${dataSanitization(req.body.followed_up)} ${dataSanitization(req.body.reason)}`,
+        );
+        logger.warn("TODO do input data validation"); // TODO
+
+        // Add to database
+        const addQuery =
+            "INSERT INTO incident_note (camp_id, in_note, in_note_date, in_note_upd_date, in_note_upd_by) VALUES ($1, $2, $3, $4, $5)";
+        const addQueryValues = [
+            dataSanitization(req.params.camp_id),
+            dataSanitization(req.body.in_note),
+            dataSanitization(req.body.in_note_date),
+            new Date().toISOString(),
+            0, //TODO equie_note_upd_by
+        ];
+
+        postgresClient.query(addQuery, addQueryValues, (err, res) => {
+            if (err) {
+                logger.error("New incident notes error: ", err); // TODO send an error to the client // TODO figure out why logger.error gave undefined?
+                return;
+            }
+            logger.info("Added new incident notes to database");
+        });
+        res.json(req.body);
+    });
+
+    // TODO sanitize before putting into logger
+    expressServer.post("/api/edit_incident_note/:camp_id", (req, res) => {
+        let postgresConnected = getPostgresConnected();
+        if (!postgresConnected) {
+            res.status(500).send({ message: "Database not connected" });
+            logger.error("Database not connected");
+            return;
+        }
+        logger.debug(
+            `POST /api/edit_incident_note/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.in_note)} ${dataSanitization(req.body.in_note_date)}`,
+        );
+        logger.warn("TODO do input data validation"); // TODO
+
+        // update specific query
+        const updateQuery =
+            "UPDATE incident_note SET in_note = $1, in_note_upd_date = $2, in_note_upd_by = $3 WHERE in_note_id = $4";
+        const updateQueryValues = [
+            dataSanitization(req.body.in_note),
+            new Date().toISOString(),
+            0, //TODO equie_note_upd_by
+            dataSanitization(req.body.in_note_id),
+        ];
+
+        postgresClient
+            .query(updateQuery, updateQueryValues)
+            .then((res) => {
+                logger.info("Updated incident notes in database");
+            })
+            .catch((e) => {
+                logger.error("Edit incident notes error: ", e);
+            });
+        res.json(req.body);
+    });
+
+    expressServer.post("/api/delete_incident_note/:camp_id", (req, res) => {
+        let postgresConnected = getPostgresConnected();
+        if (!postgresConnected) {
+            res.status(500).send({ message: "Database not connected" });
+            logger.error("Database not connected");
+            return;
+        }
+        logger.debug(
+            `POST /api/delete_incident_note/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.incident_note_id)}`,
+        );
+        logger.warn("TODO do input data validation"); // TODO
+
+        // delete specific query
+        const deleteQuery = "DELETE FROM incident_note WHERE in_note_id = $1";
+        const deleteQueryValues = [dataSanitization(req.body.incident_note_id)];
+
+        postgresClient
+            .query(deleteQuery, deleteQueryValues)
+            .then((res) => {
+                logger.info("Deleted incident notes from database");
+            })
+            .catch((e) => {
+                logger.error("Delete incident notes error: ", e);
+            });
+        res.json(req.body);
+    });
+
+    logger.info("incidentNoteRoutes.js loaded");
+};
