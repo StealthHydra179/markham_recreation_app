@@ -4,6 +4,7 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:markham_recreation_app/pages/equipment_notes/equipment_note_details.dart';
 import 'package:markham_recreation_app/pages/equipment_notes/fetch_equipment_notes.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
@@ -140,7 +141,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                           break;
                         }
                       }
-                
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => EquipmentNoteDetails(equipmentNote: equipmentNote)));
                     });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
