@@ -108,7 +108,7 @@ expressServer.get("/api", (req, res) => {
     res.send({ message: "Hello World" });
 });
 
-expressServer.use('/admin', express.static("web"));
+expressServer.use("/admin", express.static("web"));
 
 let routePassthrough = [expressServer, logger, postgresClient, dataSanitization, getPostgresConnected];
 
