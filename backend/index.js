@@ -108,8 +108,11 @@ expressServer.get("/api", (req, res) => {
     res.send({ message: "Hello World" });
 });
 
+expressServer.use('/admin', express.static("web"));
+
 let routePassthrough = [expressServer, logger, postgresClient, dataSanitization, getPostgresConnected];
 
+// Mobile Routes
 require("./express/campRoutes")(...routePassthrough);
 require("./express/weeklyChecklistRoutes")(...routePassthrough);
 require("./express/attendanceRoutes")(...routePassthrough);
@@ -120,6 +123,9 @@ require("./express/parentNoteRoutes")(...routePassthrough);
 require("./express/equipmentNoteRoutes")(...routePassthrough);
 require("./express/staffPerformanceRoutes")(...routePassthrough);
 require("./express/weeklyMeetingNotes")(...routePassthrough);
+
+// Admin Website Routes
+require("./express/admin/adminRoutes")(...routePassthrough);
 
 expressServer.listen(serverPort, () => {
     logger.info(`Server running on port ${serverPort}`);
