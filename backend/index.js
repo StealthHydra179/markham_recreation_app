@@ -122,7 +122,8 @@ require("./express/incidentNoteRoutes")(...routePassthrough);
 require("./express/parentNoteRoutes")(...routePassthrough);
 require("./express/equipmentNoteRoutes")(...routePassthrough);
 require("./express/staffPerformanceRoutes")(...routePassthrough);
-require("./express/weeklyMeetingNotes")(...routePassthrough);
+require("./express/supervisorMeetingNoteRoutes")(...routePassthrough);
+require("./express/counsellorMeetingNoteRoutes")(...routePassthrough);
 
 // Admin Website Routes
 require("./express/admin/adminRoutes")(...routePassthrough);
