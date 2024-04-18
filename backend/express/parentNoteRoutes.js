@@ -36,11 +36,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         );
         logger.warn("TODO do input data validation"); // TODO
 
-        // if followed up is false, change notes to empty string
-        if (dataSanitization(req.body.followed_Up) === "false") {
-            req.body.reason = "";
-        }
-
+  
         // TODO check if values are correct
 
         // Add to database
@@ -56,7 +52,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
 
         postgresClient.query(addQuery, addQueryValues, (err, res) => {
             if (err) {
-                logger.error("Add parent notes error: ", err); // TODO send an error to the client
+                logger.error("Add parent note error: ", err); // TODO send an error to the client
                 return;
             }
             logger.info("Added new parent note to database");
@@ -122,7 +118,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                 logger.info("Deleted parent note");
             })
             .catch((e) => {
-                logger.error("Delete parent notes error:", e);
+                logger.error("Delete parent note error:", e);
             });
         res.json(req.body);
     });

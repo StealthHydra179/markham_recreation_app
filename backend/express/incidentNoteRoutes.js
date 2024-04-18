@@ -32,7 +32,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             return;
         }
         logger.debug(
-            `POST /api/new_incident_note/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.in_note)} ${dataSanitization(req.body.in_note_date)} ${dataSanitization(req.body.absence_date)} ${dataSanitization(req.body.followed_up)} ${dataSanitization(req.body.reason)}`,
+            `POST /api/new_incident_note/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.in_note)} ${dataSanitization(req.body.in_note_date)}`,
         );
         logger.warn("TODO do input data validation"); // TODO
 
@@ -49,10 +49,10 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
 
         postgresClient.query(addQuery, addQueryValues, (err, res) => {
             if (err) {
-                logger.error("New incident notes error: ", err); // TODO send an error to the client // TODO figure out why logger.error gave undefined?
+                logger.error("New incident note error: ", err); // TODO send an error to the client // TODO figure out why logger.error gave undefined?
                 return;
             }
-            logger.info("Added new incident notes to database");
+            logger.info("Added new incident note to database");
         });
         res.json(req.body);
     });
@@ -83,10 +83,10 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         postgresClient
             .query(updateQuery, updateQueryValues)
             .then((res) => {
-                logger.info("Updated incident notes in database");
+                logger.info("Updated incident note in database");
             })
             .catch((e) => {
-                logger.error("Edit incident notes error: ", e);
+                logger.error("Edit incident note error: ", e);
             });
         res.json(req.body);
     });
@@ -110,10 +110,10 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         postgresClient
             .query(deleteQuery, deleteQueryValues)
             .then((res) => {
-                logger.info("Deleted incident notes from database");
+                logger.info("Deleted incident note from database");
             })
             .catch((e) => {
-                logger.error("Delete incident notes error: ", e);
+                logger.error("Delete incident note error: ", e);
             });
         res.json(req.body);
     });

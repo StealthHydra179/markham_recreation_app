@@ -32,7 +32,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             return;
         }
         logger.debug(
-            `POST /api/new_counsellor_meeting_note/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.cmeet_note)} ${dataSanitization(req.body.cmeet_note_date)} ${dataSanitization(req.body.absence_date)} ${dataSanitization(req.body.followed_up)} ${dataSanitization(req.body.reason)}`,
+            `POST /api/new_counsellor_meeting_note/:camp_id ${dataSanitization(req.params.camp_id)} ${dataSanitization(req.body.cmeet_note)} ${dataSanitization(req.body.cmeet_note_date)}`,
         );
         logger.warn("TODO do input data validation"); // TODO
 
