@@ -36,7 +36,6 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         );
         logger.warn("TODO do input data validation"); // TODO
 
-  
         // TODO check if values are correct
 
         // Add to database
