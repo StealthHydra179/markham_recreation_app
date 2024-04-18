@@ -115,6 +115,7 @@ let routePassthrough = [expressServer, logger, postgresClient, dataSanitization,
 // Mobile Routes
 require("./express/campRoutes")(...routePassthrough);
 require("./express/weeklyChecklistRoutes")(...routePassthrough);
+require("./express/messageBoardRoutes")(...routePassthrough);
 require("./express/attendanceRoutes")(...routePassthrough);
 require("./express/absenceRoutes")(...routePassthrough);
 require("./express/dailyNoteRoutes")(...routePassthrough);
