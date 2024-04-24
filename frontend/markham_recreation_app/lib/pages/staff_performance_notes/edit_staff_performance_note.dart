@@ -4,34 +4,34 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:markham_recreation_app/pages/equipment_notes/equipment_note_details.dart';
-import 'package:markham_recreation_app/pages/equipment_notes/fetch_equipment_notes.dart';
+import 'package:markham_recreation_app/pages/staff_performance_notes/staff_performance_note_details.dart';
+import 'package:markham_recreation_app/pages/staff_performance_notes/fetch_staff_performance_notes.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'equipment_note.dart';
+import 'staff_performance_note.dart';
 
-// Edit an equipment note
-class EditEquipmentNote extends StatefulWidget {
-  final EquipmentNote equipmentNote;
+// Edit an staff performance note
+class EditStaffPerformanceNote extends StatefulWidget {
+  final StaffPerformanceNote staffPerformanceNote;
 
-  const EditEquipmentNote({super.key, required this.equipmentNote});
+  const EditStaffPerformanceNote({super.key, required this.staffPerformanceNote});
 
   @override
-  State<EditEquipmentNote> createState() => _EditEquipmentNoteState();
+  State<EditStaffPerformanceNote> createState() => _EditStaffPerformanceNoteState();
 }
 
-// Edit equipment note page content
-class _EditEquipmentNoteState extends State<EditEquipmentNote> {
+// Edit staff performance note page content
+class _EditStaffPerformanceNoteState extends State<EditStaffPerformanceNote> {
   DateTime? selectedDate;
 
   final TextEditingController _notesController = TextEditingController();
 
-  // Initialize the text fields with the equipment note's data
+  // Initialize the text fields with the staff performance note's data
   @override
   void initState() {
     super.initState();
-    _notesController.text = widget.equipmentNote.equipNote;
-    selectedDate = DateTime.parse(widget.equipmentNote.equipNoteDate);
+    _notesController.text = widget.staffPerformanceNote.stNote;
+    selectedDate = DateTime.parse(widget.staffPerformanceNote.stNoteDate);
   }
 
   @override
@@ -39,7 +39,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Edit Equipment Note', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('Edit Staff performance Note', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       body: SingleChildScrollView(
@@ -71,7 +71,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                     controller: _notesController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Equipment Note',
+                      labelText: 'Staff performance Note',
                     ),
                   ),
                 ),
@@ -107,46 +107,46 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
 
                 // Send the checklist to the server
                 Future<http.Response> response = http.post(
-                  Uri.parse('${globals.serverUrl}/api/edit_equipment_note/${globals.campId}'),
+                  Uri.parse('${globals.serverUrl}/api/edit_staff_performance_note/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
                   body: jsonEncode(<String, String>{
-                    'equip_note_id': widget.equipmentNote.equipNoteId.toString(),
-                    'camp_id': widget.equipmentNote.campId.toString(),
-                    'equip_note_date': selectedDate.toString(),
-                    'equip_note': _notesController.text,
-                    'equip_note_upd_date': DateTime.now().toString(),
+                    'st_note_id': widget.staffPerformanceNote.stNoteId.toString(),
+                    'camp_id': widget.staffPerformanceNote.campId.toString(),
+                    'st_note_date': selectedDate.toString(),
+                    'st_note': _notesController.text,
+                    'st_note_upd_date': DateTime.now().toString(),
                   }),
                 );
                 response.then((http.Response response) {
                   if (response.statusCode == 200) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Edited Equipment Note'),
+                        content: Text('Edited Staff performance Note'),
                         duration: Duration(seconds: 3),
                       ),
                     );
 
-                    futureFetchEquipmentNotes().then((equipmentNotes) {
+                    futureFetchStaffPerformanceNotes().then((staffPerformanceNotes) {
                       // move back 2 pages
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      //readd the current equipment note page (refreshing it's contents)
-                      EquipmentNote equipmentNote = const EquipmentNote(equipNoteId: 0, campId: 0, equipNote: '', equipNoteDate: '', updDate: '', updBy: '');
-                      //find the equipment note in the list
-                      for (int i = 0; i < equipmentNotes.length; i++) {
-                        if (equipmentNotes[i].equipNoteId == widget.equipmentNote.equipNoteId) {
-                          equipmentNote = equipmentNotes[i];
+                      //readd the current staff performance note page (refreshing it's contents)
+                      StaffPerformanceNote staffPerformanceNote = const StaffPerformanceNote(stNoteId: 0, campId: 0, stNote: '', stNoteDate: '', updDate: '', updBy: '');
+                      //find the staff performance note in the list
+                      for (int i = 0; i < staffPerformanceNotes.length; i++) {
+                        if (staffPerformanceNotes[i].stNoteId == widget.staffPerformanceNote.stNoteId) {
+                          staffPerformanceNote = staffPerformanceNotes[i];
                           break;
                         }
                       }
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => EquipmentNoteDetails(equipmentNote: equipmentNote)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => StaffPerformanceNoteDetails(staffPerformanceNote: staffPerformanceNote)));
                     });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Failed to Edit Equipment Note'),
+                        content: Text('Failed to Edit Staff performance Note'),
                         duration: Duration(seconds: 3),
                       ),
                     );
@@ -155,7 +155,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                   // Runs when the server is down
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to Edit Equipment Note'),
+                      content: Text('Failed to Edit Staff performance Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );

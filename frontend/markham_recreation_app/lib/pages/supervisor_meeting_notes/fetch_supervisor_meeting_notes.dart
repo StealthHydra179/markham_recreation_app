@@ -7,30 +7,30 @@ import 'dart:convert';
 import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'package:markham_recreation_app/pages/staff_performance_notes/staff_performance_note.dart';
-import 'package:markham_recreation_app/pages/staff_performance_notes/new_staff_performance_note.dart';
-import 'package:markham_recreation_app/pages/staff_performance_notes/staff_performance_note_details.dart';
+import 'package:markham_recreation_app/pages/supervisor_meeting_notes/supervisor_meeting_note.dart';
+import 'package:markham_recreation_app/pages/supervisor_meeting_notes/new_supervisor_meeting_note.dart';
+import 'package:markham_recreation_app/pages/supervisor_meeting_notes/supervisor_meeting_note_details.dart';
 
 // global variable to store the request to the server (for FutureBuilder)
-late Future<List<StaffPerformanceNote>> futureStaffPerformanceNotes;
+late Future<List<SupervisorMeetingNote>> futureSupervisorMeetingNotes;
 
-// Fetch staff performance notes from the server
-Future<List<StaffPerformanceNote>> futureFetchStaffPerformanceNotes() async {
+// Fetch supervisor meeting notes from the server
+Future<List<SupervisorMeetingNote>> futureFetchSupervisorMeetingNotes() async {
   final response = await http.get(
-    Uri.parse('${globals.serverUrl}/api/get_staff_performance_notes/${globals.campId}'),
+    Uri.parse('${globals.serverUrl}/api/get_supervisor_meeting_notes/${globals.campId}'),
   );
 
-  // Create List of staff performance notes
-  List<StaffPerformanceNote> staffPerformanceNotes = [];
+  // Create List of supervisor meeting notes
+  List<SupervisorMeetingNote> supervisorMeetingNotes = [];
 
   if (response.statusCode == 200) {
-    // If server returns an OK response, parse the JSON and store the Staff performance Notes
-    List<dynamic> staffPerformanceNotesJson = jsonDecode(response.body);
-    staffPerformanceNotes = staffPerformanceNotesJson.map((dynamic json) => StaffPerformanceNote.fromJson(json)).toList();
-    return staffPerformanceNotes;
+    // If server returns an OK response, parse the JSON and store the Supervisor Meeting Notes
+    List<dynamic> supervisorMeetingNotesJson = jsonDecode(response.body);
+    supervisorMeetingNotes = supervisorMeetingNotesJson.map((dynamic json) => SupervisorMeetingNote.fromJson(json)).toList();
+    return supervisorMeetingNotes;
   } else {
     // If that response was not OK, throw an error.
-    throw Exception('Failed to load staff performance notes');
+    throw Exception('Failed to load supervisor meeting notes');
   }
 }
 
@@ -67,21 +67,21 @@ String dateFormatter(String date) {
   return '${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}';
 }
 
-// List staff performance notes page wrapper
-class FetchStaffPerformanceNotes extends StatefulWidget {
-  const FetchStaffPerformanceNotes({super.key});
+// List supervisor meeting notes page wrapper
+class FetchSupervisorMeetingNotes extends StatefulWidget {
+  const FetchSupervisorMeetingNotes({super.key});
 
   @override
-  State<FetchStaffPerformanceNotes> createState() => _FetchStaffPerformanceNotesState();
+  State<FetchSupervisorMeetingNotes> createState() => _FetchSupervisorMeetingNotesState();
 }
 
-// List staff performance notes page content
-class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes> {
-  // Fetch list of staff performance notes from the server
+// List supervisor meeting notes page content
+class _FetchSupervisorMeetingNotesState extends State<FetchSupervisorMeetingNotes> {
+  // Fetch list of supervisor meeting notes from the server
   @override
   void initState() {
     super.initState();
-    futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+    futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes();
   }
 
   @override
@@ -89,19 +89,19 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Staff performance Notes', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('Supervisor Meeting Notes', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
         actions: <Widget>[
-          // New staff performance note button
+          // New supervisor meeting note button
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const NewStaffPerformanceNote()),
+                MaterialPageRoute(builder: (context) => const NewSupervisorMeetingNote()),
               ).then((value) {
-                // Refresh the list of staff performance notes after returning from the new staff performance note page
-                futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+                // Refresh the list of supervisor meeting notes after returning from the new supervisor meeting note page
+                futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes();
                 setState(() {});
               });
             },
@@ -110,8 +110,8 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              // Refresh the list of staff performance notes
-              futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+              // Refresh the list of supervisor meeting notes
+              futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes();
               setState(() {});
             },
           ),
@@ -120,16 +120,16 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
       drawer: drawer.drawer(context),
       body: Column(
         children: <Widget>[
-          // Display staff performance notes in a list view, future builder waits for the server to return the data
-          FutureBuilder<List<StaffPerformanceNote>>(
-            future: futureStaffPerformanceNotes,
+          // Display supervisor meeting notes in a list view, future builder waits for the server to return the data
+          FutureBuilder<List<SupervisorMeetingNote>>(
+            future: futureSupervisorMeetingNotes,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Expanded(
                   child: ListView.builder(
                     itemCount: snapshot.data?.length,
                     itemBuilder: (context, index) {
-                      // For each staff performance note, display the camper name, date, and a chevron icon
+                      // For each supervisor meeting note, display the camper name, date, and a chevron icon
                       return ListTile(
                         title: Text("${dateTimeFormatter(snapshot.data![index].stNoteDate)}"),
                         subtitle: Text(snapshot.data![index].stNote),
@@ -140,10 +140,10 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
                           // Display the absence details page when the absence is tapped
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => StaffPerformanceNoteDetails(staffPerformanceNote: snapshot.data![index])),
+                            MaterialPageRoute(builder: (context) => SupervisorMeetingNoteDetails(supervisorMeetingNote: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of absences after returning from the absence details page
-                            futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+                            futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes();
                             setState(() {});
                           });
                         },
@@ -178,14 +178,14 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
 // import 'package:markham_recreation_app/globals.dart' as globals;
 // import 'package:markham_recreation_app/drawer.dart' as drawer;
 
-// class FetchStaffPerformanceNotes extends StatefulWidget {
-//   const FetchStaffPerformanceNotes({super.key});
+// class FetchSupervisorMeetingNotes extends StatefulWidget {
+//   const FetchSupervisorMeetingNotes({super.key});
 
 //   @override
-//   State<FetchStaffPerformanceNotes> createState() => _FetchStaffPerformanceNotesState();
+//   State<FetchSupervisorMeetingNotes> createState() => _FetchSupervisorMeetingNotesState();
 // }
 
-// class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes> {
+// class _FetchSupervisorMeetingNotesState extends State<FetchSupervisorMeetingNotes> {
 //   @override
 //   void initState() {
 //     super.initState();
@@ -196,21 +196,21 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
 //     return Scaffold(
 //       appBar: AppBar(
 //         backgroundColor: Theme.of(context).colorScheme.primary,
-//         title: const Text('Staff performance Notes', style: TextStyle(color: globals.secondaryColor)),
+//         title: const Text('Supervisor Meeting Notes', style: TextStyle(color: globals.secondaryColor)),
 //         iconTheme: const IconThemeData(color: globals.secondaryColor),
 //         actions: <Widget>[
-//           // New staff performance note button
+//           // New supervisor meeting note button
 //           IconButton(
 //             icon: const Icon(Icons.add),
 //             onPressed: () {
-//               // TODO add new staff performance note page
+//               // TODO add new supervisor meeting note page
 //             },
 //           ),
 //           // Refresh button
 //           IconButton(
 //             icon: const Icon(Icons.refresh),
 //             onPressed: () {
-//               // Refresh the list of staff performance notes
+//               // Refresh the list of supervisor meeting notes
 //               // TODO add a refresh state
 //               setState(() {});
 //             },
@@ -220,7 +220,7 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
 //       drawer: drawer.drawer(context),
 //       body: Column(
 //         children: <Widget>[
-//           // Display staff performance notes in a list view, future builder waits for the server to return the data
+//           // Display supervisor meeting notes in a list view, future builder waits for the server to return the data
           
 //         ],
 //       ),

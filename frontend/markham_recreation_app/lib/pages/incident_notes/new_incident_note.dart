@@ -1,45 +1,34 @@
-import 'dart:convert';
+library weekly_checklist;
 
-import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:markham_recreation_app/pages/equipment_notes/equipment_note_details.dart';
-import 'package:markham_recreation_app/pages/equipment_notes/fetch_equipment_notes.dart';
+import 'dart:convert';
+
+import 'package:date_field/date_field.dart';
+
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'equipment_note.dart';
-
-// Edit an equipment note
-class EditEquipmentNote extends StatefulWidget {
-  final EquipmentNote equipmentNote;
-
-  const EditEquipmentNote({super.key, required this.equipmentNote});
+class NewIncidentNote extends StatefulWidget {
+  const NewIncidentNote({super.key});
 
   @override
-  State<EditEquipmentNote> createState() => _EditEquipmentNoteState();
+  State<NewIncidentNote> createState() => _NewIncidentNoteState();
 }
 
-// Edit equipment note page content
-class _EditEquipmentNoteState extends State<EditEquipmentNote> {
+class _NewIncidentNoteState extends State<NewIncidentNote> {
   DateTime? selectedDate;
 
   final TextEditingController _notesController = TextEditingController();
 
-  // Initialize the text fields with the equipment note's data
-  @override
-  void initState() {
-    super.initState();
-    _notesController.text = widget.equipmentNote.equipNote;
-    selectedDate = DateTime.parse(widget.equipmentNote.equipNoteDate);
-  }
-
   @override
   Widget build(BuildContext context) {
+    // Update checkbox state
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Edit Equipment Note', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('New Incident Note', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       body: SingleChildScrollView(
@@ -53,11 +42,9 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                     labelText: 'Enter Date',
                   ),
                   mode: DateTimeFieldPickerMode.date,
-                  // TODO replace with week processing
-                  // firstDate: DateTime.now().add(const Duration(days: -7)),
-                  // lastDate: DateTime.now().add(const Duration(days: 7)),
-                  initialPickerDateTime: selectedDate,
-                  initialValue: selectedDate,
+                  firstDate: DateTime.now().add(const Duration(days: -7)),
+                  lastDate: DateTime.now().add(const Duration(days: 7)),
+                  initialPickerDateTime: DateTime.now().add(const Duration(days: 0)),
                   onChanged: (DateTime? value) {
                     selectedDate = value;
                   },
@@ -68,10 +55,11 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                 margin: const EdgeInsets.all(10),
                 child: SizedBox(
                   child: TextField(
+                    // TODO make the box expand vertically when new information is added
                     controller: _notesController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Equipment Note',
+                      labelText: 'Notes',
                     ),
                   ),
                 ),
@@ -82,7 +70,8 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                 padding: const EdgeInsets.all(10),
               ),
               onPressed: () {
- 
+                // TODO input validation
+
                 if (selectedDate == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -96,57 +85,37 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                 if (_notesController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Please enter a reason'),
+                      content: Text('Please enter a note'),
                       duration: Duration(seconds: 3),
                     ),
                   );
                   return;
                 }
 
-                // TODO check if date is out of bounds
-
                 // Send the checklist to the server
                 Future<http.Response> response = http.post(
-                  Uri.parse('${globals.serverUrl}/api/edit_equipment_note/${globals.campId}'),
+                  Uri.parse('${globals.serverUrl}/api/new_incident_note/${globals.campId}'), //+globals.camp_id.toString()
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
                   body: jsonEncode(<String, String>{
-                    'equip_note_id': widget.equipmentNote.equipNoteId.toString(),
-                    'camp_id': widget.equipmentNote.campId.toString(),
-                    'equip_note_date': selectedDate.toString(),
-                    'equip_note': _notesController.text,
-                    'equip_note_upd_date': DateTime.now().toString(),
+                    'in_note_date': selectedDate.toString(),
+                    'in_note': _notesController.text,
                   }),
                 );
                 response.then((http.Response response) {
                   if (response.statusCode == 200) {
+                    Navigator.pop(context, true); // go back to the previous page and force a refresh
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Edited Equipment Note'),
+                        content: Text('New Incident Note Saved'),
                         duration: Duration(seconds: 3),
                       ),
                     );
-
-                    futureFetchEquipmentNotes().then((equipmentNotes) {
-                      // move back 2 pages
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      //readd the current equipment note page (refreshing it's contents)
-                      EquipmentNote equipmentNote = const EquipmentNote(equipNoteId: 0, campId: 0, equipNote: '', equipNoteDate: '', updDate: '', updBy: '');
-                      //find the equipment note in the list
-                      for (int i = 0; i < equipmentNotes.length; i++) {
-                        if (equipmentNotes[i].equipNoteId == widget.equipmentNote.equipNoteId) {
-                          equipmentNote = equipmentNotes[i];
-                          break;
-                        }
-                      }
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => EquipmentNoteDetails(equipmentNote: equipmentNote)));
-                    });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Failed to Edit Equipment Note'),
+                        content: Text('Failed to Save New Incident Note'),
                         duration: Duration(seconds: 3),
                       ),
                     );
@@ -155,7 +124,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                   // Runs when the server is down
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to Edit Equipment Note'),
+                      content: Text('Failed to Save Incident Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );

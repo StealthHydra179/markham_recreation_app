@@ -4,34 +4,34 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:markham_recreation_app/pages/equipment_notes/equipment_note_details.dart';
-import 'package:markham_recreation_app/pages/equipment_notes/fetch_equipment_notes.dart';
+import 'package:markham_recreation_app/pages/message_board/message_details.dart';
+import 'package:markham_recreation_app/pages/message_board/fetch_messages.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'equipment_note.dart';
+import 'message.dart';
 
-// Edit an equipment note
-class EditEquipmentNote extends StatefulWidget {
-  final EquipmentNote equipmentNote;
+// Edit an message
+class EditMessageBoard extends StatefulWidget {
+  final MessageBoard messageBoard;
 
-  const EditEquipmentNote({super.key, required this.equipmentNote});
+  const EditMessageBoard({super.key, required this.messageBoard});
 
   @override
-  State<EditEquipmentNote> createState() => _EditEquipmentNoteState();
+  State<EditMessageBoard> createState() => _EditMessageBoardState();
 }
 
-// Edit equipment note page content
-class _EditEquipmentNoteState extends State<EditEquipmentNote> {
+// Edit message page content
+class _EditMessageBoardState extends State<EditMessageBoard> {
   DateTime? selectedDate;
 
   final TextEditingController _notesController = TextEditingController();
 
-  // Initialize the text fields with the equipment note's data
+  // Initialize the text fields with the message's data
   @override
   void initState() {
     super.initState();
-    _notesController.text = widget.equipmentNote.equipNote;
-    selectedDate = DateTime.parse(widget.equipmentNote.equipNoteDate);
+    _notesController.text = widget.messageBoard.inNote;
+    selectedDate = DateTime.parse(widget.messageBoard.inNoteDate);
   }
 
   @override
@@ -39,7 +39,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Edit Equipment Note', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('Edit Message', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       body: SingleChildScrollView(
@@ -71,7 +71,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                     controller: _notesController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Equipment Note',
+                      labelText: 'Message',
                     ),
                   ),
                 ),
@@ -107,46 +107,47 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
 
                 // Send the checklist to the server
                 Future<http.Response> response = http.post(
-                  Uri.parse('${globals.serverUrl}/api/edit_equipment_note/${globals.campId}'),
+                  Uri.parse('${globals.serverUrl}/api/edit_message/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
                   body: jsonEncode(<String, String>{
-                    'equip_note_id': widget.equipmentNote.equipNoteId.toString(),
-                    'camp_id': widget.equipmentNote.campId.toString(),
-                    'equip_note_date': selectedDate.toString(),
-                    'equip_note': _notesController.text,
-                    'equip_note_upd_date': DateTime.now().toString(),
+                    'app_message_id': widget.messageBoard.inNoteId.toString(),
+                    'camp_id': widget.messageBoard.campId.toString(),
+                    'app_message_date': selectedDate.toString(),
+                    'app_message': _notesController.text,
+                    'app_message_upd_date': DateTime.now().toString(),
                   }),
                 );
                 response.then((http.Response response) {
                   if (response.statusCode == 200) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Edited Equipment Note'),
+                        content: Text('Edited Message'),
                         duration: Duration(seconds: 3),
                       ),
                     );
 
-                    futureFetchEquipmentNotes().then((equipmentNotes) {
+                    futureFetchMessageBoards().then((messageBoards) {
                       // move back 2 pages
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      //readd the current equipment note page (refreshing it's contents)
-                      EquipmentNote equipmentNote = const EquipmentNote(equipNoteId: 0, campId: 0, equipNote: '', equipNoteDate: '', updDate: '', updBy: '');
-                      //find the equipment note in the list
-                      for (int i = 0; i < equipmentNotes.length; i++) {
-                        if (equipmentNotes[i].equipNoteId == widget.equipmentNote.equipNoteId) {
-                          equipmentNote = equipmentNotes[i];
+                      //readd the current message page (refreshing it's contents)
+                      MessageBoard messageBoard = const MessageBoard(inNoteId: 0, campId: 0, inNote: '', inNoteDate: '', updDate: '', updBy: '');
+                      //find the message in the list
+                      for (int i = 0; i < messageBoards.length; i++) {
+                        if (messageBoards[i].inNoteId == widget.messageBoard.inNoteId) {
+                          messageBoard = messageBoards[i];
                           break;
                         }
                       }
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => EquipmentNoteDetails(equipmentNote: equipmentNote)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MessageBoardDetails(messageBoard: messageBoard)));
+
                     });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Failed to Edit Equipment Note'),
+                        content: Text('Failed to Edit Message'),
                         duration: Duration(seconds: 3),
                       ),
                     );
@@ -155,7 +156,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                   // Runs when the server is down
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to Edit Equipment Note'),
+                      content: Text('Failed to Edit Message'),
                       duration: Duration(seconds: 3),
                     ),
                   );

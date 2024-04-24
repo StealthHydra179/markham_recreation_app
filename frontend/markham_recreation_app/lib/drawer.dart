@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:markham_recreation_app/main.dart';
 import 'package:markham_recreation_app/pages/attendance/fetch_attendance.dart';
+import 'package:markham_recreation_app/pages/counsellor_meeting_notes/fetch_counsellor_meeting_notes.dart';
 import 'package:markham_recreation_app/pages/daily_notes/fetch_daily_notes.dart';
 import 'package:markham_recreation_app/pages/equipment_notes/fetch_equipment_notes.dart';
 import 'package:markham_recreation_app/pages/incident_notes/fetch_incident_notes.dart';
 import 'package:markham_recreation_app/pages/parent_notes/fetch_parent_notes.dart';
 import 'package:markham_recreation_app/pages/staff_performance_notes/fetch_staff_performance_notes.dart';
-
+import 'package:markham_recreation_app/pages/supervisor_meeting_notes/fetch_supervisor_meeting_notes.dart';
+import 'package:markham_recreation_app/pages/message_board/fetch_messages.dart';
 import 'package:markham_recreation_app/pages/weekly_checklist/fetch_weekly_checklist.dart';
 import 'package:markham_recreation_app/pages/absences/fetch_absences.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
-import 'package:markham_recreation_app/pages/weekly_meeting_notes/fetch_weekly_meeting_notes.dart';
 
 
 // TODO move dateformatter to globals file
@@ -95,6 +96,19 @@ Drawer drawer(BuildContext context) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchWeeklyChecklist()),
+            );
+          },
+        ),
+        ListTile(
+          leading: const Icon(
+            Icons.chevron_right,
+          ),
+          title: const Text('Message Board'),
+          onTap: () {
+            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchMessageBoards()),
             );
           },
         ),
@@ -193,12 +207,25 @@ Drawer drawer(BuildContext context) {
           leading: const Icon(
             Icons.chevron_right,
           ),
-          title: const Text('Weekly Meeting Notes'),
+          title: const Text('Counsellor Weekly Meeting Notes'),
           onTap: () {
             Navigator.popUntil(context, (route)=>route.isFirst);
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const FetchWeeklyMeetingNotes()),
+              MaterialPageRoute(builder: (context) => const FetchCounsellorMeetingNotes()),
+            );
+          },
+        ),
+        ListTile(
+          leading: const Icon(
+            Icons.chevron_right,
+          ),
+          title: const Text('Supervisor Weekly Meeting Notes'),
+          onTap: () {
+            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchSupervisorMeetingNotes()),
             );
           },
         ),

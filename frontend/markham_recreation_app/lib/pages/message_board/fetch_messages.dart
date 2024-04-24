@@ -7,30 +7,30 @@ import 'dart:convert';
 import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'package:markham_recreation_app/pages/staff_performance_notes/staff_performance_note.dart';
-import 'package:markham_recreation_app/pages/staff_performance_notes/new_staff_performance_note.dart';
-import 'package:markham_recreation_app/pages/staff_performance_notes/staff_performance_note_details.dart';
+import 'package:markham_recreation_app/pages/message_board/message.dart';
+import 'package:markham_recreation_app/pages/message_board/new_message.dart';
+import 'package:markham_recreation_app/pages/message_board/message_details.dart';
 
 // global variable to store the request to the server (for FutureBuilder)
-late Future<List<StaffPerformanceNote>> futureStaffPerformanceNotes;
+late Future<List<MessageBoard>> futureMessageBoards;
 
-// Fetch staff performance notes from the server
-Future<List<StaffPerformanceNote>> futureFetchStaffPerformanceNotes() async {
+// Fetch messages from the server
+Future<List<MessageBoard>> futureFetchMessageBoards() async {
   final response = await http.get(
-    Uri.parse('${globals.serverUrl}/api/get_staff_performance_notes/${globals.campId}'),
+    Uri.parse('${globals.serverUrl}/api/get_messages/${globals.campId}'),
   );
 
-  // Create List of staff performance notes
-  List<StaffPerformanceNote> staffPerformanceNotes = [];
+  // Create List of messages
+  List<MessageBoard> messageBoards = [];
 
   if (response.statusCode == 200) {
-    // If server returns an OK response, parse the JSON and store the Staff performance Notes
-    List<dynamic> staffPerformanceNotesJson = jsonDecode(response.body);
-    staffPerformanceNotes = staffPerformanceNotesJson.map((dynamic json) => StaffPerformanceNote.fromJson(json)).toList();
-    return staffPerformanceNotes;
+    // If server returns an OK response, parse the JSON and store the Messages
+    List<dynamic> messageBoardsJson = jsonDecode(response.body);
+    messageBoards = messageBoardsJson.map((dynamic json) => MessageBoard.fromJson(json)).toList();
+    return messageBoards;
   } else {
     // If that response was not OK, throw an error.
-    throw Exception('Failed to load staff performance notes');
+    throw Exception('Failed to load messages');
   }
 }
 
@@ -67,21 +67,21 @@ String dateFormatter(String date) {
   return '${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}';
 }
 
-// List staff performance notes page wrapper
-class FetchStaffPerformanceNotes extends StatefulWidget {
-  const FetchStaffPerformanceNotes({super.key});
+// List messages page wrapper
+class FetchMessageBoards extends StatefulWidget {
+  const FetchMessageBoards({super.key});
 
   @override
-  State<FetchStaffPerformanceNotes> createState() => _FetchStaffPerformanceNotesState();
+  State<FetchMessageBoards> createState() => _FetchMessageBoardsState();
 }
 
-// List staff performance notes page content
-class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes> {
-  // Fetch list of staff performance notes from the server
+// List messages page content
+class _FetchMessageBoardsState extends State<FetchMessageBoards> {
+  // Fetch list of messages from the server
   @override
   void initState() {
     super.initState();
-    futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+    futureMessageBoards = futureFetchMessageBoards();
   }
 
   @override
@@ -89,19 +89,19 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Staff performance Notes', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('Messages', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
         actions: <Widget>[
-          // New staff performance note button
+          // New message button
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const NewStaffPerformanceNote()),
+                MaterialPageRoute(builder: (context) => const NewMessageBoard()),
               ).then((value) {
-                // Refresh the list of staff performance notes after returning from the new staff performance note page
-                futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+                // Refresh the list of messages after returning from the new message page
+                futureMessageBoards = futureFetchMessageBoards();
                 setState(() {});
               });
             },
@@ -110,8 +110,8 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              // Refresh the list of staff performance notes
-              futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+              // Refresh the list of messages
+              futureMessageBoards = futureFetchMessageBoards();
               setState(() {});
             },
           ),
@@ -120,19 +120,19 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
       drawer: drawer.drawer(context),
       body: Column(
         children: <Widget>[
-          // Display staff performance notes in a list view, future builder waits for the server to return the data
-          FutureBuilder<List<StaffPerformanceNote>>(
-            future: futureStaffPerformanceNotes,
+          // Display messages in a list view, future builder waits for the server to return the data
+          FutureBuilder<List<MessageBoard>>(
+            future: futureMessageBoards,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Expanded(
                   child: ListView.builder(
                     itemCount: snapshot.data?.length,
                     itemBuilder: (context, index) {
-                      // For each staff performance note, display the camper name, date, and a chevron icon
+                      // For each message, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text("${dateTimeFormatter(snapshot.data![index].stNoteDate)}"),
-                        subtitle: Text(snapshot.data![index].stNote),
+                        title: Text("${dateTimeFormatter(snapshot.data![index].inNoteDate)}"),
+                        subtitle: Text(snapshot.data![index].inNote),
                         trailing: const Icon(Icons.chevron_right),
 
                         // If not followed up change the background color to a light red
@@ -140,10 +140,10 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
                           // Display the absence details page when the absence is tapped
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => StaffPerformanceNoteDetails(staffPerformanceNote: snapshot.data![index])),
+                            MaterialPageRoute(builder: (context) => MessageBoardDetails(messageBoard: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of absences after returning from the absence details page
-                            futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+                            futureMessageBoards = futureFetchMessageBoards();
                             setState(() {});
                           });
                         },
@@ -178,14 +178,14 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
 // import 'package:markham_recreation_app/globals.dart' as globals;
 // import 'package:markham_recreation_app/drawer.dart' as drawer;
 
-// class FetchStaffPerformanceNotes extends StatefulWidget {
-//   const FetchStaffPerformanceNotes({super.key});
+// class FetchMessageBoards extends StatefulWidget {
+//   const FetchMessageBoards({super.key});
 
 //   @override
-//   State<FetchStaffPerformanceNotes> createState() => _FetchStaffPerformanceNotesState();
+//   State<FetchMessageBoards> createState() => _FetchMessageBoardsState();
 // }
 
-// class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes> {
+// class _FetchMessageBoardsState extends State<FetchMessageBoards> {
 //   @override
 //   void initState() {
 //     super.initState();
@@ -196,21 +196,21 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
 //     return Scaffold(
 //       appBar: AppBar(
 //         backgroundColor: Theme.of(context).colorScheme.primary,
-//         title: const Text('Staff performance Notes', style: TextStyle(color: globals.secondaryColor)),
+//         title: const Text('Messages', style: TextStyle(color: globals.secondaryColor)),
 //         iconTheme: const IconThemeData(color: globals.secondaryColor),
 //         actions: <Widget>[
-//           // New staff performance note button
+//           // New message button
 //           IconButton(
 //             icon: const Icon(Icons.add),
 //             onPressed: () {
-//               // TODO add new staff performance note page
+//               // TODO add new message page
 //             },
 //           ),
 //           // Refresh button
 //           IconButton(
 //             icon: const Icon(Icons.refresh),
 //             onPressed: () {
-//               // Refresh the list of staff performance notes
+//               // Refresh the list of messages
 //               // TODO add a refresh state
 //               setState(() {});
 //             },
@@ -220,7 +220,7 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
 //       drawer: drawer.drawer(context),
 //       body: Column(
 //         children: <Widget>[
-//           // Display staff performance notes in a list view, future builder waits for the server to return the data
+//           // Display messages in a list view, future builder waits for the server to return the data
           
 //         ],
 //       ),

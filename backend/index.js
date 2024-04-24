@@ -122,6 +122,7 @@ let routePassthrough = [expressServer, logger, postgresClient, dataSanitization,
 // Mobile Routes
 require("./express/campRoutes")(...routePassthrough);
 require("./express/weeklyChecklistRoutes")(...routePassthrough);
+require("./express/messageBoardRoutes")(...routePassthrough);
 require("./express/attendanceRoutes")(...routePassthrough);
 require("./express/absenceRoutes")(...routePassthrough);
 require("./express/dailyNoteRoutes")(...routePassthrough);
@@ -129,7 +130,8 @@ require("./express/incidentNoteRoutes")(...routePassthrough);
 require("./express/parentNoteRoutes")(...routePassthrough);
 require("./express/equipmentNoteRoutes")(...routePassthrough);
 require("./express/staffPerformanceRoutes")(...routePassthrough);
-require("./express/weeklyMeetingNotes")(...routePassthrough);
+require("./express/supervisorMeetingNoteRoutes")(...routePassthrough);
+require("./express/counsellorMeetingNoteRoutes")(...routePassthrough);
 
 // Admin Website Routes
 require("./express/admin/adminRoutes")(...routePassthrough);

@@ -4,34 +4,34 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:markham_recreation_app/pages/equipment_notes/equipment_note_details.dart';
-import 'package:markham_recreation_app/pages/equipment_notes/fetch_equipment_notes.dart';
+import 'package:markham_recreation_app/pages/daily_notes/daily_note_details.dart';
+import 'package:markham_recreation_app/pages/daily_notes/fetch_daily_notes.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'equipment_note.dart';
+import 'daily_note.dart';
 
-// Edit an equipment note
-class EditEquipmentNote extends StatefulWidget {
-  final EquipmentNote equipmentNote;
+// Edit an daily note
+class EditDailyNote extends StatefulWidget {
+  final DailyNote dailyNote;
 
-  const EditEquipmentNote({super.key, required this.equipmentNote});
+  const EditDailyNote({super.key, required this.dailyNote});
 
   @override
-  State<EditEquipmentNote> createState() => _EditEquipmentNoteState();
+  State<EditDailyNote> createState() => _EditDailyNoteState();
 }
 
-// Edit equipment note page content
-class _EditEquipmentNoteState extends State<EditEquipmentNote> {
+// Edit daily note page content
+class _EditDailyNoteState extends State<EditDailyNote> {
   DateTime? selectedDate;
 
   final TextEditingController _notesController = TextEditingController();
 
-  // Initialize the text fields with the equipment note's data
+  // Initialize the text fields with the daily note's data
   @override
   void initState() {
     super.initState();
-    _notesController.text = widget.equipmentNote.equipNote;
-    selectedDate = DateTime.parse(widget.equipmentNote.equipNoteDate);
+    _notesController.text = widget.dailyNote.inNote;
+    selectedDate = DateTime.parse(widget.dailyNote.inNoteDate);
   }
 
   @override
@@ -39,7 +39,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Edit Equipment Note', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('Edit Daily Note', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       body: SingleChildScrollView(
@@ -71,7 +71,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                     controller: _notesController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Equipment Note',
+                      labelText: 'Daily Note',
                     ),
                   ),
                 ),
@@ -107,46 +107,47 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
 
                 // Send the checklist to the server
                 Future<http.Response> response = http.post(
-                  Uri.parse('${globals.serverUrl}/api/edit_equipment_note/${globals.campId}'),
+                  Uri.parse('${globals.serverUrl}/api/edit_daily_note/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
                   body: jsonEncode(<String, String>{
-                    'equip_note_id': widget.equipmentNote.equipNoteId.toString(),
-                    'camp_id': widget.equipmentNote.campId.toString(),
-                    'equip_note_date': selectedDate.toString(),
-                    'equip_note': _notesController.text,
-                    'equip_note_upd_date': DateTime.now().toString(),
+                    'daily_note_id': widget.dailyNote.inNoteId.toString(),
+                    'camp_id': widget.dailyNote.campId.toString(),
+                    'daily_note_date': selectedDate.toString(),
+                    'daily_note': _notesController.text,
+                    'daily_note_upd_date': DateTime.now().toString(),
                   }),
                 );
                 response.then((http.Response response) {
                   if (response.statusCode == 200) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Edited Equipment Note'),
+                        content: Text('Edited Daily Note'),
                         duration: Duration(seconds: 3),
                       ),
                     );
 
-                    futureFetchEquipmentNotes().then((equipmentNotes) {
+                    futureFetchDailyNotes().then((dailyNotes) {
                       // move back 2 pages
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      //readd the current equipment note page (refreshing it's contents)
-                      EquipmentNote equipmentNote = const EquipmentNote(equipNoteId: 0, campId: 0, equipNote: '', equipNoteDate: '', updDate: '', updBy: '');
-                      //find the equipment note in the list
-                      for (int i = 0; i < equipmentNotes.length; i++) {
-                        if (equipmentNotes[i].equipNoteId == widget.equipmentNote.equipNoteId) {
-                          equipmentNote = equipmentNotes[i];
+                      //readd the current daily note page (refreshing it's contents)
+                      DailyNote dailyNote = const DailyNote(inNoteId: 0, campId: 0, inNote: '', inNoteDate: '', updDate: '', updBy: '');
+                      //find the daily note in the list
+                      for (int i = 0; i < dailyNotes.length; i++) {
+                        if (dailyNotes[i].inNoteId == widget.dailyNote.inNoteId) {
+                          dailyNote = dailyNotes[i];
                           break;
                         }
                       }
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => EquipmentNoteDetails(equipmentNote: equipmentNote)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DailyNoteDetails(dailyNote: dailyNote)));
+
                     });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Failed to Edit Equipment Note'),
+                        content: Text('Failed to Edit Daily Note'),
                         duration: Duration(seconds: 3),
                       ),
                     );
@@ -155,7 +156,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                   // Runs when the server is down
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to Edit Equipment Note'),
+                      content: Text('Failed to Edit Daily Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );
