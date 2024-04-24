@@ -1,5 +1,6 @@
 function loadCamps() {
-    let campLocation = document.getElementById("campLocation").options[document.getElementById("campLocation").selectedIndex].value;
+    let campLocation =
+        document.getElementById("campLocation").options[document.getElementById("campLocation").selectedIndex].value;
     let campDate = document.getElementById("campDate").value;
     let campFacility = document.getElementById("campFacility").value;
     let campNamePartial = document.getElementById("campName").value;
@@ -7,14 +8,14 @@ function loadCamps() {
     let url = `/api/admin/camp/${campLocation}/${campDate}/${campFacility}/`;
 
     let output = document.getElementById("campResults");
-    let campName = ""
-    let facility = ""
-    let campDescription = ""
-    let supervisorName = ""
-    let directorName = ""
-    let camperCount = ""
-    let room = ""
-    let location = ""
+    let campName = "";
+    let facility = "";
+    let campDescription = "";
+    let supervisorName = "";
+    let directorName = "";
+    let camperCount = "";
+    let room = "";
+    let location = "";
 
     let templateOutput = `
     <div class="col-sm-12">
@@ -38,11 +39,10 @@ function loadCamps() {
             </div>
         </div>
     </div>
-    `
+    `;
 }
 
 function setup() {
     //Location setup
-
     //Facility setup
 }

@@ -115,7 +115,7 @@ expressServer.get("/api", (req, res) => {
     res.send({ message: "Hello World" });
 });
 
-expressServer.use('/admin', express.static("web"));
+expressServer.use("/admin", express.static("web"));
 
 let routePassthrough = [expressServer, logger, postgresClient, dataSanitization, getPostgresConnected];
 
@@ -142,4 +142,4 @@ expressServer.listen(serverPort, () => {
 
 expressServer.get("/test", async (req, res) => {
     await require("./express/admin/csvExportHelper")(logger, postgresClient, getPostgresConnected, req, res);
-})
+});

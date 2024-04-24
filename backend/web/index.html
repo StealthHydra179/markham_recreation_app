@@ -1,759 +1,807 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <title>Markham Recreation Camp Admin Page</title>
 
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1" name="viewport"/>
-    <title>Markham Recreation Camp Admin Page</title>
+        <!-- Meta -->
+        <!-- TODO FIX META -->
+        <meta content="Marketplace for Bootstrap Admin Dashboards" name="description" />
+        <meta content="Bootstrap Gallery" name="author" />
+        <link href="https://www.bootstrap.gallery/" rel="canonical" />
+        <meta content="https://www.bootstrap.gallery" property="og:url" />
+        <meta content="Admin Templates - Dashboard Templates | Bootstrap Gallery" property="og:title" />
+        <meta content="Marketplace for Bootstrap Admin Dashboards" property="og:description" />
+        <meta content="Website" property="og:type" />
+        <meta content="Bootstrap Gallery" property="og:site_name" />
+        <link href="assets/images/markham_icon.png" rel="shortcut icon" />
+        <!-- TODO FIX FAVICON -->
 
-    <!-- Meta --> <!-- TODO FIX META -->
-    <meta content="Marketplace for Bootstrap Admin Dashboards" name="description"/>
-    <meta content="Bootstrap Gallery" name="author"/>
-    <link href="https://www.bootstrap.gallery/" rel="canonical">
-    <meta content="https://www.bootstrap.gallery" property="og:url">
-    <meta content="Admin Templates - Dashboard Templates | Bootstrap Gallery" property="og:title">
-    <meta content="Marketplace for Bootstrap Admin Dashboards" property="og:description">
-    <meta content="Website" property="og:type">
-    <meta content="Bootstrap Gallery" property="og:site_name">
-    <link href="assets/images/markham_icon.png" rel="shortcut icon"/> <!-- TODO FIX FAVICON -->
-
-    <!-- *************
+        <!-- *************
 			************ CSS Files *************
 		************* -->
-    <link href="assets/fonts/bootstrap/bootstrap-icons.css" rel="stylesheet"/>
-    <link href="assets/css/main.css" rel="stylesheet"/>
+        <link href="assets/fonts/bootstrap/bootstrap-icons.css" rel="stylesheet" />
+        <link href="assets/css/main.css" rel="stylesheet" />
 
-    <!-- *************
+        <!-- *************
 			************ Vendor Css Files *************
 		************ -->
 
-    <!-- Scrollbar CSS -->
-    <link href="assets/vendor/overlay-scroll/OverlayScrollbars.min.css" rel="stylesheet"/>
-</head>
+        <!-- Scrollbar CSS -->
+        <link href="assets/vendor/overlay-scroll/OverlayScrollbars.min.css" rel="stylesheet" />
+    </head>
 
-<body>
-<!-- Page wrapper start -->
-<div class="page-wrapper">
+    <body>
+        <!-- Page wrapper start -->
+        <div class="page-wrapper">
+            <!-- App header starts -->
+            <div class="app-header d-flex align-items-center">
+                <!-- Toggle buttons start -->
+                <div class="d-flex col">
+                    <button class="toggle-sidebar" id="toggle-sidebar">
+                        <i class="bi bi-list lh-1 text-white"></i>
+                    </button>
+                    <button class="pin-sidebar" id="pin-sidebar">
+                        <i class="bi bi-list lh-1 text-white"></i>
+                    </button>
+                </div>
+                <!-- Toggle buttons end -->
 
-    <!-- App header starts -->
-    <div class="app-header d-flex align-items-center">
-
-        <!-- Toggle buttons start -->
-        <div class="d-flex col">
-            <button class="toggle-sidebar" id="toggle-sidebar">
-                <i class="bi bi-list lh-1 text-white"></i>
-            </button>
-            <button class="pin-sidebar" id="pin-sidebar">
-                <i class="bi bi-list lh-1 text-white"></i>
-            </button>
-        </div>
-        <!-- Toggle buttons end -->
-
-        <!-- App brand starts -->
-        <div class="app-brand py-2 col">
-            <a href="index.html">
-                <img alt="Markham Logo" class="logo" src="assets/images/logo_white.gif"/>
-            </a>
-        </div>
-        <!-- App brand ends -->
-
-        <!-- App header actions start -->
-        <div class="header-actions col">
-            <div class="d-lg-flex d-none align-items-center gap-2">
-                <div class="dropdown">
-                    <a aria-expanded="false" class="dropdown-toggle header-action-icon" data-bs-toggle="dropdown" href="#!"
-                       role="button">
-                        <i class="bi bi-exclamation-triangle fs-5 lh-1 text-white"></i>
-                        <span class="count-label">7</span>
+                <!-- App brand starts -->
+                <div class="app-brand py-2 col">
+                    <a href="index.html">
+                        <img alt="Markham Logo" class="logo" src="assets/images/logo_white.gif" />
                     </a>
-                    <div class="dropdown-menu dropdown-menu-end shadow-lg">
-                        <h5 class="fw-semibold px-3 py-2 text-primary">
-                            Notifications
-                        </h5>
-                        <div class="dropdown-item">
-                            <div class="d-flex py-2 border-bottom">
-                                <div class="icon-box md bg-success rounded-circle me-3">
-                                    <i class="bi bi-exclamation-triangle text-white fs-4"></i>
-                                </div>
-                                <div class="m-0">
-                                    <h6 class="mb-1 fw-semibold">Rosalie Deleon</h6>
-                                    <p class="mb-1 text-secondary">You have new order.</p>
-                                    <p class="small m-0 text-secondary">30 mins ago</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dropdown-item">
-                            <div class="d-flex py-2 border-bottom">
-                                <div class="icon-box md bg-danger rounded-circle me-3">
-                                    <i class="bi bi-exclamation-octagon text-white fs-4"></i>
-                                </div>
-                                <div class="m-0">
-                                    <h6 class="mb-1 fw-semibold">Donovan Stuart</h6>
-                                    <p class="mb-2">Membership has been expired.</p>
-                                    <p class="small m-0 text-secondary">2 days ago</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dropdown-item">
-                            <div class="d-flex py-2">
-                                <div class="icon-box md bg-warning rounded-circle me-3">
-                                    <i class="bi bi-exclamation-square text-white fs-4"></i>
-                                </div>
-                                <div class="m-0">
-                                    <h6 class="mb-1 fw-semibold">Roscoe Richards</h6>
-                                    <p class="mb-2">Payment pending. Pay now.</p>
-                                    <p class="small m-0 text-secondary">3 days ago</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-grid mx-3 my-1">
-                            <a class="btn btn-info" href="javascript:void(0)">View all</a>
-                        </div>
-                    </div>
                 </div>
-                <div class="dropdown">
-                    <a aria-expanded="false" class="dropdown-toggle header-action-icon" data-bs-toggle="dropdown" href="#!"
-                       role="button">
-                        <i class="bi bi-bell fs-5 lh-1 text-white"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end shadow-lg">
-                        <h5 class="fw-semibold px-3 py-2 text-primary">Updates</h5>
-                        <div class="dropdown-item">
-                            <div class="d-flex py-2 border-bottom">
-                                <div class="icon-box md border border-success grd-success-light rounded-circle me-3">
-                                    <span class="text-success">DS</span>
-                                </div>
-                                <div class="m-0">
-                                    <h6 class="mb-1 fw-semibold">Douglass Shaw</h6>
-                                    <p class="mb-1 text-secondary">
-                                        Membership has been ended.
-                                    </p>
-                                    <p class="small m-0 text-secondary">Today, 07:30pm</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dropdown-item">
-                            <div class="d-flex py-2 border-bottom">
-                                <div class="icon-box md border border-danger grd-danger-light rounded-circle me-3">
-                                    <span class="text-danger">WG</span>
-                                </div>
-                                <div class="m-0">
-                                    <h6 class="mb-1 fw-semibold">Willie Garrison</h6>
-                                    <p class="mb-1 text-secondary">
-                                        Congratulate, James for new job.
-                                    </p>
-                                    <p class="small m-0 text-secondary">Today, 08:00pm</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dropdown-item">
-                            <div class="d-flex py-2">
-                                <div class="icon-box md border border-warning grd-warning-light rounded-circle me-3">
-                                    <span class="text-warning">TJ</span>
-                                </div>
-                                <div class="m-0">
-                                    <h6 class="mb-1 fw-semibold">Terry Jenkins</h6>
-                                    <p class="mb-1 text-secondary">
-                                        Lewis added new schedule release.
-                                    </p>
-                                    <p class="small m-0 text-secondary">Today, 09:30pm</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-grid mx-3 my-1">
-                            <a class="btn btn-info" href="javascript:void(0)">View all</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <a aria-expanded="false" class="dropdown-toggle header-action-icon" data-bs-toggle="dropdown" href="#!"
-                       role="button">
-                        <i class="bi bi-envelope-open fs-5 lh-1 text-white"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end shadow-lg">
-                        <h5 class="fw-semibold px-3 py-2 text-primary">Messages</h5>
-                        <div class="dropdown-item">
-                            <div class="d-flex py-2 border-bottom">
-                                <img alt="Admin Theme" class="img-3x me-3 rounded-5" src="assets/images/user3.png"/>
-                                <div class="m-0">
-                                    <h6 class="mb-1 fw-semibold">Angelia Payne</h6>
-                                    <p class="mb-1 text-secondary">
-                                        Membership has been ended.
-                                    </p>
-                                    <p class="small m-0 text-secondary">Today, 07:30pm</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dropdown-item">
-                            <div class="d-flex py-2 border-bottom">
-                                <img alt="Admin Theme" class="img-3x me-3 rounded-5" src="assets/images/user1.png"/>
-                                <div class="m-0">
-                                    <h6 class="mb-1 fw-semibold">Clyde Fowler</h6>
-                                    <p class="mb-1 text-secondary">
-                                        Congratulate, James for new job.
-                                    </p>
-                                    <p class="small m-0 text-secondary">Today, 08:00pm</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dropdown-item">
-                            <div class="d-flex py-2">
-                                <img alt="Admin Theme" class="img-3x me-3 rounded-5" src="assets/images/user4.png"/>
-                                <div class="m-0">
-                                    <h6 class="mb-1 fw-semibold">Sophie Michiels</h6>
-                                    <p class="mb-2 text-secondary">
-                                        Lewis added new schedule release.
-                                    </p>
-                                    <p class="small m-0 text-secondary">Today, 09:30pm</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-grid mx-3 my-1">
-                            <a class="btn btn-primary" href="javascript:void(0)">View all</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="dropdown ms-3">
-                <a aria-expanded="false" class="dropdown-toggle d-flex py-2 align-items-center text-decoration-none"
-                   data-bs-toggle="dropdown"
-                   href="#!" id="userSettings" role="button">
-                    <img alt="User icon" class="rounded-2 img-3x" src="assets/images/markham_icon.png"/>
-                    <div class="ms-2 text-truncate d-lg-block d-none text-white">
-                        <span class="d-flex opacity-50 small">Admin</span>
-                        <span>Admin User</span>
-                    </div>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end shadow-lg">
-                    <div class="header-action-links">
-                        <a class="dropdown-item" href="profile.html"><i
-                                class="bi bi-person border border-primary text-primary"></i>Profile</a>
-                        <a class="dropdown-item" href="settings.html"><i
-                                class="bi bi-gear border border-danger text-danger"></i>Settings</a>
-                    </div>
-                    <div class="mx-3 mt-2 d-grid">
-                        <a class="btn btn-primary btn-sm text-white" href="login.html">Logout</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- App header actions end -->
-    </div>
+                <!-- App brand ends -->
 
-    <!-- App header ends -->
-
-    <!-- Main container start -->
-    <div class="main-container">
-
-        <!-- Sidebar wrapper start -->
-        <nav class="sidebar-wrapper" id="sidebar">
-
-            <!-- Sidebar profile starts -->
-            <div class="sidebar-profile">
-                <img alt="Admin Dashboard" class="profile-user mb-3" src="assets/images/markham_icon.png"/>
-                <div class="text-center">
-                    <h6 class="profile-name m-0 text-nowrap text-truncate">
-                        Admin User <!-- TODO dynamic user -->
-                    </h6>
-                </div>
-            </div>
-            <!-- Sidebar profile ends -->
-            <div class="sidebarMenuScroll">
-                <!-- Sidebar menu starts -->
-                <ul class="sidebar-menu">
-                    <li class="active current-page">
-                        <a href="index.html">
-                            <i class="bi bi-pie-chart"></i>
-                            <span class="menu-text">Dashboard</span>
+                <!-- App header actions start -->
+                <div class="header-actions col">
+                    <div class="d-lg-flex d-none align-items-center gap-2">
+                        <div class="dropdown">
+                            <a
+                                aria-expanded="false"
+                                class="dropdown-toggle header-action-icon"
+                                data-bs-toggle="dropdown"
+                                href="#!"
+                                role="button"
+                            >
+                                <i class="bi bi-exclamation-triangle fs-5 lh-1 text-white"></i>
+                                <span class="count-label">7</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end shadow-lg">
+                                <h5 class="fw-semibold px-3 py-2 text-primary">Notifications</h5>
+                                <div class="dropdown-item">
+                                    <div class="d-flex py-2 border-bottom">
+                                        <div class="icon-box md bg-success rounded-circle me-3">
+                                            <i class="bi bi-exclamation-triangle text-white fs-4"></i>
+                                        </div>
+                                        <div class="m-0">
+                                            <h6 class="mb-1 fw-semibold">Rosalie Deleon</h6>
+                                            <p class="mb-1 text-secondary">You have new order.</p>
+                                            <p class="small m-0 text-secondary">30 mins ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item">
+                                    <div class="d-flex py-2 border-bottom">
+                                        <div class="icon-box md bg-danger rounded-circle me-3">
+                                            <i class="bi bi-exclamation-octagon text-white fs-4"></i>
+                                        </div>
+                                        <div class="m-0">
+                                            <h6 class="mb-1 fw-semibold">Donovan Stuart</h6>
+                                            <p class="mb-2">Membership has been expired.</p>
+                                            <p class="small m-0 text-secondary">2 days ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item">
+                                    <div class="d-flex py-2">
+                                        <div class="icon-box md bg-warning rounded-circle me-3">
+                                            <i class="bi bi-exclamation-square text-white fs-4"></i>
+                                        </div>
+                                        <div class="m-0">
+                                            <h6 class="mb-1 fw-semibold">Roscoe Richards</h6>
+                                            <p class="mb-2">Payment pending. Pay now.</p>
+                                            <p class="small m-0 text-secondary">3 days ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-grid mx-3 my-1">
+                                    <a class="btn btn-info" href="javascript:void(0)">View all</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <a
+                                aria-expanded="false"
+                                class="dropdown-toggle header-action-icon"
+                                data-bs-toggle="dropdown"
+                                href="#!"
+                                role="button"
+                            >
+                                <i class="bi bi-bell fs-5 lh-1 text-white"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end shadow-lg">
+                                <h5 class="fw-semibold px-3 py-2 text-primary">Updates</h5>
+                                <div class="dropdown-item">
+                                    <div class="d-flex py-2 border-bottom">
+                                        <div
+                                            class="icon-box md border border-success grd-success-light rounded-circle me-3"
+                                        >
+                                            <span class="text-success">DS</span>
+                                        </div>
+                                        <div class="m-0">
+                                            <h6 class="mb-1 fw-semibold">Douglass Shaw</h6>
+                                            <p class="mb-1 text-secondary">Membership has been ended.</p>
+                                            <p class="small m-0 text-secondary">Today, 07:30pm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item">
+                                    <div class="d-flex py-2 border-bottom">
+                                        <div
+                                            class="icon-box md border border-danger grd-danger-light rounded-circle me-3"
+                                        >
+                                            <span class="text-danger">WG</span>
+                                        </div>
+                                        <div class="m-0">
+                                            <h6 class="mb-1 fw-semibold">Willie Garrison</h6>
+                                            <p class="mb-1 text-secondary">Congratulate, James for new job.</p>
+                                            <p class="small m-0 text-secondary">Today, 08:00pm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item">
+                                    <div class="d-flex py-2">
+                                        <div
+                                            class="icon-box md border border-warning grd-warning-light rounded-circle me-3"
+                                        >
+                                            <span class="text-warning">TJ</span>
+                                        </div>
+                                        <div class="m-0">
+                                            <h6 class="mb-1 fw-semibold">Terry Jenkins</h6>
+                                            <p class="mb-1 text-secondary">Lewis added new schedule release.</p>
+                                            <p class="small m-0 text-secondary">Today, 09:30pm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-grid mx-3 my-1">
+                                    <a class="btn btn-info" href="javascript:void(0)">View all</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <a
+                                aria-expanded="false"
+                                class="dropdown-toggle header-action-icon"
+                                data-bs-toggle="dropdown"
+                                href="#!"
+                                role="button"
+                            >
+                                <i class="bi bi-envelope-open fs-5 lh-1 text-white"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end shadow-lg">
+                                <h5 class="fw-semibold px-3 py-2 text-primary">Messages</h5>
+                                <div class="dropdown-item">
+                                    <div class="d-flex py-2 border-bottom">
+                                        <img
+                                            alt="Admin Theme"
+                                            class="img-3x me-3 rounded-5"
+                                            src="assets/images/user3.png"
+                                        />
+                                        <div class="m-0">
+                                            <h6 class="mb-1 fw-semibold">Angelia Payne</h6>
+                                            <p class="mb-1 text-secondary">Membership has been ended.</p>
+                                            <p class="small m-0 text-secondary">Today, 07:30pm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item">
+                                    <div class="d-flex py-2 border-bottom">
+                                        <img
+                                            alt="Admin Theme"
+                                            class="img-3x me-3 rounded-5"
+                                            src="assets/images/user1.png"
+                                        />
+                                        <div class="m-0">
+                                            <h6 class="mb-1 fw-semibold">Clyde Fowler</h6>
+                                            <p class="mb-1 text-secondary">Congratulate, James for new job.</p>
+                                            <p class="small m-0 text-secondary">Today, 08:00pm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item">
+                                    <div class="d-flex py-2">
+                                        <img
+                                            alt="Admin Theme"
+                                            class="img-3x me-3 rounded-5"
+                                            src="assets/images/user4.png"
+                                        />
+                                        <div class="m-0">
+                                            <h6 class="mb-1 fw-semibold">Sophie Michiels</h6>
+                                            <p class="mb-2 text-secondary">Lewis added new schedule release.</p>
+                                            <p class="small m-0 text-secondary">Today, 09:30pm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-grid mx-3 my-1">
+                                    <a class="btn btn-primary" href="javascript:void(0)">View all</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown ms-3">
+                        <a
+                            aria-expanded="false"
+                            class="dropdown-toggle d-flex py-2 align-items-center text-decoration-none"
+                            data-bs-toggle="dropdown"
+                            href="#!"
+                            id="userSettings"
+                            role="button"
+                        >
+                            <img alt="User icon" class="rounded-2 img-3x" src="assets/images/markham_icon.png" />
+                            <div class="ms-2 text-truncate d-lg-block d-none text-white">
+                                <span class="d-flex opacity-50 small">Admin</span>
+                                <span>Admin User</span>
+                            </div>
                         </a>
-                    </li>
-                    <li>
-                        <a href="analytics.html">
-                            <i class="bi bi-bar-chart-line"></i>
-                            <span class="menu-text">Analytics</span>
-                        </a>
-                    </li>
+                        <div class="dropdown-menu dropdown-menu-end shadow-lg">
+                            <div class="header-action-links">
+                                <a class="dropdown-item" href="profile.html"
+                                    ><i class="bi bi-person border border-primary text-primary"></i>Profile</a
+                                >
+                                <a class="dropdown-item" href="settings.html"
+                                    ><i class="bi bi-gear border border-danger text-danger"></i>Settings</a
+                                >
+                            </div>
+                            <div class="mx-3 mt-2 d-grid">
+                                <a class="btn btn-primary btn-sm text-white" href="login.html">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- App header actions end -->
+            </div>
 
-                    <li class="treeview">
-                        <a href="#!">
-                            <i class="bi bi-stickies"></i>
-                            <span class="menu-text">Camp Information</span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li>
-                                <a href="#">Current Camps</a>
+            <!-- App header ends -->
+
+            <!-- Main container start -->
+            <div class="main-container">
+                <!-- Sidebar wrapper start -->
+                <nav class="sidebar-wrapper" id="sidebar">
+                    <!-- Sidebar profile starts -->
+                    <div class="sidebar-profile">
+                        <img alt="Admin Dashboard" class="profile-user mb-3" src="assets/images/markham_icon.png" />
+                        <div class="text-center">
+                            <h6 class="profile-name m-0 text-nowrap text-truncate">
+                                Admin User
+                                <!-- TODO dynamic user -->
+                            </h6>
+                        </div>
+                    </div>
+                    <!-- Sidebar profile ends -->
+                    <div class="sidebarMenuScroll">
+                        <!-- Sidebar menu starts -->
+                        <ul class="sidebar-menu">
+                            <li class="active current-page">
+                                <a href="index.html">
+                                    <i class="bi bi-pie-chart"></i>
+                                    <span class="menu-text">Dashboard</span>
+                                </a>
                             </li>
                             <li>
-                                <a href="#">Past Camps</a>
+                                <a href="analytics.html">
+                                    <i class="bi bi-bar-chart-line"></i>
+                                    <span class="menu-text">Analytics</span>
+                                </a>
                             </li>
-                            <li>
-                                <a href="export_camp_info.html">Download Camp Spreadsheet</a>
+
+                            <li class="treeview">
+                                <a href="#!">
+                                    <i class="bi bi-stickies"></i>
+                                    <span class="menu-text">Camp Information</span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li>
+                                        <a href="#">Current Camps</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Past Camps</a>
+                                    </li>
+                                    <li>
+                                        <a href="export_camp_info.html">Download Camp Spreadsheet</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="treeview">
+                                <a href="#!">
+                                    <i class="bi bi-stickies"></i>
+                                    <span class="menu-text">User Management</span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li>
+                                        <a href="users/users.html">View Users</a>
+                                        <!-- todo replace with non html-->
+                                    </li>
+                                    <li>
+                                        <a href="#">Add User</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Remove User</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
-                    </li>
+                    </div>
+                    <!-- Sidebar menu ends -->
+                </nav>
+                <!-- Sidebar wrapper end -->
 
-                    <li class="treeview">
-                        <a href="#!">
-                            <i class="bi bi-stickies"></i>
-                            <span class="menu-text">User Management</span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li>
-                                <a href="users/users.html">View Users</a> <!-- todo replace with non html-->
-                            </li>
-                            <li>
-                                <a href="#">Add User</a>
-                            </li>
-                            <li>
-                                <a href="#">Remove User</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <!-- Sidebar menu ends -->
+                <!-- App container starts -->
+                <div class="app-container">
+                    <!-- App hero header starts -->
+                    <div class="app-hero-header mb-4">
+                        <!-- Breadcrumb and Stats start -->
+                        <div class="d-flex align-items-center mb-3">
+                            <!-- Breadcrumb start -->
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <i class="bi bi-house lh-1"></i>
+                                    <a class="text-decoration-none" href="index.html">Home</a>
+                                </li>
+                                <li aria-current="page" class="breadcrumb-item">Dashboard</li>
+                            </ol>
+                            <!-- Breadcrumb end -->
+                        </div>
+                        <!-- Breadcrumb and stats end -->
 
-        </nav>
-        <!-- Sidebar wrapper end -->
-
-        <!-- App container starts -->
-        <div class="app-container">
-
-            <!-- App hero header starts -->
-            <div class="app-hero-header mb-4">
-
-                <!-- Breadcrumb and Stats start -->
-                <div class="d-flex align-items-center mb-3">
-
-                    <!-- Breadcrumb start -->
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <i class="bi bi-house lh-1"></i>
-                            <a class="text-decoration-none" href="index.html">Home</a>
-                        </li>
-                        <li aria-current="page" class="breadcrumb-item">Dashboard</li>
-                    </ol>
-                    <!-- Breadcrumb end -->
-                </div>
-                <!-- Breadcrumb and stats end -->
-
-                <!-- Row start -->
-                <div class="row gx-3">
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="bg-transparent-light rounded-1 mb-3 position-relative">
-                            <div class="p-3 text-white">
-                                <div class="mb-2">
-                                    <i class="bi bi-bar-chart fs-1 lh-1"></i>
+                        <!-- Row start -->
+                        <div class="row gx-3">
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="bg-transparent-light rounded-1 mb-3 position-relative">
+                                    <div class="p-3 text-white">
+                                        <div class="mb-2">
+                                            <i class="bi bi-bar-chart fs-1 lh-1"></i>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <h5 class="m-0 fw-normal">Campers</h5>
+                                            <h3 class="m-0">3500</h3>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <h5 class="m-0 fw-normal">Campers</h5>
-                                    <h3 class="m-0">3500</h3>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="bg-transparent-light rounded-1 mb-3 position-relative">
+                                    <div class="p-3 text-white">
+                                        <div class="mb-2">
+                                            <i class="bi bi-clipboard fs-1 lh-1"></i>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <h5 class="m-0 fw-normal">Camps</h5>
+                                            <h3 class="m-0">60</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="bg-transparent-light rounded-1 mb-3 position-relative">
+                                    <div class="p-3 text-white">
+                                        <!--                    <div class="arrow-label">+18%</div>-->
+                                        <div class="mb-2">
+                                            <i class="bi bi-person fs-1 lh-1"></i>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <h5 class="m-0 fw-normal">Supervisors</h5>
+                                            <h3 class="m-0">65</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="bg-transparent-light rounded-1 mb-3 position-relative">
+                                    <div class="p-3 text-white">
+                                        <!--                    <div class="arrow-label">+24%</div>-->
+                                        <div class="mb-2">
+                                            <i class="bi bi-bell fs-1 lh-1"></i>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <h5 class="m-0 fw-normal">Directors</h5>
+                                            <h3 class="m-0">7</h3>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Row end -->
                     </div>
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="bg-transparent-light rounded-1 mb-3 position-relative">
-                            <div class="p-3 text-white">
-                                <div class="mb-2">
-                                    <i class="bi bi-clipboard fs-1 lh-1"></i>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <h5 class="m-0 fw-normal">Camps</h5>
-                                    <h3 class="m-0">60</h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="bg-transparent-light rounded-1 mb-3 position-relative">
-                            <div class="p-3 text-white">
-                                <!--                    <div class="arrow-label">+18%</div>-->
-                                <div class="mb-2">
-                                    <i class="bi bi-person fs-1 lh-1"></i>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <h5 class="m-0 fw-normal">Supervisors</h5>
-                                    <h3 class="m-0">65</h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="bg-transparent-light rounded-1 mb-3 position-relative">
-                            <div class="p-3 text-white">
-                                <!--                    <div class="arrow-label">+24%</div>-->
-                                <div class="mb-2">
-                                    <i class="bi bi-bell fs-1 lh-1"></i>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <h5 class="m-0 fw-normal">Directors</h5>
-                                    <h3 class="m-0">7</h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Row end -->
-            </div>
-            <!-- App Hero header ends -->
-            <!-- App body starts -->
-            <div class="app-body">
-                <!-- Row start -->
-                <div class="row gx-3">
-                    <div class="col-xl-12 col-sm-12 col-12">
-                        <div class="card mb-3">
-                            <div class="card-body height-230">
-                                <div class="row align-items-end">
-                                    <div class="col-sm-8">
-                                        <h3 class="mb-4">Weekly Summary</h3>
-                                        <p>
-                                            <span class="text-success fw-bold">40/100</span> attendances have been
-                                            submitted.
-                                        </p>
-                                        <div class="mt-4 d-flex flex-wrap gap-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="icon-box lg grd-info-light rounded-5 me-3">
-                                                    <i class="bi bi-clipboard text-info fs-3"></i>
-                                                </div>
-                                                <div class="m-0">
-                                                    <h3 class="m-0 fw-semibold">20</h3>
-                                                    <p class="m-0 text-secondary">Incident Reports</p>
+                    <!-- App Hero header ends -->
+                    <!-- App body starts -->
+                    <div class="app-body">
+                        <!-- Row start -->
+                        <div class="row gx-3">
+                            <div class="col-xl-12 col-sm-12 col-12">
+                                <div class="card mb-3">
+                                    <div class="card-body height-230">
+                                        <div class="row align-items-end">
+                                            <div class="col-sm-8">
+                                                <h3 class="mb-4">Weekly Summary</h3>
+                                                <p>
+                                                    <span class="text-success fw-bold">40/100</span> attendances have
+                                                    been submitted.
+                                                </p>
+                                                <div class="mt-4 d-flex flex-wrap gap-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="icon-box lg grd-info-light rounded-5 me-3">
+                                                            <i class="bi bi-clipboard text-info fs-3"></i>
+                                                        </div>
+                                                        <div class="m-0">
+                                                            <h3 class="m-0 fw-semibold">20</h3>
+                                                            <p class="m-0 text-secondary">Incident Reports</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="icon-box lg grd-danger-light rounded-5 me-3">
+                                                            <i class="bi bi-thermometer text-danger fs-3"></i>
+                                                        </div>
+                                                        <div class="m-0">
+                                                            <h3 class="m-0 fw-semibold">54</h3>
+                                                            <p class="m-0 text-secondary">Absent Campers</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="icon-box lg grd-info-light rounded-5 me-3">
+                                                            <i class="bi bi-megaphone text-info fs-3"></i>
+                                                        </div>
+                                                        <div class="m-0">
+                                                            <h3 class="m-0 fw-semibold">265</h3>
+                                                            <p class="m-0 text-secondary">Parent Comments</p>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="d-flex align-items-center">
-                                                <div class="icon-box lg grd-danger-light rounded-5 me-3">
-                                                    <i class="bi bi-thermometer text-danger fs-3"></i>
-                                                </div>
-                                                <div class="m-0">
-                                                    <h3 class="m-0 fw-semibold">54</h3>
-                                                    <p class="m-0 text-secondary">Absent Campers</p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <div class="icon-box lg grd-info-light rounded-5 me-3">
-                                                    <i class="bi bi-megaphone text-info fs-3"></i>
-                                                </div>
-                                                <div class="m-0">
-                                                    <h3 class="m-0 fw-semibold">265</h3>
-                                                    <p class="m-0 text-secondary">Parent Comments</p>
-                                                </div>
+                                            <div class="col-sm-4">
+                                                <img
+                                                    alt="Bootstrap Gallery"
+                                                    class="congrats-img"
+                                                    src="assets/images/sales.svg"
+                                                />
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <img alt="Bootstrap Gallery" class="congrats-img"
-                                             src="assets/images/sales.svg"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Row end -->
+
+                        <!-- Row start -->
+                        <div class="row gx-3">
+                            <div class="col-xl-6 col-12">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Regions</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table align-middle">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Link</th>
+                                                        <th>Page Title</th>
+                                                        <th>Visitors</th>
+                                                        <th>Percentage</th>
+                                                        <th>Growth</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="grd-info-light">
+                                                        <td>
+                                                            <a class="text-danger" href="javascript:void(0)">
+                                                                <i class="bi bi-box-arrow-up-right fs-3"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>Home</td>
+                                                        <td>56,000</td>
+                                                        <td>
+                                                            <div class="progress lg progress-spacer">
+                                                                <div
+                                                                    aria-valuemax="100"
+                                                                    aria-valuemin="0"
+                                                                    aria-valuenow="50"
+                                                                    class="progress-bar bg-primary"
+                                                                    role="progressbar"
+                                                                    style="width: 50%"
+                                                                ></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <p class="m-0 text-info">8% high</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="grd-success-light">
+                                                        <td>
+                                                            <a class="text-danger" href="javascript:void(0)">
+                                                                <i class="bi bi-box-arrow-up-right fs-3"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>About</td>
+                                                        <td>35,000</td>
+                                                        <td>
+                                                            <div class="progress lg progress-spacer">
+                                                                <div
+                                                                    aria-valuemax="100"
+                                                                    aria-valuemin="0"
+                                                                    aria-valuenow="60"
+                                                                    class="progress-bar bg-success"
+                                                                    role="progressbar"
+                                                                    style="width: 60%"
+                                                                ></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <p class="m-0 text-success">12% low</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="grd-warning-light">
+                                                        <td>
+                                                            <a class="text-danger" href="javascript:void(0)">
+                                                                <i class="bi bi-box-arrow-up-right fs-3"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>Contact</td>
+                                                        <td>28,000</td>
+                                                        <td>
+                                                            <div class="progress lg progress-spacer">
+                                                                <div
+                                                                    aria-valuemax="100"
+                                                                    aria-valuemin="0"
+                                                                    aria-valuenow="70"
+                                                                    class="progress-bar bg-warning"
+                                                                    role="progressbar"
+                                                                    style="width: 70%"
+                                                                ></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <p class="m-0 text-warning">15% high</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-12">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Camp Status</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table align-middle">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Link</th>
+                                                        <th>Page Title</th>
+                                                        <th>Visitors</th>
+                                                        <th>Percentage</th>
+                                                        <th>Growth</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="grd-info-light">
+                                                        <td>
+                                                            <a class="text-danger" href="javascript:void(0)">
+                                                                <i class="bi bi-box-arrow-up-right fs-3"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>Home</td>
+                                                        <td>56,000</td>
+                                                        <td>25%</td>
+                                                        <td>
+                                                            <p class="m-0 text-info">8% high</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="grd-success-light">
+                                                        <td>
+                                                            <a class="text-danger" href="javascript:void(0)">
+                                                                <i class="bi bi-box-arrow-up-right fs-3"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>About</td>
+                                                        <td>35,000</td>
+                                                        <td>23%</td>
+                                                        <td>
+                                                            <p class="m-0 text-success">12% low</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="grd-warning-light">
+                                                        <td>
+                                                            <a class="text-danger" href="javascript:void(0)">
+                                                                <i class="bi bi-box-arrow-up-right fs-3"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>Contact</td>
+                                                        <td>28,000</td>
+                                                        <td>18%</td>
+                                                        <td>
+                                                            <p class="m-0 text-warning">15% high</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Row end -->
+
+                        <!-- Row start -->
+                        <div class="row gx-3">
+                            <div class="col-xl-8 col-12">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Directors</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table align-middle">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Link</th>
+                                                        <th>Page Title</th>
+                                                        <th>Visitors</th>
+                                                        <th>Percentage</th>
+                                                        <th>Growth</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="grd-info-light">
+                                                        <td>
+                                                            <a class="text-danger" href="javascript:void(0)">
+                                                                <i class="bi bi-box-arrow-up-right fs-3"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>Home</td>
+                                                        <td>56,000</td>
+                                                        <td>
+                                                            <div class="progress lg progress-spacer">
+                                                                <div
+                                                                    aria-valuemax="100"
+                                                                    aria-valuemin="0"
+                                                                    aria-valuenow="50"
+                                                                    class="progress-bar bg-primary"
+                                                                    role="progressbar"
+                                                                    style="width: 50%"
+                                                                ></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <p class="m-0 text-info">8% high</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="grd-success-light">
+                                                        <td>
+                                                            <a class="text-danger" href="javascript:void(0)">
+                                                                <i class="bi bi-box-arrow-up-right fs-3"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>About</td>
+                                                        <td>35,000</td>
+                                                        <td>
+                                                            <div class="progress lg progress-spacer">
+                                                                <div
+                                                                    aria-valuemax="100"
+                                                                    aria-valuemin="0"
+                                                                    aria-valuenow="60"
+                                                                    class="progress-bar bg-success"
+                                                                    role="progressbar"
+                                                                    style="width: 60%"
+                                                                ></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <p class="m-0 text-success">12% low</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="grd-warning-light">
+                                                        <td>
+                                                            <a class="text-danger" href="javascript:void(0)">
+                                                                <i class="bi bi-box-arrow-up-right fs-3"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>Contact</td>
+                                                        <td>28,000</td>
+                                                        <td>
+                                                            <div class="progress lg progress-spacer">
+                                                                <div
+                                                                    aria-valuemax="100"
+                                                                    aria-valuemin="0"
+                                                                    aria-valuenow="70"
+                                                                    class="progress-bar bg-warning"
+                                                                    role="progressbar"
+                                                                    style="width: 70%"
+                                                                ></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <p class="m-0 text-warning">15% high</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-12">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Submitted Attendance</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="auto-align-graph" id="sourceMedium"></div>
+                                        <div class="text-center">
+                                            <h2 class="fw-semibold m-0">
+                                                40/100
+                                                <i class="bi bi-exclamation-circle-fill text-danger ms-1"></i>
+                                            </h2>
+                                            <p class="text-truncate">only 40% submitted</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Row end -->
                     </div>
+                    <!-- App body ends -->
+
+                    <!-- App footer start -->
+                    <div class="app-footer">
+                        <span>© Bootstrap Gallery 2024</span>
+                    </div>
+                    <!-- App footer end -->
                 </div>
-                <!-- Row end -->
-
-
-                <!-- Row start -->
-                <div class="row gx-3">
-                    <div class="col-xl-6 col-12">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <h5 class="card-title">Regions</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table align-middle">
-                                        <thead>
-                                        <tr>
-                                            <th>Link</th>
-                                            <th>Page Title</th>
-                                            <th>Visitors</th>
-                                            <th>Percentage</th>
-                                            <th>Growth</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="grd-info-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Home</td>
-                                            <td>56,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="50"
-                                                         class="progress-bar bg-primary" role="progressbar" style="width: 50%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-info">8% high</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-success-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>About</td>
-                                            <td>35,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="60"
-                                                         class="progress-bar bg-success" role="progressbar" style="width: 60%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-success">12% low</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-warning-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Contact</td>
-                                            <td>28,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="70"
-                                                         class="progress-bar bg-warning" role="progressbar" style="width: 70%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-warning">15% high</p>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-12">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <h5 class="card-title">Camp Status</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table align-middle">
-                                        <thead>
-                                        <tr>
-                                            <th>Link</th>
-                                            <th>Page Title</th>
-                                            <th>Visitors</th>
-                                            <th>Percentage</th>
-                                            <th>Growth</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="grd-info-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Home</td>
-                                            <td>56,000</td>
-                                            <td>25%</td>
-                                            <td>
-                                                <p class="m-0 text-info">8% high</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-success-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>About</td>
-                                            <td>35,000</td>
-                                            <td>23%</td>
-                                            <td>
-                                                <p class="m-0 text-success">12% low</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-warning-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Contact</td>
-                                            <td>28,000</td>
-                                            <td>18%</td>
-                                            <td>
-                                                <p class="m-0 text-warning">15% high</p>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Row end -->
-
-                <!-- Row start -->
-                <div class="row gx-3">
-                    <div class="col-xl-8 col-12">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <h5 class="card-title">Directors</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table align-middle">
-                                        <thead>
-                                        <tr>
-                                            <th>Link</th>
-                                            <th>Page Title</th>
-                                            <th>Visitors</th>
-                                            <th>Percentage</th>
-                                            <th>Growth</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="grd-info-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Home</td>
-                                            <td>56,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="50"
-                                                         class="progress-bar bg-primary" role="progressbar" style="width: 50%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-info">8% high</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-success-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>About</td>
-                                            <td>35,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="60"
-                                                         class="progress-bar bg-success" role="progressbar" style="width: 60%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-success">12% low</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-warning-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Contact</td>
-                                            <td>28,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="70"
-                                                         class="progress-bar bg-warning" role="progressbar" style="width: 70%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-warning">15% high</p>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-12">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <h5 class="card-title">Submitted Attendance</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="auto-align-graph" id="sourceMedium"></div>
-                                <div class="text-center">
-                                    <h2 class="fw-semibold m-0">
-                                        40/100
-                                        <i class="bi bi-exclamation-circle-fill text-danger ms-1"></i>
-                                    </h2>
-                                    <p class="text-truncate">only 40% submitted</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Row end -->
-
+                <!-- App container ends -->
             </div>
-            <!-- App body ends -->
-
-            <!-- App footer start -->
-            <div class="app-footer">
-                <span>© Bootstrap Gallery 2024</span>
-            </div>
-            <!-- App footer end -->
-
+            <!-- Main container end -->
         </div>
-        <!-- App container ends -->
+        <!-- Page wrapper end -->
 
-    </div>
-    <!-- Main container end -->
-
-</div>
-<!-- Page wrapper end -->
-
-<!-- *************
+        <!-- *************
         ************ JavaScript Files *************
     ************* -->
-<!-- Required jQuery first, then Bootstrap Bundle JS -->
-<script src="assets/js/vendor/jquery.min.js"></script>
-<script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+        <!-- Required jQuery first, then Bootstrap Bundle JS -->
+        <script src="assets/js/vendor/jquery.min.js"></script>
+        <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
 
-<!-- *************
+        <!-- *************
         ************ Vendor Js Files *************
     ************* -->
 
-<!-- Overlay Scroll JS -->
-<script src="assets/vendor/overlay-scroll/jquery.overlayScrollbars.min.js"></script>
-<script src="assets/vendor/overlay-scroll/custom-scrollbar.js"></script>
+        <!-- Overlay Scroll JS -->
+        <script src="assets/vendor/overlay-scroll/jquery.overlayScrollbars.min.js"></script>
+        <script src="assets/vendor/overlay-scroll/custom-scrollbar.js"></script>
 
-<!-- Apex Charts -->
-<script src="assets/vendor/apex/apexcharts.min.js"></script>
-<script src="assets/vendor/apex/custom/dash1/sales.js"></script>
-<script src="assets/vendor/apex/custom/dash1/revenue.js"></script>
-<script src="assets/vendor/apex/custom/dash1/source.js"></script>
+        <!-- Apex Charts -->
+        <script src="assets/vendor/apex/apexcharts.min.js"></script>
+        <script src="assets/vendor/apex/custom/dash1/sales.js"></script>
+        <script src="assets/vendor/apex/custom/dash1/revenue.js"></script>
+        <script src="assets/vendor/apex/custom/dash1/source.js"></script>
 
-<!-- Vector Maps -->
-<script src="assets/vendor/jvectormap/jquery-jvectormap-2.0.5.min.js"></script>
-<script src="assets/vendor/jvectormap/gdp-data.js"></script>
-<script src="assets/vendor/jvectormap/continents-mill.js"></script>
-<script src="assets/vendor/jvectormap/custom/world-map-markers3.js"></script>
+        <!-- Vector Maps -->
+        <script src="assets/vendor/jvectormap/jquery-jvectormap-2.0.5.min.js"></script>
+        <script src="assets/vendor/jvectormap/gdp-data.js"></script>
+        <script src="assets/vendor/jvectormap/continents-mill.js"></script>
+        <script src="assets/vendor/jvectormap/custom/world-map-markers3.js"></script>
 
-<!-- Custom JS files -->
-<script src="assets/js/custom.js"></script>
-<script src="assets/js/index.js"></script>
-</body>
-
+        <!-- Custom JS files -->
+        <script src="assets/js/custom.js"></script>
+        <script src="assets/js/index.js"></script>
+    </body>
 </html>
