@@ -9,6 +9,8 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         }
         logger.debug(`GET /api/camp/:user_id ${dataSanitization(req.params.user_id)}`);
 
+
+        // TODO replace with join
         const query = "SELECT * FROM camp_user_role WHERE user_id = $1";
         const values = [dataSanitization(req.params.user_id)];
         postgresClient.query(query, values, async (err, result) => {
@@ -22,6 +24,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                 const values = [result.rows[i].camp_id];
                 const res = await postgresClient.query(query, values);
                 result.rows[i]["camp_name"] = res.rows[0].camp_name;
+                result.rows[i]["start_date"] = res.rows[0].start_date;
             }
             res.json(result.rows);
         });

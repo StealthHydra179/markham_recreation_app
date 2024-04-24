@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
-    <title>Markham Recreation Camp Admin Page</title>
+    <title>Markham Recreation Camp Admin Page | Export Camp Info</title>
 
     <!-- Meta --> <!-- TODO FIX META -->
     <meta content="Marketplace for Bootstrap Admin Dashboards" name="description"/>
@@ -29,6 +29,9 @@
 
     <!-- Scrollbar CSS -->
     <link href="assets/vendor/overlay-scroll/OverlayScrollbars.min.css" rel="stylesheet"/>
+
+    <!-- Date Range CSS -->
+    <link rel="stylesheet" href="assets/vendor/daterange/daterange.css" />
 </head>
 
 <body>
@@ -331,7 +334,7 @@
                             <i class="bi bi-house lh-1"></i>
                             <a class="text-decoration-none" href="index.html">Home</a>
                         </li>
-                        <li aria-current="page" class="breadcrumb-item">Dashboard</li>
+                        <li aria-current="page" class="breadcrumb-item">Export Camps</li>
                     </ol>
                     <!-- Breadcrumb end -->
                 </div>
@@ -403,47 +406,81 @@
                 <div class="row gx-3">
                     <div class="col-xl-12 col-sm-12 col-12">
                         <div class="card mb-3">
-                            <div class="card-body height-230">
+                            <div class="card-body">
                                 <div class="row align-items-end">
-                                    <div class="col-sm-8">
-                                        <h3 class="mb-4">Weekly Summary</h3>
-                                        <p>
-                                            <span class="text-success fw-bold">40/100</span> attendances have been
-                                            submitted.
-                                        </p>
-                                        <div class="mt-4 d-flex flex-wrap gap-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="icon-box lg grd-info-light rounded-5 me-3">
-                                                    <i class="bi bi-clipboard text-info fs-3"></i>
-                                                </div>
-                                                <div class="m-0">
-                                                    <h3 class="m-0 fw-semibold">20</h3>
-                                                    <p class="m-0 text-secondary">Incident Reports</p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
+                                    <div class="col-sm-12">
+                                        <h3 class="mb-4 pt-4 ps-4">Fetch Camp Information</h3>
+                                        <div class="mt-4 d-flex flex-wrap">
+                                            <div class="col-sm-4 d-flex align-items-center p-3">
                                                 <div class="icon-box lg grd-danger-light rounded-5 me-3">
-                                                    <i class="bi bi-thermometer text-danger fs-3"></i>
+                                                    <i class="bi bi-pin-map text-danger fs-3"></i>
                                                 </div>
-                                                <div class="m-0">
-                                                    <h3 class="m-0 fw-semibold">54</h3>
-                                                    <p class="m-0 text-secondary">Absent Campers</p>
+                                                <div class="m-0 w-100">
+<!--                                                    <h3 class="m-0 fw-semibold">20</h3>-->
+                                                    <p class="m-0 text-secondary">Camp Location</p><!-- TODO maybe make it possible to select multiple -->
+                                                    <select class="form-select" aria-label="Camp location" id="campLocation">
+                                                        <option selected>Choose...</option>
+                                                        <option value="north">North</option>
+                                                        <option value="south">South</option>
+                                                        <option value="east">East</option>
+                                                        <option value="west">West</option>
+                                                        <option value="central">Central</option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                            <div class="d-flex align-items-center">
-                                                <div class="icon-box lg grd-info-light rounded-5 me-3">
-                                                    <i class="bi bi-megaphone text-info fs-3"></i>
+                                            <div class="col-sm-4 d-flex align-items-center p-3">
+                                                <div class="icon-box lg grd-danger-light rounded-5 me-3">
+                                                    <i class="bi bi-calendar text-danger fs-3"></i>
                                                 </div>
-                                                <div class="m-0">
-                                                    <h3 class="m-0 fw-semibold">265</h3>
-                                                    <p class="m-0 text-secondary">Parent Comments</p>
+                                                <div class="m-0 w-100">
+                                                    <p class="m-0 text-secondary">Camp Date</p> <!-- TODO maybe make a range? -->
+
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" id="campDate" />
+                                                        <span class="input-group-text">
+                                                          <i class="bi bi-calendar4"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 d-flex align-items-center p-3">
+                                                <div class="icon-box lg grd-danger-light rounded-5 me-3">
+                                                    <i class="bi bi-building text-danger fs-3"></i>
+                                                </div>
+                                                <div class="m-0 w-100">
+                                                    <p class="m-0 text-secondary">Camp Facility</p>
+                                                    <select class="form-select" aria-label="Camp facility" id="campFacility">
+                                                        <option selected>Choose...</option>
+                                                        <option value="civicCenter">Markham Civic Center</option>
+                                                        <option value="gym">Gym</option> <!-- TODO make dynamic-->
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <img alt="Bootstrap Gallery" class="congrats-img"
-                                             src="assets/images/sales.svg"/>
+                                </div>
+                                <div class="row align-items-end">
+                                    <div class="col-sm-12">
+                                        <div class="d-flex flex-wrap">
+                                            <div class="col-sm-10 d-flex align-items-center p-3">
+                                                <div class="icon-box lg grd-danger-light rounded-5 me-3">
+                                                    <i class="bi bi-clipboard text-danger fs-3"></i> <!-- TODO this icon is not aligned ?? -->
+                                                </div>
+                                                <div class="m-0 w-100">
+                                                    <!--                                                    <h3 class="m-0 fw-semibold">20</h3>-->
+                                                    <p class="m-0 text-secondary">Camp Name</p>
+                                                    <input type="text" class="form-control" placeholder="Enter camp name" id="campName" />
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 d-flex align-items-center p-3">
+                                                <div class="m-0 w-100">
+                                                    <br>
+                                                    <button type="button" class="btn btn-primary w-100 text-white">
+                                                        Submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -452,253 +489,39 @@
                 </div>
                 <!-- Row end -->
 
-
                 <!-- Row start -->
                 <div class="row gx-3">
-                    <div class="col-xl-6 col-12">
+                    <div class="col-xl-12 col-sm-12 col-12">
                         <div class="card mb-3">
-                            <div class="card-header">
-                                <h5 class="card-title">Regions</h5>
-                            </div>
                             <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table align-middle">
-                                        <thead>
-                                        <tr>
-                                            <th>Link</th>
-                                            <th>Page Title</th>
-                                            <th>Visitors</th>
-                                            <th>Percentage</th>
-                                            <th>Growth</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="grd-info-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Home</td>
-                                            <td>56,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="50"
-                                                         class="progress-bar bg-primary" role="progressbar" style="width: 50%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-info">8% high</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-success-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>About</td>
-                                            <td>35,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="60"
-                                                         class="progress-bar bg-success" role="progressbar" style="width: 60%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-success">12% low</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-warning-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Contact</td>
-                                            <td>28,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="70"
-                                                         class="progress-bar bg-warning" role="progressbar" style="width: 70%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-warning">15% high</p>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                <div class="row align-items-end">
+                                    <div class="col-sm-12">
+                                        <h3 class="mb-4 pt-4 ps-4">Camps</h3>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-12">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <h5 class="card-title">Camp Status</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table align-middle">
-                                        <thead>
-                                        <tr>
-                                            <th>Link</th>
-                                            <th>Page Title</th>
-                                            <th>Visitors</th>
-                                            <th>Percentage</th>
-                                            <th>Growth</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="grd-info-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Home</td>
-                                            <td>56,000</td>
-                                            <td>25%</td>
-                                            <td>
-                                                <p class="m-0 text-info">8% high</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-success-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>About</td>
-                                            <td>35,000</td>
-                                            <td>23%</td>
-                                            <td>
-                                                <p class="m-0 text-success">12% low</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-warning-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Contact</td>
-                                            <td>28,000</td>
-                                            <td>18%</td>
-                                            <td>
-                                                <p class="m-0 text-warning">15% high</p>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Row end -->
+                                <div class="row px-3" id="campResults">
+                                    <div class="col-sm-12">
+                                        <div class="alert alert-secondary" role="alert">
+                                            <h4>Basketball @ Angus Glen CC</h4>
+                                            <p>
+                                                Camp Information
+                                            </p>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <p>
+                                                        Camp Supervisor: John Doe<br>Camp Director: Jane Doe<br>Campers: 20
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-2 align-self-end">
+                                                    <button type="button" class="btn btn-primary w-100 text-white">
+                                                        Export
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                <!-- Row start -->
-                <div class="row gx-3">
-                    <div class="col-xl-8 col-12">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <h5 class="card-title">Directors</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table align-middle">
-                                        <thead>
-                                        <tr>
-                                            <th>Link</th>
-                                            <th>Page Title</th>
-                                            <th>Visitors</th>
-                                            <th>Percentage</th>
-                                            <th>Growth</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="grd-info-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Home</td>
-                                            <td>56,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="50"
-                                                         class="progress-bar bg-primary" role="progressbar" style="width: 50%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-info">8% high</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-success-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>About</td>
-                                            <td>35,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="60"
-                                                         class="progress-bar bg-success" role="progressbar" style="width: 60%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-success">12% low</p>
-                                            </td>
-                                        </tr>
-                                        <tr class="grd-warning-light">
-                                            <td>
-                                                <a class="text-danger" href="javascript:void(0)">
-                                                    <i class="bi bi-box-arrow-up-right fs-3"></i>
-                                                </a>
-                                            </td>
-                                            <td>Contact</td>
-                                            <td>28,000</td>
-                                            <td>
-                                                <div class="progress lg progress-spacer">
-                                                    <div aria-valuemax="100" aria-valuemin="0"
-                                                         aria-valuenow="70"
-                                                         class="progress-bar bg-warning" role="progressbar" style="width: 70%"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="m-0 text-warning">15% high</p>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-12">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <h5 class="card-title">Submitted Attendance</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="auto-align-graph" id="sourceMedium"></div>
-                                <div class="text-center">
-                                    <h2 class="fw-semibold m-0">
-                                        40/100
-                                        <i class="bi bi-exclamation-circle-fill text-danger ms-1"></i>
-                                    </h2>
-                                    <p class="text-truncate">only 40% submitted</p>
                                 </div>
                             </div>
                         </div>
@@ -730,6 +553,8 @@
 <!-- Required jQuery first, then Bootstrap Bundle JS -->
 <script src="assets/js/vendor/jquery.min.js"></script>
 <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="assets/js/vendor/modernizr.js"></script>
+<script src="assets/js/vendor/moment.min.js"></script>
 
 <!-- *************
         ************ Vendor Js Files *************
@@ -750,6 +575,10 @@
 <script src="assets/vendor/jvectormap/gdp-data.js"></script>
 <script src="assets/vendor/jvectormap/continents-mill.js"></script>
 <script src="assets/vendor/jvectormap/custom/world-map-markers3.js"></script>
+
+<!-- Date Range JS -->
+<script src="assets/vendor/daterange/daterange.js"></script>
+<script src="assets/vendor/daterange/custom-daterange.js"></script>
 
 <!-- Custom JS files -->
 <script src="assets/js/custom.js"></script>

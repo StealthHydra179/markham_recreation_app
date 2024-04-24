@@ -53,6 +53,13 @@ logger.configure({
             maxSize: "20m",
             level: "info",
         }),
+        new DailyRotateFile({
+            filename: "logs/markham_rec_server-%DATE%-all.log",
+            datePattern: "YYYY-MM-DD",
+            zippedArchive: false,
+            maxSize: "20m",
+            level: "debug",
+        }),
     ],
 });
 // Development environment
@@ -130,3 +137,7 @@ require("./express/admin/adminRoutes")(...routePassthrough);
 expressServer.listen(serverPort, () => {
     logger.info(`Server running on port ${serverPort}`);
 });
+
+expressServer.get("/test", async (req, res) => {
+    await require("./express/admin/csvExportHelper")(logger, postgresClient, getPostgresConnected, req, res);
+})
