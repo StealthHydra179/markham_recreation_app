@@ -14,6 +14,7 @@ const String serverUrl = 'http://10.0.2.2:3000'; //localhost is 10.0.2.2 in the 
 // Current Camp
 int campId = -1; //TODO: change this to be dynamic based on the user's camp
 String campName = 'Loading'; //TODO: change this to be dynamic based on the user's camp
+DateTime startDate = DateTime.now(); //TODO: change this to be dynamic based on the user's camp
 
 // List of available camp // TODO fetch from server
 List<Camp> campList = [
@@ -38,6 +39,7 @@ Future<void> fetchcamp() async {
     if (campId == -1) {
       campId = campList[0].id;
       campName = campList[0].name;
+      startDate = campList[0].startDate;
     }
   } else {
     throw Exception('Failed to load camp');
@@ -49,13 +51,15 @@ Future<void> fetchcamp() async {
 class Camp {
   final int id;
   final String name;
+  final DateTime startDate;
 
-  Camp({required this.id, required this.name});
+  Camp({required this.id, required this.name, required this.startDate});
 
   factory Camp.fromJson(Map<String, dynamic> json) {
     return Camp(
       id: json['camp_id'],
       name: json['camp_name'],
+      startDate: DateTime.parse(json['start_date']),
     );
   }
 }

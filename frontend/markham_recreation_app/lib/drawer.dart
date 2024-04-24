@@ -12,6 +12,13 @@ import 'package:markham_recreation_app/pages/absences/fetch_absences.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/pages/weekly_meeting_notes/fetch_weekly_meeting_notes.dart';
 
+
+// TODO move dateformatter to globals file
+String dateFormatter(String date) {
+  // Import form yyyy-mm-ddThh:mm:ss.000Z to mm/dd/yyyy
+  return '${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}';
+}
+
 // TODO so when a page openned pop both the drawer and the previous page before navigating to a new page
 // TODO figure out why when restart server this doesnt open until the server responds
 Drawer drawer(BuildContext context) {
@@ -50,10 +57,12 @@ Drawer drawer(BuildContext context) {
                       itemCount: globals.campList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
-                          title: Text(globals.campList[index].name),
+                          title: Text(globals.campList[index].name), // TODO fix the arrow changing directions on tap but not changing back
+                          subtitle: Text("${dateFormatter(globals.campList[index].startDate.toString())} to ${dateFormatter(globals.campList[index].startDate.add(const Duration(days: 7)).toString())}"),
                           onTap: () {
                             globals.campId = globals.campList[index].id;
                             globals.campName = globals.campList[index].name;
+                            globals.startDate = globals.campList[index].startDate;
                             Navigator.pop(context);
                             Navigator.pop(context);
                             Navigator.popUntil(context, (_) => false);

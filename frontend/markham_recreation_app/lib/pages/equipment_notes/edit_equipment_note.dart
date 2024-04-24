@@ -140,6 +140,8 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                           break;
                         }
                       }
+
+                      //TODO missing some navigator code?
                 
                     });
                   } else {
