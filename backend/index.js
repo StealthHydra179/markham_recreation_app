@@ -1,10 +1,10 @@
 const express = require("express");
-let cookie_parser=require('cookie-parser')
+let cookie_parser = require("cookie-parser");
 const { Client: postgres_client } = require("pg");
 const winston = require("winston");
 const DailyRotateFile = require("winston-daily-rotate-file");
 const uuid = require("uuid");
-var session = require('express-session')
+var session = require("express-session");
 
 // Load environment variables
 require("dotenv").config();
@@ -13,22 +13,24 @@ require("dotenv").config();
 const expressServer = express();
 const serverPort = 3000;
 expressServer.use(express.json());
-expressServer.use(cookie_parser('mark_rec_cjkw3as'));
+expressServer.use(cookie_parser("mark_rec_cjkw3as"));
 // expressServer.set('trust proxy', 1)
-expressServer.use(session({
-    genid: function(req) {
-        let id = uuid.v4() // use UUIDs for session IDs
-        console.log("Session ID: " + id);//todo why is this being called like 7 times
-        return id // use UUIDs for session IDs
-    },
-    secret: 'mark_rec_cjkw3as',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        secure: false, //TODO when on https, set to true
-        maxAge: 600000
-    }
-}))
+expressServer.use(
+    session({
+        genid: function (req) {
+            let id = uuid.v4(); // use UUIDs for session IDs
+            console.log("Session ID: " + id); //todo why is this being called like 7 times
+            return id; // use UUIDs for session IDs
+        },
+        secret: "mark_rec_cjkw3as",
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            secure: false, //TODO when on https, set to true
+            maxAge: 600000,
+        },
+    }),
+);
 
 // Database Connection
 const postgresClient = new postgres_client({
@@ -134,7 +136,7 @@ expressServer.get("/api", (req, res) => {
     res.send({ message: "Hello World" });
 });
 
-expressServer.use('/admin', express.static("web"));
+expressServer.use("/admin", express.static("web"));
 
 let routePassthrough = [expressServer, logger, postgresClient, dataSanitization, getPostgresConnected];
 

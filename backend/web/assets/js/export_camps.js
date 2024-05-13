@@ -5,7 +5,8 @@ function clearDate() {
 let camps = [];
 
 function loadCamps() {
-    let campLocation = document.getElementById("campLocation").options[document.getElementById("campLocation").selectedIndex].text;
+    let campLocation =
+        document.getElementById("campLocation").options[document.getElementById("campLocation").selectedIndex].text;
     let campDate = document.getElementById("campDate").value;
     let campFacility = document.getElementById("campFacility").value;
     let campNamePartial = document.getElementById("campName").value;
@@ -27,7 +28,7 @@ function loadCamps() {
         let location = camp.location_name;
         let start_date = camp.start_date;
         let end_date = camp.end_date;
-        let campID = camp.camp_id
+        let campID = camp.camp_id;
 
         if (campLocation !== "" && campLocation.toLowerCase().includes(location.toLowerCase()) === false) {
             // console.log("location" + campName)
@@ -87,7 +88,7 @@ function loadCamps() {
                 </div>
             </div>
         </div>
-        `
+        `;
 
         output.innerHTML += templateOutput;
     });
@@ -95,7 +96,8 @@ function loadCamps() {
 
 function updateFacilities() {
     // when the location is changed, update the facilities
-    let location = document.getElementById("campLocation").options[document.getElementById("campLocation").selectedIndex].text;
+    let location =
+        document.getElementById("campLocation").options[document.getElementById("campLocation").selectedIndex].text;
     let facilitySelect = document.getElementById("facilities");
     let facilityOptions = facilitySelect.options;
     for (let i = 0; i < facilityOptions.length; i++) {
@@ -115,7 +117,7 @@ function updateFacilities() {
 let facilitySelect = document.getElementById("campLocation");
 facilitySelect.addEventListener("change", updateFacilities);
 
-setup()
+setup();
 function setup() {
     // Location setup
     let locationFetchUrl = "/api/admin/fetch_locations";
@@ -135,7 +137,6 @@ function setup() {
         }
     };
     xhr.send();
-    
 
     //Facility setup
     let facilityFetchUrl = "/api/admin/fetch_facilities";
@@ -149,13 +150,12 @@ function setup() {
             facilities.forEach((facility) => {
                 let option = document.createElement("option");
                 option.value = facility.facility_name;
-                option.classList.add(facility.location_name+"_location_facility")
+                option.classList.add(facility.location_name + "_location_facility");
                 facilitySelect.appendChild(option);
             });
         }
     };
     facilityXhr.send();
-
 
     //Fetch camps
     let campFetchUrl = "/api/admin/fetch_camps";
@@ -167,9 +167,8 @@ function setup() {
             camps = JSON.parse(campXhr.responseText);
             loadCamps();
         }
-    }
+    };
     campXhr.send();
-
 
     let url = "/api/admin/user_info";
     let userXHR = new XMLHttpRequest();
@@ -185,9 +184,7 @@ function setup() {
         }
     };
     userXHR.send();
-
 } // TODO BUG FIX CUS THERES GONNA BE MANY BUGS
-
 
 // TODO maybe on type load camps
 
@@ -197,22 +194,21 @@ function fetchCSV(campID, camp_name) {
     let xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.open("GET", csvFetchUrl, true);
     xmlHttpRequest.setRequestHeader("Content-Type", "application/json");
-    xmlHttpRequest.responseType = 'blob';
+    xmlHttpRequest.responseType = "blob";
     xmlHttpRequest.onreadystatechange = function () {
         if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === 200) {
             //download passed file
-            let a = document.createElement('a');
+            let a = document.createElement("a");
             a.href = window.URL.createObjectURL(xmlHttpRequest.response);
             a.download = camp_name + ".xlsx";
-            a.style.display = 'none';
+            a.style.display = "none";
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(a.href);
         }
-    }
+    };
     xmlHttpRequest.send();
 }
-
 
 // function getUser() {
 //     let userFetchUrl = "/api/admin/user_info";

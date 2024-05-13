@@ -11,7 +11,6 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         }
         logger.debug(`GET /api/camp/:user_id ${dataSanitization(req.params.user_id)}`);
 
-
         // TODO replace with join
         const query = "SELECT * FROM camp_user_role WHERE user_id = $1";
         const values = [dataSanitization(req.params.user_id)];

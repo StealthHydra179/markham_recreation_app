@@ -15,8 +15,8 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         let message = "Login failed";
         let user = req.body.username;
         let pass = req.body.password;
-        console.log(pass)
-        console.log(req.body)
+        console.log(pass);
+        console.log(req.body);
         // url encode user and pass
         user = encodeURIComponent(user);
         pass = encodeURIComponent(pass);
@@ -39,7 +39,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                 result.rows[0] = { user_password: "" };
                 logger.info("User not found");
             }
-            bcrypt.compare(pass, result.rows[0].user_password, function(err, result) {
+            bcrypt.compare(pass, result.rows[0].user_password, function (err, result) {
                 // result == true
                 // let user = result.rows[0].email;
                 if (result) {
@@ -69,58 +69,53 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                             supervisor.push(res1.rows[i].camp_id);
                         }
 
-
-                        if (full_time.length + director.length +supervisor.length == 0) {
+                        if (full_time.length + director.length + supervisor.length == 0) {
                             // res.status(401).send({ message: "Login failed" }); // TODO display message on login page
-                            console.log(req.session.user_id)
+                            console.log(req.session.user_id);
                             res.status(401).send({ message: "Login failed" });
                             logger.info("Login failed");
                             return;
                         }
 
-
                         // res.cookie('user', result.rows[0].email, {signed: true})
                         req.session.regenerate(function (err) {
                             if (err) {
                                 logger.error("Error regenerating session");
-                                res.status(500).send({message: "Error logging in"});
+                                res.status(500).send({ message: "Error logging in" });
                                 return err; //del next
                             }
 
                             // store user information in session, typically a user id
-                            req.session.user = req.body.username
-                            req.session.userId = res1.rows[0].user_id
+                            req.session.user = req.body.username;
+                            req.session.userId = res1.rows[0].user_id;
 
-                            req.session.camp_full_time = full_time
-                            req.session.camp_director = director
-                            req.session.camps = supervisor
-                            logger.info("User logged in: " + req.session.user)
+                            req.session.camp_full_time = full_time;
+                            req.session.camp_director = director;
+                            req.session.camps = supervisor;
+                            logger.info("User logged in: " + req.session.user);
 
                             // save the session before redirection to ensure page
                             // load does not happen before session is saved
                             req.session.save(function (err) {
                                 if (err) {
                                     logger.error("Error saving session");
-                                    res.status(500).send({message: "Error logging in"});
+                                    res.status(500).send({ message: "Error logging in" });
                                     return err; // delted next
                                 }
                                 // res.status(200).send({ message: message }); // todo cookie stuff
-                                res.send({ message: message })
+                                res.send({ message: message });
                                 logger.info("Mobile Login successful");
-                                logger.info("User logged in: ",req.session)
-                            })
-                        })
+                                logger.info("User logged in: ", req.session);
+                            });
+                        });
                     });
-
-
-
                 } else {
                     res.status(401).send({ message: "Login failed" });
                     logger.info("Login failed");
                 }
             });
         });
-    })
+    });
 
     expressServer.post("/api/logout", (req, res) => {
         req.session.destroy(function (err) {
@@ -130,5 +125,5 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             }
             res.status(200).send({ message: "Logged out" });
         });
-    })
-}
+    });
+};

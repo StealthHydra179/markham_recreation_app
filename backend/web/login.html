@@ -1,83 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Admin Templates - Dashboard Templates - Unify Admin Template</title>
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Admin Templates - Dashboard Templates - Unify Admin Template</title>
-
-    <!-- Meta -->
-    <meta name="description" content="Marketplace for Bootstrap Admin Dashboards" />
-    <meta name="author" content="Bootstrap Gallery" />
-    <link rel="canonical" href="https://www.bootstrap.gallery/">
-    <meta property="og:url" content="https://www.bootstrap.gallery">
-    <meta property="og:title" content="Admin Templates - Dashboard Templates | Bootstrap Gallery">
-    <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards">
-    <meta property="og:type" content="Website">
-    <meta property="og:site_name" content="Bootstrap Gallery">
-<!--    <link rel="shortcut icon" href="assets/images/favicon.svg" />-->
-    <link href="assets/images/markham_icon.png" rel="shortcut icon"/>
-    <!-- *************
+        <!-- Meta -->
+        <meta name="description" content="Marketplace for Bootstrap Admin Dashboards" />
+        <meta name="author" content="Bootstrap Gallery" />
+        <link rel="canonical" href="https://www.bootstrap.gallery/" />
+        <meta property="og:url" content="https://www.bootstrap.gallery" />
+        <meta property="og:title" content="Admin Templates - Dashboard Templates | Bootstrap Gallery" />
+        <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards" />
+        <meta property="og:type" content="Website" />
+        <meta property="og:site_name" content="Bootstrap Gallery" />
+        <!--    <link rel="shortcut icon" href="assets/images/favicon.svg" />-->
+        <link href="assets/images/markham_icon.png" rel="shortcut icon" />
+        <!-- *************
 			************ CSS Files *************
 		************* -->
-    <link rel="stylesheet" href="assets/fonts/bootstrap/bootstrap-icons.css" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-</head>
+        <link rel="stylesheet" href="assets/fonts/bootstrap/bootstrap-icons.css" />
+        <link rel="stylesheet" href="assets/css/main.css" />
+    </head>
 
-<body class="login-bg">
-<!-- Container start -->
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-xl-4 col-lg-5 col-sm-8 col-12">
-            <div class="my-5">
-                <form class="login-form rounded-4 p-4 mt-5" action="/admin/login" method="post">
-                    <a href="index.html" class="mb-4 d-flex">
-                        <img src="assets/images/logo_white.gif" class="img-fluid login-logo" alt="Unity Admin Dashboard" />
-                    </a>
-                    <h2 class="fw-light mb-4">Login</h2>
-                    <div class="mb-3">
-                        <label class="form-label" for="username">Your Email</label>
-                        <input type="text" name="username" id="username" class="form-control border-0" placeholder="Enter your email" />
+    <body class="login-bg">
+        <!-- Container start -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-4 col-lg-5 col-sm-8 col-12">
+                    <div class="my-5">
+                        <form class="login-form rounded-4 p-4 mt-5" action="/admin/login" method="post">
+                            <a href="index.html" class="mb-4 d-flex">
+                                <img
+                                    src="assets/images/logo_white.gif"
+                                    class="img-fluid login-logo"
+                                    alt="Unity Admin Dashboard"
+                                />
+                            </a>
+                            <h2 class="fw-light mb-4">Login</h2>
+                            <div class="mb-3">
+                                <label class="form-label" for="username">Your Email</label>
+                                <input
+                                    type="text"
+                                    name="username"
+                                    id="username"
+                                    class="form-control border-0"
+                                    placeholder="Enter your email"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="password">Your Password</label>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    id="password"
+                                    class="form-control border-0"
+                                    placeholder="Enter password"
+                                />
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="form-check m-0">
+                                    <!--                            <input class="form-check-input border-0" type="checkbox" value="" id="rememberPassword" />-->
+                                    <!--                            <label class="form-check-label" for="rememberPassword">Remember</label>-->
+                                </div>
+                                <a href="forgot-password.html" class="text-white text-decoration-underline"
+                                    >Lost password?</a
+                                >
+                            </div>
+                            <div class="d-grid py-3 mt-3">
+                                <button type="submit" class="btn btn-lg btn-primary">
+                                    <!--                            onclick="submitLogin()"-->
+                                    Login
+                                </button>
+                            </div>
+                            <!--                    <div class="text-center py-3">or Login with</div>-->
+                            <!--                    <div class="d-flex gap-2 justify-content-center">-->
+                            <!--                        <button type="submit" class="btn btn-outline-light">-->
+                            <!--                            <i class="bi bi-google me-2"></i>Gmail-->
+                            <!--                        </button>-->
+                            <!--                        <button type="submit" class="btn btn-outline-light">-->
+                            <!--                            <i class="bi bi-facebook me-2"></i>Facebook-->
+                            <!--                        </button>-->
+                            <!--                    </div>-->
+                            <!--                    <div class="text-center pt-4">-->
+                            <!--                        <span>Not registered?</span>-->
+                            <!--                        <a href="signup.html" class="text-white text-decoration-underline ms-2">-->
+                            <!--                            SignUp</a>-->
+                            <!--                    </div>-->
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="password">Your Password</label>
-                        <input type="password" name="password" id="password" class="form-control border-0" placeholder="Enter password" />
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="form-check m-0">
-<!--                            <input class="form-check-input border-0" type="checkbox" value="" id="rememberPassword" />-->
-<!--                            <label class="form-check-label" for="rememberPassword">Remember</label>-->
-                        </div>
-                        <a href="forgot-password.html" class="text-white text-decoration-underline">Lost password?</a>
-                    </div>
-                    <div class="d-grid py-3 mt-3">
-                        <button type="submit" class="btn btn-lg btn-primary">
-<!--                            onclick="submitLogin()"-->
-                            Login
-                        </button>
-                    </div>
-<!--                    <div class="text-center py-3">or Login with</div>-->
-<!--                    <div class="d-flex gap-2 justify-content-center">-->
-<!--                        <button type="submit" class="btn btn-outline-light">-->
-<!--                            <i class="bi bi-google me-2"></i>Gmail-->
-<!--                        </button>-->
-<!--                        <button type="submit" class="btn btn-outline-light">-->
-<!--                            <i class="bi bi-facebook me-2"></i>Facebook-->
-<!--                        </button>-->
-<!--                    </div>-->
-<!--                    <div class="text-center pt-4">-->
-<!--                        <span>Not registered?</span>-->
-<!--                        <a href="signup.html" class="text-white text-decoration-underline ms-2">-->
-<!--                            SignUp</a>-->
-<!--                    </div>-->
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- Container end -->
+        <!-- Container end -->
 
-<script src="assets/js/login.js"></script>
-</body>
-
+        <script src="assets/js/login.js"></script>
+    </body>
 </html>
