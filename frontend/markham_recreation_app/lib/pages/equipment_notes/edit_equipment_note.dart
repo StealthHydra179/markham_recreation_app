@@ -8,7 +8,7 @@ import 'package:markham_recreation_app/pages/equipment_notes/equipment_note_deta
 import 'package:markham_recreation_app/pages/equipment_notes/fetch_equipment_notes.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'equipment_note.dart';
+import 'package:markham_recreation_app/pages/equipment_notes/equipment_note.dart';
 
 // Edit an equipment note
 class EditEquipmentNote extends StatefulWidget {
@@ -106,7 +106,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                 // TODO check if date is out of bounds
 
                 // Send the checklist to the server
-                Future<http.Response> response = http.post(
+                Future<http.Response> response = globals.session.post(
                   Uri.parse('${globals.serverUrl}/api/edit_equipment_note/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -128,7 +128,7 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                       ),
                     );
 
-                    futureFetchEquipmentNotes().then((equipmentNotes) {
+                    futureFetchEquipmentNotes(context).then((equipmentNotes) {
                       // move back 2 pages
                       Navigator.pop(context);
                       Navigator.pop(context);

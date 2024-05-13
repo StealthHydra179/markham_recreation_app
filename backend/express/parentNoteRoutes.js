@@ -1,5 +1,7 @@
+const authenticate = require("./helper/authentication");
+
 module.exports = function (expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
-    expressServer.get("/api/get_parent_notes/:camp_id", (req, res) => {
+    expressServer.get("/api/get_parent_notes/:camp_id", authenticate, (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({ message: "Database not connected" });
@@ -24,7 +26,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         });
     });
 
-    expressServer.post("/api/new_parent_notes/:camp_id", (req, res) => {
+    expressServer.post("/api/new_parent_notes/:camp_id", authenticate, (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({ message: "Database not connected" });
@@ -61,7 +63,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     });
 
     // TODO sanitize before putting into logger
-    expressServer.post("/api/edit_parent_notes/:camp_id", (req, res) => {
+    expressServer.post("/api/edit_parent_notes/:camp_id", authenticate, (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({ message: "Database not connected" });
@@ -96,7 +98,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         res.json(req.body);
     });
 
-    expressServer.post("/api/delete_parent_notes/:camp_id", (req, res) => {
+    expressServer.post("/api/delete_parent_notes/:camp_id", authenticate, (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({ message: "Database not connected" });

@@ -8,7 +8,7 @@ import 'package:markham_recreation_app/pages/parent_notes/parent_notes_details.d
 import 'package:markham_recreation_app/pages/parent_notes/fetch_parent_notes.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'parent_notes.dart';
+import 'package:markham_recreation_app/pages/parent_notes/parent_notes.dart';
 
 // Edit an parent_notes
 class EditParentNote extends StatefulWidget {
@@ -106,7 +106,7 @@ class _EditParentNoteState extends State<EditParentNote> {
               // TODO check if date is out of bounds
 
               // Send the checklist to the server
-              Future<http.Response> response = http.post(
+              Future<http.Response> response = globals.session.post(
                 Uri.parse('${globals.serverUrl}/api/edit_parent_notes/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
@@ -128,7 +128,7 @@ class _EditParentNoteState extends State<EditParentNote> {
                     ),
                   );
 
-                  futureFetchParentNotes().then((parentNotes) {
+                  futureFetchParentNotes(context).then((parentNotes) {
                     // move back 2 pages
                     Navigator.pop(context);
                     Navigator.pop(context);

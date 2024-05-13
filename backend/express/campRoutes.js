@@ -1,5 +1,7 @@
+const authenticate = require("./helper/authentication");
+
 module.exports = function (expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
-    expressServer.get("/api/camp/:user_id", (req, res) => {
+    expressServer.get("/api/camp/:user_id", authenticate, (req, res) => {
         let postgresConnected = getPostgresConnected();
 
         if (!postgresConnected) {

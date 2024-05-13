@@ -1,3 +1,5 @@
+const authenticate = require("./helper/authentication");
+
 module.exports = function (
     expressServer,
     logger,
@@ -5,7 +7,7 @@ module.exports = function (
     dataSanitization,
     getPostgresConnected,
 ) {
-    expressServer.get("/api/weekly_checklist/:camp_id", async (req, res) => {
+    expressServer.get("/api/weekly_checklist/:camp_id", authenticate, async (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({ message: "Database not connected" });
@@ -25,7 +27,7 @@ module.exports = function (
         res.json(rows);
     });
 
-    expressServer.post("/api/weekly_checklist/:camp_id", async (req, res) => {
+    expressServer.post("/api/weekly_checklist/:camp_id", authenticate, async (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({ message: "Database not connected" });

@@ -93,7 +93,7 @@ class _NewSupervisorMeetingNoteState extends State<NewSupervisorMeetingNote> {
                 }
 
                 // Send the checklist to the server
-                Future<http.Response> response = http.post(
+                Future<http.Response> response = globals.session.post(
                   Uri.parse('${globals.serverUrl}/api/new_supervisor_meeting_note/${globals.campId}'), //+globals.camp_id.toString()
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -112,7 +112,11 @@ class _NewSupervisorMeetingNoteState extends State<NewSupervisorMeetingNote> {
                         duration: Duration(seconds: 3),
                       ),
                     );
-                  } else {
+                  } else if (response.statusCode == 401) {
+        //redirect to /
+        globals.loggedIn = false;
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);        
+      } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Failed to Save New Supervisor Meeting Note'),

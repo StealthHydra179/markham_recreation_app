@@ -8,7 +8,7 @@ import 'package:markham_recreation_app/pages/staff_performance_notes/staff_perfo
 import 'package:markham_recreation_app/pages/staff_performance_notes/fetch_staff_performance_notes.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'staff_performance_note.dart';
+import 'package:markham_recreation_app/pages/staff_performance_notes/staff_performance_note.dart';
 
 // Edit an staff performance note
 class EditStaffPerformanceNote extends StatefulWidget {
@@ -106,7 +106,7 @@ class _EditStaffPerformanceNoteState extends State<EditStaffPerformanceNote> {
                 // TODO check if date is out of bounds
 
                 // Send the checklist to the server
-                Future<http.Response> response = http.post(
+                Future<http.Response> response = globals.session.post(
                   Uri.parse('${globals.serverUrl}/api/edit_staff_performance_note/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -128,7 +128,7 @@ class _EditStaffPerformanceNoteState extends State<EditStaffPerformanceNote> {
                       ),
                     );
 
-                    futureFetchStaffPerformanceNotes().then((staffPerformanceNotes) {
+                    futureFetchStaffPerformanceNotes(context).then((staffPerformanceNotes) {
                       // move back 2 pages
                       Navigator.pop(context);
                       Navigator.pop(context);

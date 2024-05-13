@@ -1,11 +1,15 @@
 // Date Range
 $(".datepicker").daterangepicker({
 	singleDatePicker: true,
-	startDate: moment().startOf("hour"),
-	endDate: moment().startOf("hour").add(32, "hour"),
+	autoUpdateInput: false,
 	locale: {
 		format: "DD/MM/YYYY",
+		cancelLabel: 'Clear'
 	},
+});
+
+$('.datepicker').on('apply.daterangepicker', function(ev, picker) {
+	$(this).val(picker.startDate.format('YYYY-MM-DD'));
 });
 
 // Date Range Opens Left

@@ -1,6 +1,6 @@
 let excel = require("excel4node");
 // TODO remove newline characters in all given strings
-module.exports = async function csvExportHelper(logger, postgresClient, getPostgresConnected, req, res) {
+module.exports = async function csvExportHelper(logger, postgresClient, getPostgresConnected, req, res, campId) {
     let postgresConnected = getPostgresConnected();
     if (!postgresConnected) {
         res.status(500).send({message: "Database not connected"});
@@ -8,8 +8,6 @@ module.exports = async function csvExportHelper(logger, postgresClient, getPostg
         return;
     }
     logger.debug(`CSV Export Function`);
-
-    let campId = 1;                                // TODO
 
     let wb = new excel.Workbook({
         author: "Markham Rec Online Application",            // REVISIT THIS (move to globals)
@@ -228,21 +226,32 @@ module.exports = async function csvExportHelper(logger, postgresClient, getPostg
         ws.cell(endRow, charMap[startCol], endRow, charMap[endCol], false).style({border: {bottom: {style: 'thick', color: '#000000'}}});
     }
 
+    // get camp info
+    let campQuery = `SELECT * FROM camp WHERE camp_id = $1;`;
+    let campValues = [campId];
+    let campRes = await postgresClient.query(campQuery, campValues);
+    let camp = campRes.rows[0];
+
     // // Row 1
     let row1End = 1;
 
     // Week
-    writeCell(ws, "A", 1, "Week:", titleStyle);
-    // TODO week number
+    writeCell(ws, "A", 1, "Camp Name:", titleStyle);
+    // writeCell(ws, "B", 1, camp.camp_name, trueStyle);
+    writeMergeCell(ws, "B", 1, "C", 1, camp.camp_name, trueStyle);
+    thickOutlineRange(ws, "B", 1, "C", 1);
 
     // Dates
     writeCell(ws, "E", 1, "Dates:", titleStyle);
-    // TODO dates
+    //start date to end date
+    // writeCell(ws, "F", 1, camp.start_date.toLocaleDateString() + " to " + camp.end_date.toLocaleDateString(), trueStyle);
+    writeMergeCell(ws, "F", 1, "G", 1, camp.start_date.toLocaleDateString() + " to " + camp.end_date.toLocaleDateString(), trueStyle);
+    thickOutlineRange(ws, "F", 1, "G", 1);
 
     // Total Number of Campers
     writeMergeCell(ws, "I", 1, "J", 1, "Total Number of Campers:", titleStyle);
     // TODO total number of campers
-    let totalCampers = 20;
+    let totalCampers = camp.camper_count;
     writeCell(ws, "K", 1, totalCampers, trueStyle);
     thickOutlineRange(ws, "K", 1, "K", 1);
 
@@ -267,6 +276,10 @@ module.exports = async function csvExportHelper(logger, postgresClient, getPostg
         // TODO for some reason for the first cell the font size does not apply?
         writeMergeCell(ws, "A", row1End+2+i*2+1-skipped*2, "A", row1End+2+i*2+1-skipped*2+1,("" + (weeklyCheckListRes.rows[i].checklist_status ? "submitted" : "missing")).toUpperCase(), weeklyCheckListRes.rows[i].checklist_status ? trueStyle : falseStyle);
         writeMergeCell(ws, "B", row1End+2+i*2+1-skipped*2, "C", row1End+2+i*2+1-skipped*2+1, weeklyCheckListRes.rows[i].checklist_description, descriptionStyle);
+    }
+    if (weeklyCheckListRes.rows.length === 0) {
+        writeMergeCell(ws, "A", row1End+2+1, "C", row1End+2+1, "No checklist items", trueStyle);
+        row2End += 1;
     }
     thickOutlineRange(ws, "A", row1End+2, "C", row2End);
 
@@ -301,6 +314,17 @@ module.exports = async function csvExportHelper(logger, postgresClient, getPostg
         writeCell(ws, col, row+3, afterCare ? afterCare : "", afterCare == null ? falseStyle : trueStyle);
         initalCol = String.fromCharCode(initalCol.charCodeAt(0) + 1);
     }
+    if (dailyAttendanceRes.rows.length === 0) {
+        for (let i = 0; i < 5; i++) {
+            let col = initalCol;
+            let row = row1End + 2 + 2;
+            writeCell(ws, col, row, "", falseStyle);
+            writeCell(ws, col, row + 1, "", falseStyle);
+            writeCell(ws, col, row + 2, "", falseStyle);
+            writeCell(ws, col, row + 3, "", falseStyle);
+            initalCol = String.fromCharCode(initalCol.charCodeAt(0) + 1);
+        }
+    }
     thickOutlineRange(ws, "E", row1End+2, "K", row1End+2+5);
     row2End = Math.max(row2End, row1End+2+5);
 
@@ -325,7 +349,11 @@ module.exports = async function csvExportHelper(logger, postgresClient, getPostg
         length += rowsNeeded;
         writeMergeCell(ws, "A", row2End+2+2+length-rowsNeeded, "C", row2End+2+2+length-1, message, trueDescriptionStyle);
     }
-    thickOutlineRange(ws, "A", row2End+2, "C", row2End+2+2+length-1);
+    if (messageBoardRes.rows.length === 0) {
+        writeMergeCell(ws, "A", row2End+2+2, "C", row2End+2+2, "No messages", trueStyle);
+        length += 1;
+    }
+    thickOutlineRange(ws, "A", row2End+2+2, "C", row2End+2+2+length-1);
     row3End = row2End+2+2+length-1;
     // TODO should there be a date of the message on the exported CSV as well?
 
@@ -360,16 +388,230 @@ module.exports = async function csvExportHelper(logger, postgresClient, getPostg
         writeMergeCell(ws, "I", row2End+2+3+absentLength, "K", row2End+2+3+absentLength+rowsNeeded-1, reason, followedUp ? trueDescriptionStyle : falseStyle);
         absentLength += 1;
     }
+    if (absentCampersRes.rows.length === 0) {
+        writeMergeCell(ws, "E", row2End+2+3, "K", row2End+2+3, "No absent campers", trueStyle);
+        absentLength += 1;
+    }
     thickOutlineRange(ws, "E", row2End+2+2, "K", row2End+2+3+absentLength-1);
     row3End = Math.max(row3End, row2End+2+3+absentLength-1);
-    console.log(row3End)
+    // console.log(row3End)
 
     // // Row 4
     // // Left Side
     let currentLeftSideEnd = -1;
 
+    // Daily Notes
+    writeMergeCell(ws, "A", row3End+2, "F", row3End+2, "Daily Notes", titleNoBorderStyle);
+    writeMergeCell(ws, "A", row3End+2+1, "F", row3End+2+1, "How did the day go? Any successes or challenges with program or activity plans? What worked well? What was learned and can be improved upon?", subTitleNoBorderStyle);
+    thickOutlineRange(ws, "A", row3End+2, "F", row3End+2+1, false);
+    // a is day of week (determined by length of daily notes for that day (min length = 1) , b-f is the notes
+    let noteRowCharacterLength = 117
+    let rowsPerNote = 18/14;
+    let dailyNotesQuery = `SELECT * FROM daily_note WHERE camp_id = $1 ORDER BY daily_note_date;`;
+    let dailyNotesValues = [campId];
+    let dailyNotesRes = await postgresClient.query(dailyNotesQuery, dailyNotesValues);
+    let dailyNotesLength = 0;
+    let lengthOfDays = [0, 0, 0, 0, 0]
+    let lastDay = -1;
+    for (let i = 0; i < dailyNotesRes.rows.length; i++) {
+        let dayOfWeek = dailyNotesRes.rows[i].daily_note_date;
+        // console.log("d"+dayOfWeek)
+        dayOfWeek = dayOfWeek.getDay()-1;
+        // console.log("d"+dayOfWeek)
+
+        if (dayOfWeek !== lastDay && dayOfWeek !== lastDay+1) {
+            for (let j = lastDay+1; j < dayOfWeek; j++) {
+                writeCell(ws, "A", row3End+2+2+dailyNotesLength, "", titleNoBorderWhiteBackgroundStyle);
+                writeMergeCell(ws, "B", row3End+2+2+dailyNotesLength, "F", row3End+2+2+dailyNotesLength, "", trueDescriptionStyle);
+                dailyNotesLength += 1;
+            }
+        }
+
+        let note = dailyNotesRes.rows[i].daily_note;
+        let rowsNeeded = Math.ceil(note.length/noteRowCharacterLength/rowsPerNote);
+        dailyNotesLength += rowsNeeded;
+        writeMergeCell(ws, "B", row3End+2+2+dailyNotesLength-rowsNeeded, "F", row3End+2+2+dailyNotesLength-1, note, trueDescriptionStyle);
+        // add to length of days
+        lengthOfDays[dayOfWeek] += rowsNeeded;
+        lastDay = dayOfWeek;
+    }
+    if (lastDay !== 4) {
+        // console.log("lastDay"+lastDay)
+        for (let j = lastDay+1; j < 5; j++) {
+            // console.log("j"+j)
+            // console.log(row3End+2+2+dailyNotesLength)
+            writeCell(ws, "A", row3End+2+2+dailyNotesLength, "", titleNoBorderWhiteBackgroundStyle);
+            writeMergeCell(ws, "B", row3End+2+2+dailyNotesLength, "F", row3End+2+2+dailyNotesLength, "", trueDescriptionStyle);
+            dailyNotesLength += 1;
+        }
+    }
+    let nameOfDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    let previousLength = 0;
+    for (let i = 0; i < lengthOfDays.length; i++) {
+        if (lengthOfDays[i] === 0) {
+            lengthOfDays[i] = 1;
+        }
+        // writeCell(ws, "A", row3End+2+2+previousLength, nameOfDays[i], titleNoBorderWhiteBackgroundStyle);
+        writeMergeCell(ws, "A", row3End+2+2+previousLength, "A", row3End+2+2+lengthOfDays[i]-1+previousLength, nameOfDays[i], titleNoBorderWhiteBackgroundStyle);
+        thickOutlineRange(ws, "A", row3End+2+2+previousLength, "A", row3End+2+2+previousLength);
+        thickOutlineRange(ws, "B", row3End+2+2+previousLength, "F", row3End+2+2+lengthOfDays[i]-1+previousLength);
+        previousLength += lengthOfDays[i];
+    }
+    currentLeftSideEnd = row3End+2+2+dailyNotesLength-1;
+
+    // Staff performance
+    //also split into monday through friday
+    writeMergeCell(ws, "A", currentLeftSideEnd+2, "F", currentLeftSideEnd+2, "Staff Performance", titleNoBorderStyle);
+    writeMergeCell(ws, "A", currentLeftSideEnd+2+1, "F", currentLeftSideEnd+2+1, "How did the staff perform this week? Any acknowledgements worth noting? Any comments (positive or negative) or concerns worth noting?", subTitleNoBorderStyle);
+    thickOutlineRange(ws, "A", currentLeftSideEnd+2, "F", currentLeftSideEnd+2+1, false);
+    let staffPerformanceQuery = `SELECT * FROM staff_performance_note WHERE camp_id = $1 ORDER BY st_note_date;`;
+    let staffPerformanceValues = [campId];
+    let staffPerformanceRes = await postgresClient.query(staffPerformanceQuery, staffPerformanceValues);
+    let staffPerformanceLength = 0;
+    let lengthOfStaffDays = [0, 0, 0, 0, 0]
+    let lastStaffDay = -1;
+    for (let i = 0; i < staffPerformanceRes.rows.length; i++) {
+        let dayOfWeek = staffPerformanceRes.rows[i].st_note_date;
+        dayOfWeek = dayOfWeek.getDay()-1;
+
+        if (dayOfWeek !== lastStaffDay && dayOfWeek !== lastStaffDay+1) {
+            for (let j = lastStaffDay+1; j < dayOfWeek; j++) {
+                writeCell(ws, "A", currentLeftSideEnd+2+2+staffPerformanceLength, "", titleNoBorderWhiteBackgroundStyle);
+                writeMergeCell(ws, "B", currentLeftSideEnd+2+2+staffPerformanceLength, "F", currentLeftSideEnd+2+2+staffPerformanceLength, "", trueDescriptionStyle);
+                staffPerformanceLength += 1;
+            }
+        }
+
+        let note = staffPerformanceRes.rows[i].st_note;
+        let rowsNeeded = Math.ceil(note.length/noteRowCharacterLength/rowsPerNote);
+        staffPerformanceLength += rowsNeeded;
+        writeMergeCell(ws, "B", currentLeftSideEnd+2+2+staffPerformanceLength-rowsNeeded, "F", currentLeftSideEnd+2+2+staffPerformanceLength-1, note, trueDescriptionStyle);
+        // add to length of days
+        lengthOfStaffDays[dayOfWeek] += rowsNeeded;
+        lastStaffDay = dayOfWeek;
+    }
+    if (lastStaffDay !== 4) {
+        for (let j = lastStaffDay+1; j < 5; j++) {
+            writeCell(ws, "A", currentLeftSideEnd+2+2+staffPerformanceLength, "", titleNoBorderWhiteBackgroundStyle);
+            writeMergeCell(ws, "B", currentLeftSideEnd+2+2+staffPerformanceLength, "F", currentLeftSideEnd+2+2+staffPerformanceLength, "", trueDescriptionStyle);
+            staffPerformanceLength += 1;
+        }
+    }
+    previousLength = 0;
+    for (let i = 0; i < lengthOfStaffDays.length; i++) {
+        if (lengthOfStaffDays[i] === 0) {
+            lengthOfStaffDays[i] = 1;
+        }
+        writeMergeCell(ws, "A", currentLeftSideEnd+2+2+previousLength, "A", currentLeftSideEnd+2+2+lengthOfStaffDays[i]-1+previousLength, nameOfDays[i], titleNoBorderWhiteBackgroundStyle);
+        thickOutlineRange(ws, "A", currentLeftSideEnd+2+2+previousLength, "A", currentLeftSideEnd+2+2+previousLength);
+        thickOutlineRange(ws, "B", currentLeftSideEnd+2+2+previousLength, "F", currentLeftSideEnd+2+2+lengthOfStaffDays[i]-1+previousLength);
+        previousLength += lengthOfStaffDays[i];
+    }
+    currentLeftSideEnd = currentLeftSideEnd+2+2+staffPerformanceLength-1;
+
+    // Weekly Meeting notes
+    //instead of dates its "Counsellor Meeting" and "Supervisor Meeting"
+    writeMergeCell(ws, "A", currentLeftSideEnd+2, "F", currentLeftSideEnd+2, "Weekly Meeting Notes", titleNoBorderStyle);
+    thickOutlineRange(ws, "A", currentLeftSideEnd+2, "F", currentLeftSideEnd+2, false);
+    let weeklyCounsellorMessageNotesQuery = `SELECT * FROM counsellor_meeting_note WHERE camp_id = $1 ORDER BY cmeet_note_date;`;
+    let weeklyCounsellorMessageNotesValues = [campId];
+    let weeklyCounsellorMessageNotesRes = await postgresClient.query(weeklyCounsellorMessageNotesQuery, weeklyCounsellorMessageNotesValues);
+    let weeklyCounsellorMessageNotesLength = 0;
+    for (let i = 0; i < weeklyCounsellorMessageNotesRes.rows.length; i++) {
+        let note = weeklyCounsellorMessageNotesRes.rows[i].cmeet_note;
+        let rowsNeeded = Math.ceil(note.length/noteRowCharacterLength/rowsPerNote);
+        weeklyCounsellorMessageNotesLength += rowsNeeded;
+        writeMergeCell(ws, "B", currentLeftSideEnd+2+1+weeklyCounsellorMessageNotesLength-rowsNeeded, "F", currentLeftSideEnd+2+1+weeklyCounsellorMessageNotesLength-1, note, trueDescriptionStyle);
+    }
+    if (weeklyCounsellorMessageNotesRes.rows.length === 0) {
+        writeMergeCell(ws, "B", currentLeftSideEnd+2+1, "F", currentLeftSideEnd+2+1, "No counsellor meeting notes", trueStyle);
+        weeklyCounsellorMessageNotesLength += 1;
+    }
+    writeMergeCell(ws, "A", currentLeftSideEnd+2+1, "A", currentLeftSideEnd+2+1+weeklyCounsellorMessageNotesLength-1, "Counsellor Meeting", titleNoBorderWhiteBackgroundStyle);
+    thickOutlineRange(ws, "A", currentLeftSideEnd+2+1, "A", currentLeftSideEnd+2+1+weeklyCounsellorMessageNotesLength-1);
+    thickOutlineRange(ws, "B", currentLeftSideEnd+2+1, "F", currentLeftSideEnd+2+1+weeklyCounsellorMessageNotesLength-1);
+    currentLeftSideEnd = currentLeftSideEnd+2+1+weeklyCounsellorMessageNotesLength-1;
+    let weeklySupervisorMessageNotesQuery = `SELECT * FROM supervisor_meeting_note WHERE camp_id = $1 ORDER BY smeet_note_date;`;
+    let weeklySupervisorMessageNotesValues = [campId];
+    let weeklySupervisorMessageNotesRes = await postgresClient.query(weeklySupervisorMessageNotesQuery, weeklySupervisorMessageNotesValues);
+    let weeklySupervisorMessageNotesLength = 0;
+    for (let i = 0; i < weeklySupervisorMessageNotesRes.rows.length; i++) {
+        let note = weeklySupervisorMessageNotesRes.rows[i].smeet_note;
+        let rowsNeeded = Math.ceil(note.length/noteRowCharacterLength/rowsPerNote);
+        weeklySupervisorMessageNotesLength += rowsNeeded;
+        writeMergeCell(ws, "B", currentLeftSideEnd+1+weeklySupervisorMessageNotesLength-rowsNeeded, "F", currentLeftSideEnd+1+weeklySupervisorMessageNotesLength-1, note, trueDescriptionStyle);
+    }
+    if (weeklySupervisorMessageNotesRes.rows.length === 0) {
+        writeMergeCell(ws, "B", currentLeftSideEnd+1, "F", currentLeftSideEnd+1, "No supervisor meeting notes", trueStyle);
+        weeklySupervisorMessageNotesLength += 1;
+    }
+    writeMergeCell(ws, "A", currentLeftSideEnd+1, "A", currentLeftSideEnd+1+weeklySupervisorMessageNotesLength-1, "Supervisor Meeting", titleNoBorderWhiteBackgroundStyle);
+    thickOutlineRange(ws, "A", currentLeftSideEnd+1, "A", currentLeftSideEnd+1+weeklySupervisorMessageNotesLength-1);
+    thickOutlineRange(ws, "B", currentLeftSideEnd+1, "F", currentLeftSideEnd+1+weeklySupervisorMessageNotesLength-1);
+    currentLeftSideEnd = currentLeftSideEnd+2+1+weeklySupervisorMessageNotesLength-1;
 
     // // Right Side
+    // H-K
+    // Incident/Accident Reports
+    let currentRightSideEnd = -1;
+    writeMergeCell(ws, "H", row3End+2, "K", row3End+2, "Incident/Accident Reports", titleNoBorderStyle);
+    thickOutlineRange(ws, "H", row3End+2, "K", row3End+2, false);
+    writeMergeCell(ws, "H", row3End+2+1, "J", row3End+2+1, "# of Weekly Incident Reports", titleNoBorderWhiteBackgroundLeftStyle);
+    thickOutlineRange(ws, "H", row3End+2+1, "J", row3End+2+1);
+    let incidentReportQuery = `SELECT * FROM incident_note WHERE camp_id = $1;`;
+    let incidentReportValues = [campId];
+    let incidentReportRes = await postgresClient.query(incidentReportQuery, incidentReportValues);
+    let incidentReportLength = incidentReportRes.rows.length;
+    writeCell(ws, "K", row3End+2+1, incidentReportLength, trueStyle);
+    thickOutlineRange(ws, "K", row3End+2+1, "K", row3End+2+1);
+    for (let i = 0; i < incidentReportRes.rows.length; i++) {
+        let note = incidentReportRes.rows[i].in_note;
+        writeMergeCell(ws, "H", row3End+2+2+i, "K", row3End+2+2+i, note, trueDescriptionStyle);
+    }
+    if (incidentReportRes.rows.length === 0) {
+        writeMergeCell(ws, "H", row3End+2+2, "K", row3End+2+2, "No incident reports", trueStyle);
+        incidentReportLength += 1;
+    }
+    thickOutlineRange(ws, "H", row3End+2+2, "K", row3End+2+2+incidentReportLength-1);
+    currentRightSideEnd = row3End+2+2+incidentReportLength-1;
+
+    // Parent comments and concerns
+    writeMergeCell(ws, "H", currentRightSideEnd+2, "K", currentRightSideEnd+2, "Parent Comments and Concerns", titleNoBorderStyle);
+    writeMergeCell(ws, "H", currentRightSideEnd+2+1, "K", currentRightSideEnd+2+1, "Were there any notable parent questions? Any comments (positive or negative) that were shared?", subTitleNoBorderStyle);
+    thickOutlineRange(ws, "H", currentRightSideEnd+2, "K", currentRightSideEnd+2+1, false);
+    let parentCommentsQuery = `SELECT * FROM parent_note WHERE camp_id = $1;`;
+    let parentCommentsValues = [campId];
+    let parentCommentsRes = await postgresClient.query(parentCommentsQuery, parentCommentsValues);
+    let parentCommentsLength = parentCommentsRes.rows.length;
+    for (let i = 0; i < parentCommentsRes.rows.length; i++) {
+        let note = parentCommentsRes.rows[i].pa_note;
+        writeMergeCell(ws, "H", currentRightSideEnd+2+2+i, "K", currentRightSideEnd+2+2+i, note, trueDescriptionStyle);
+    }
+    if (parentCommentsRes.rows.length === 0) {
+        writeMergeCell(ws, "H", currentRightSideEnd+2+2, "K", currentRightSideEnd+2+2, "No parent comments", trueStyle);
+        parentCommentsLength += 1;
+    }
+    thickOutlineRange(ws, "H", currentRightSideEnd+2, "K", currentRightSideEnd+2+2+parentCommentsLength-1);
+    currentRightSideEnd = currentRightSideEnd+2+2+parentCommentsLength-1;
+
+    // Equipment and supplies
+    writeMergeCell(ws, "H", currentRightSideEnd+2, "K", currentRightSideEnd+2, "Equipment and Supplies", titleNoBorderStyle);
+    writeMergeCell(ws, "H", currentRightSideEnd+2+1, "K", currentRightSideEnd+2+1, "Any requests or issues with camp supplies and equipment?", subTitleNoBorderStyle);
+    thickOutlineRange(ws, "H", currentRightSideEnd+2, "K", currentRightSideEnd+2+1, false);
+    let equipmentQuery = `SELECT * FROM equipment_note WHERE camp_id = $1;`;
+    let equipmentValues = [campId];
+    let equipmentRes = await postgresClient.query(equipmentQuery, equipmentValues);
+    let equipmentLength = equipmentRes.rows.length;
+    for (let i = 0; i < equipmentRes.rows.length; i++) {
+        let note = equipmentRes.rows[i].equip_note;
+        writeMergeCell(ws, "H", currentRightSideEnd+2+2+i, "K", currentRightSideEnd+2+2+i, note, trueDescriptionStyle);
+    }
+    if (equipmentRes.rows.length === 0) {
+        writeMergeCell(ws, "H", currentRightSideEnd+2+2, "K", currentRightSideEnd+2+2, "No equipment notes", trueStyle);
+        equipmentLength += 1;
+    }
+    thickOutlineRange(ws, "H", currentRightSideEnd+2, "K", currentRightSideEnd+2+2+equipmentLength-1);
+    currentRightSideEnd = currentRightSideEnd+2+2+equipmentLength-1;
 
 
     wb.write(campId + ".xlsx", res);

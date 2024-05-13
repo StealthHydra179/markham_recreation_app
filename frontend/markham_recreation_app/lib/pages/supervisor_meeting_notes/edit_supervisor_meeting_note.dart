@@ -8,7 +8,7 @@ import 'package:markham_recreation_app/pages/supervisor_meeting_notes/supervisor
 import 'package:markham_recreation_app/pages/supervisor_meeting_notes/fetch_supervisor_meeting_notes.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'supervisor_meeting_note.dart';
+import 'package:markham_recreation_app/pages/supervisor_meeting_notes/supervisor_meeting_note.dart';
 
 // Edit an supervisor meeting note
 class EditSupervisorMeetingNote extends StatefulWidget {
@@ -106,7 +106,7 @@ class _EditSupervisorMeetingNoteState extends State<EditSupervisorMeetingNote> {
                 // TODO check if date is out of bounds
 
                 // Send the checklist to the server
-                Future<http.Response> response = http.post(
+                Future<http.Response> response = globals.session.post(
                   Uri.parse('${globals.serverUrl}/api/edit_supervisor_meeting_note/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -128,7 +128,7 @@ class _EditSupervisorMeetingNoteState extends State<EditSupervisorMeetingNote> {
                       ),
                     );
 
-                    futureFetchSupervisorMeetingNotes().then((supervisorMeetingNotes) {
+                    futureFetchSupervisorMeetingNotes(context).then((supervisorMeetingNotes) {
                       // move back 2 pages
                       Navigator.pop(context);
                       Navigator.pop(context);

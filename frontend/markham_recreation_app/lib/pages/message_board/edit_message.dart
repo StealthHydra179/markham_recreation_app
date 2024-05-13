@@ -8,7 +8,7 @@ import 'package:markham_recreation_app/pages/message_board/message_details.dart'
 import 'package:markham_recreation_app/pages/message_board/fetch_messages.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'message.dart';
+import 'package:markham_recreation_app/pages/message_board/message.dart';
 
 // Edit an message
 class EditMessageBoard extends StatefulWidget {
@@ -106,7 +106,7 @@ class _EditMessageBoardState extends State<EditMessageBoard> {
                 // TODO check if date is out of bounds
 
                 // Send the checklist to the server
-                Future<http.Response> response = http.post(
+                Future<http.Response> response = globals.session.post(
                   Uri.parse('${globals.serverUrl}/api/edit_message/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -128,7 +128,7 @@ class _EditMessageBoardState extends State<EditMessageBoard> {
                       ),
                     );
 
-                    futureFetchMessageBoards().then((messageBoards) {
+                    futureFetchMessageBoards(context).then((messageBoards) {
                       // move back 2 pages
                       Navigator.pop(context);
                       Navigator.pop(context);

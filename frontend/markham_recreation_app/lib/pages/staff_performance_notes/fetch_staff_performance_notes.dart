@@ -15,8 +15,8 @@ import 'package:markham_recreation_app/pages/staff_performance_notes/staff_perfo
 late Future<List<StaffPerformanceNote>> futureStaffPerformanceNotes;
 
 // Fetch staff performance notes from the server
-Future<List<StaffPerformanceNote>> futureFetchStaffPerformanceNotes() async {
-  final response = await http.get(
+Future<List<StaffPerformanceNote>> futureFetchStaffPerformanceNotes(context) async {
+  final response = await globals.session.get(
     Uri.parse('${globals.serverUrl}/api/get_staff_performance_notes/${globals.campId}'),
   );
 
@@ -28,6 +28,12 @@ Future<List<StaffPerformanceNote>> futureFetchStaffPerformanceNotes() async {
     List<dynamic> staffPerformanceNotesJson = jsonDecode(response.body);
     staffPerformanceNotes = staffPerformanceNotesJson.map((dynamic json) => StaffPerformanceNote.fromJson(json)).toList();
     return staffPerformanceNotes;
+  } else if (response.statusCode == 401) {
+    //redirect to /
+    globals.loggedIn = false;
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    return staffPerformanceNotes;
+  
   } else {
     // If that response was not OK, throw an error.
     throw Exception('Failed to load staff performance notes');
@@ -81,7 +87,7 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
   @override
   void initState() {
     super.initState();
-    futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+    futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes(context);
   }
 
   @override
@@ -101,7 +107,7 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
                 MaterialPageRoute(builder: (context) => const NewStaffPerformanceNote()),
               ).then((value) {
                 // Refresh the list of staff performance notes after returning from the new staff performance note page
-                futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+                futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes(context);
                 setState(() {});
               });
             },
@@ -111,7 +117,7 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
             icon: const Icon(Icons.refresh),
             onPressed: () {
               // Refresh the list of staff performance notes
-              futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+              futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes(context);
               setState(() {});
             },
           ),
@@ -143,7 +149,7 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
                             MaterialPageRoute(builder: (context) => StaffPerformanceNoteDetails(staffPerformanceNote: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of absences after returning from the absence details page
-                            futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes();
+                            futureStaffPerformanceNotes = futureFetchStaffPerformanceNotes(context);
                             setState(() {});
                           });
                         },

@@ -1,7 +1,10 @@
 const express = require("express");
+let cookie_parser=require('cookie-parser')
 const { Client: postgres_client } = require("pg");
 const winston = require("winston");
 const DailyRotateFile = require("winston-daily-rotate-file");
+const uuid = require("uuid");
+var session = require('express-session')
 
 // Load environment variables
 require("dotenv").config();
@@ -10,6 +13,22 @@ require("dotenv").config();
 const expressServer = express();
 const serverPort = 3000;
 expressServer.use(express.json());
+expressServer.use(cookie_parser('mark_rec_cjkw3as'));
+// expressServer.set('trust proxy', 1)
+expressServer.use(session({
+    genid: function(req) {
+        let id = uuid.v4() // use UUIDs for session IDs
+        console.log("Session ID: " + id);//todo why is this being called like 7 times
+        return id // use UUIDs for session IDs
+    },
+    secret: 'mark_rec_cjkw3as',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false, //TODO when on https, set to true
+        maxAge: 600000
+    }
+}))
 
 // Database Connection
 const postgresClient = new postgres_client({
@@ -119,6 +138,9 @@ expressServer.use('/admin', express.static("web"));
 
 let routePassthrough = [expressServer, logger, postgresClient, dataSanitization, getPostgresConnected];
 
+// Authentication Routes
+require("./express/helper/authenticationRoutes")(...routePassthrough);
+
 // Mobile Routes
 require("./express/campRoutes")(...routePassthrough);
 require("./express/weeklyChecklistRoutes")(...routePassthrough);
@@ -140,6 +162,54 @@ expressServer.listen(serverPort, () => {
     logger.info(`Server running on port ${serverPort}`);
 });
 
-expressServer.get("/test", async (req, res) => {
-    await require("./express/admin/csvExportHelper")(logger, postgresClient, getPostgresConnected, req, res);
-})
+// const bcrypt = require("bcrypt");
+// const saltRounds = 10;
+//
+// function addUser() {
+//     let email = "user@example.com";
+//     let plainTextPassword = "hello";
+//
+//
+//     email = encodeURIComponent(email);
+//     plainTextPassword = encodeURIComponent(plainTextPassword);
+//     // use datacleaning
+//     email = dataSanitization(email);
+//     plainTextPassword = dataSanitization(plainTextPassword);
+//
+//     bcrypt.hash(plainTextPassword, saltRounds, function(err, hash) {
+//         // Store hash in your password DB.
+//
+//         let query = `INSERT INTO app_user (email, user_password) VALUES ($1, $2);`;
+//         let values = [email, hash];
+//         postgresClient.query(query, values, (err, result) => {
+//             if (err) {
+//                 logger.error("e", err);
+//                 // res.status(500).send({ message: "Error adding user" });
+//                 return;
+//             } else {
+//                 // res.status(200).send({ message: "User added" });
+//                 logger.info("User added");
+//             }
+//         });
+//     });
+// }
+// addUser()
+//
+//
+// function isAuthenticated (req, res, next) {
+//     if (req.session.user) next()
+//     else next('route')
+// }
+//
+// expressServer.get('/a', isAuthenticated, function (req, res) {
+//     // this is only called when there is an authentication user due to isAuthenticated
+//     res.send('hello, ' + escapeHtml(req.session.user) + '!' +
+//         ' <a href="/logout">Logout</a>')
+// })
+//
+// expressServer.get('/a', function (req, res) {
+//     res.send('<form action="/login" method="post">' +
+//         'Username: <input name="user"><br>' +
+//         'Password: <input name="pass" type="password"><br>' +
+//         '<input type="submit" text="Login"></form>')
+// })

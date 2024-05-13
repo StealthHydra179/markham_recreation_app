@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+// import 'package:http/browser_client.dart';
 
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
+import 'package:markham_recreation_app/login.dart';
 
 void main() {
+  var clientFactory = Client.new;
+
+  
   WidgetsFlutterBinding.ensureInitialized();
 
-  globals.fetchcamp().whenComplete(() {
+  globals.fetchcamp(0).whenComplete(() {
     findSystemLocale().whenComplete(() {
-      runApp(const MyApp());
+      runWithClient(() => runApp(const MyApp()), clientFactory);
     });
   });
 }
@@ -48,56 +54,88 @@ class LandingPage extends StatefulWidget {
 
   @override
   State<LandingPage> createState() => _LandingPageState();
+
+  // static void restartApp(BuildContext context) {
+  //   _LandingPageState? state = context.findAncestorStateOfType<_LandingPageState>();
+  //   print(state);
+  //   // print(context.)
+  //   state?.restartApp();
+  //   print('Restarting app');
+  //   print(context.findAncestorStateOfType<_LandingPageState>()?.toString());
+  //   print(context.toString());
+  // }
 }
 
 class _LandingPageState extends State<LandingPage> {
-  int _counter = 0;
+  // void restartApp() {
+  //   //log
+  //   print('Restarting app');
+  //   setState(() {});
+  // }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    if (globals.loggedIn) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(widget.title, style: const TextStyle(color: globals.secondaryColor)),
-        iconTheme: const IconThemeData(color: globals.secondaryColor),
-      ),
-      drawer: drawer.drawer(context),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Please select a page from the navigation.',
-            ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
-          ],
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: Text(widget.title, style: const TextStyle(color: globals.secondaryColor)),
+          iconTheme: const IconThemeData(color: globals.secondaryColor),
         ),
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ),
-    );
+        drawer: drawer.drawer(context),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'Please select a page from the navigation.',
+              ),
+              // Text(
+              //   '$_counter',
+              //   style: Theme.of(context).textTheme.headlineMedium,
+              // ),
+            ],
+          ),
+        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: _incrementCounter,
+        //   tooltip: 'Increment',
+        //   child: const Icon(Icons.add),
+        // ),
+      );
+    } else {
+      //button redirect to login page
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: Text(widget.title, style: const TextStyle(color: globals.secondaryColor)),
+          iconTheme: const IconThemeData(color: globals.secondaryColor),
+        ),
+        // drawer: drawer.drawer(context),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'Please login to access the app.',
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Login())).then((_) {setState(() {});});
+                },
+                child: const Text('Login'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

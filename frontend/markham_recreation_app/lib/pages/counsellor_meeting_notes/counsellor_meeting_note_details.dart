@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/pages/counsellor_meeting_notes/fetch_counsellor_meeting_notes.dart';
 
-import 'counsellor_meeting_note.dart';
-import 'edit_counsellor_meeting_note.dart';
+import 'package:markham_recreation_app/pages/counsellor_meeting_notes/counsellor_meeting_note.dart';
+import 'package:markham_recreation_app/pages/counsellor_meeting_notes/edit_counsellor_meeting_note.dart';
 
 // Details of an Counsellor Meeting Note
 class CounsellorMeetingNoteDetails extends StatelessWidget {
@@ -49,7 +49,7 @@ class CounsellorMeetingNoteDetails extends StatelessWidget {
             icon: const Icon(Icons.delete),
             onPressed: () {
               // Send a request to the server to delete the Counsellor Meeting Note
-              Future<http.Response> response = http.post(
+              Future<http.Response> response = globals.session.post(
                 Uri.parse('${globals.serverUrl}/api/delete_counsellor_meeting_note/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',

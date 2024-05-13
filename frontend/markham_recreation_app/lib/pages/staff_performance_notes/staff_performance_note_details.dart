@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/pages/staff_performance_notes/fetch_staff_performance_notes.dart';
 
-import 'staff_performance_note.dart';
-import 'edit_staff_performance_note.dart';
+import 'package:markham_recreation_app/pages/staff_performance_notes/staff_performance_note.dart';
+import 'package:markham_recreation_app/pages/staff_performance_notes/edit_staff_performance_note.dart';
 
 // Details of an Staff performance Note
 class StaffPerformanceNoteDetails extends StatelessWidget {
@@ -49,7 +49,7 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
             icon: const Icon(Icons.delete),
             onPressed: () {
               // Send a request to the server to delete the Staff performance Note
-              Future<http.Response> response = http.post(
+              Future<http.Response> response = globals.session.post(
                 Uri.parse('${globals.serverUrl}/api/delete_staff_performance_note/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',

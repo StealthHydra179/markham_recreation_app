@@ -15,8 +15,8 @@ import 'package:markham_recreation_app/pages/incident_notes/incident_note_detail
 late Future<List<IncidentNote>> futureIncidentNotes;
 
 // Fetch incident notes from the server
-Future<List<IncidentNote>> futureFetchIncidentNotes() async {
-  final response = await http.get(
+Future<List<IncidentNote>> futureFetchIncidentNotes(context) async {
+  final response = await globals.session.get(
     Uri.parse('${globals.serverUrl}/api/get_incident_notes/${globals.campId}'),
   );
 
@@ -28,6 +28,12 @@ Future<List<IncidentNote>> futureFetchIncidentNotes() async {
     List<dynamic> incidentNotesJson = jsonDecode(response.body);
     incidentNotes = incidentNotesJson.map((dynamic json) => IncidentNote.fromJson(json)).toList();
     return incidentNotes;
+  } else if (response.statusCode == 401) {
+        //redirect to /
+    globals.loggedIn = false;
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    return incidentNotes;
+  
   } else {
     // If that response was not OK, throw an error.
     throw Exception('Failed to load incident notes');
@@ -81,7 +87,7 @@ class _FetchIncidentNotesState extends State<FetchIncidentNotes> {
   @override
   void initState() {
     super.initState();
-    futureIncidentNotes = futureFetchIncidentNotes();
+    futureIncidentNotes = futureFetchIncidentNotes(context);
   }
 
   @override
@@ -101,7 +107,7 @@ class _FetchIncidentNotesState extends State<FetchIncidentNotes> {
                 MaterialPageRoute(builder: (context) => const NewIncidentNote()),
               ).then((value) {
                 // Refresh the list of incident notes after returning from the new incident note page
-                futureIncidentNotes = futureFetchIncidentNotes();
+                futureIncidentNotes = futureFetchIncidentNotes(context);
                 setState(() {});
               });
             },
@@ -111,7 +117,7 @@ class _FetchIncidentNotesState extends State<FetchIncidentNotes> {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               // Refresh the list of incident notes
-              futureIncidentNotes = futureFetchIncidentNotes();
+              futureIncidentNotes = futureFetchIncidentNotes(context);
               setState(() {});
             },
           ),
@@ -143,7 +149,7 @@ class _FetchIncidentNotesState extends State<FetchIncidentNotes> {
                             MaterialPageRoute(builder: (context) => IncidentNoteDetails(incidentNote: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of absences after returning from the absence details page
-                            futureIncidentNotes = futureFetchIncidentNotes();
+                            futureIncidentNotes = futureFetchIncidentNotes(context);
                             setState(() {});
                           });
                         },

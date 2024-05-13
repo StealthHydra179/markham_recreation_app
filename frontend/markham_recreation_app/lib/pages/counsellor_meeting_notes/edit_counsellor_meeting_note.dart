@@ -8,7 +8,7 @@ import 'package:markham_recreation_app/pages/counsellor_meeting_notes/counsellor
 import 'package:markham_recreation_app/pages/counsellor_meeting_notes/fetch_counsellor_meeting_notes.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'counsellor_meeting_note.dart';
+import 'package:markham_recreation_app/pages/counsellor_meeting_notes/counsellor_meeting_note.dart';
 
 // Edit an counsellor meeting note
 class EditCounsellorMeetingNote extends StatefulWidget {
@@ -106,7 +106,7 @@ class _EditCounsellorMeetingNoteState extends State<EditCounsellorMeetingNote> {
                 // TODO check if date is out of bounds
 
                 // Send the checklist to the server
-                Future<http.Response> response = http.post(
+                Future<http.Response> response = globals.session.post(
                   Uri.parse('${globals.serverUrl}/api/edit_counsellor_meeting_note/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -128,7 +128,7 @@ class _EditCounsellorMeetingNoteState extends State<EditCounsellorMeetingNote> {
                       ),
                     );
 
-                    futureFetchCounsellorMeetingNotes().then((counsellorMeetingNotes) {
+                    futureFetchCounsellorMeetingNotes(context).then((counsellorMeetingNotes) {
                       // move back 2 pages
                       Navigator.pop(context);
                       Navigator.pop(context);

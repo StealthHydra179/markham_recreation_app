@@ -22,6 +22,13 @@ class Absence {
   });
 
   factory Absence.fromJson(Map<String, dynamic> json) {
+    // print(json);
+
+    // if reason for an item is null, set it to an empty string
+    if (json['reason'] == null) {
+      json['reason'] = '';
+    }
+
     // Create an absence from a JSON object
     return switch (json) {
       {

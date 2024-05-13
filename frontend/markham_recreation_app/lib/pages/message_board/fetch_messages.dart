@@ -15,8 +15,8 @@ import 'package:markham_recreation_app/pages/message_board/message_details.dart'
 late Future<List<MessageBoard>> futureMessageBoards;
 
 // Fetch messages from the server
-Future<List<MessageBoard>> futureFetchMessageBoards() async {
-  final response = await http.get(
+Future<List<MessageBoard>> futureFetchMessageBoards(context) async {
+  final response = await globals.session.get(
     Uri.parse('${globals.serverUrl}/api/get_messages/${globals.campId}'),
   );
 
@@ -27,6 +27,11 @@ Future<List<MessageBoard>> futureFetchMessageBoards() async {
     // If server returns an OK response, parse the JSON and store the Messages
     List<dynamic> messageBoardsJson = jsonDecode(response.body);
     messageBoards = messageBoardsJson.map((dynamic json) => MessageBoard.fromJson(json)).toList();
+    return messageBoards;
+  } else if (response.statusCode == 401) {
+    //redirect to /
+    globals.loggedIn = false;
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     return messageBoards;
   } else {
     // If that response was not OK, throw an error.
@@ -81,7 +86,7 @@ class _FetchMessageBoardsState extends State<FetchMessageBoards> {
   @override
   void initState() {
     super.initState();
-    futureMessageBoards = futureFetchMessageBoards();
+    futureMessageBoards = futureFetchMessageBoards(context);
   }
 
   @override
@@ -101,7 +106,7 @@ class _FetchMessageBoardsState extends State<FetchMessageBoards> {
                 MaterialPageRoute(builder: (context) => const NewMessageBoard()),
               ).then((value) {
                 // Refresh the list of messages after returning from the new message page
-                futureMessageBoards = futureFetchMessageBoards();
+                futureMessageBoards = futureFetchMessageBoards(context);
                 setState(() {});
               });
             },
@@ -111,7 +116,7 @@ class _FetchMessageBoardsState extends State<FetchMessageBoards> {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               // Refresh the list of messages
-              futureMessageBoards = futureFetchMessageBoards();
+              futureMessageBoards = futureFetchMessageBoards(context);
               setState(() {});
             },
           ),
@@ -143,7 +148,7 @@ class _FetchMessageBoardsState extends State<FetchMessageBoards> {
                             MaterialPageRoute(builder: (context) => MessageBoardDetails(messageBoard: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of absences after returning from the absence details page
-                            futureMessageBoards = futureFetchMessageBoards();
+                            futureMessageBoards = futureFetchMessageBoards(context);
                             setState(() {});
                           });
                         },

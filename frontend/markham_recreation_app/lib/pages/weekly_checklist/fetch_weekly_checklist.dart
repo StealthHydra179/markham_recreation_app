@@ -59,7 +59,7 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
   List<ChecklistItem> checklist = [];
 
   void _fetch_checklist() async {
-    Future<http.Response> response = http.get(
+    Future<http.Response> response = globals.session.get(
       Uri.parse('${globals.serverUrl}/api/weekly_checklist/${globals.campId}'),
     );
     response.then((http.Response response) {
@@ -82,6 +82,10 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
             //TODO edit the state of the checkboxes to match the response
           ),
         );
+      } else if (response.statusCode == 401) {
+        //redirect to /
+        globals.loggedIn = false;
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -150,7 +154,7 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
                   ),
                   onPressed: () {
                     // Send the checklist to the server
-                    Future<http.Response> response = http.post(
+                    Future<http.Response> response = globals.session.post(
                       Uri.parse('${globals.serverUrl}/api/weekly_checklist/${globals.campId}'),
                       headers: <String, String>{
                         'Content-Type': 'application/json; charset=UTF-8',
@@ -168,6 +172,10 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
                             duration: Duration(seconds: 3),
                           ),
                         );
+                      } else if (response.statusCode == 401) {
+                        //redirect to /
+                        globals.loggedIn = false;
+                        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

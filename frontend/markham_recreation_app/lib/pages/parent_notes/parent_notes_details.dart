@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/pages/parent_notes/fetch_parent_notes.dart';
 
-import 'parent_notes.dart';
-import 'edit_parent_notes.dart';
+import 'package:markham_recreation_app/pages/parent_notes/parent_notes.dart';
+import 'package:markham_recreation_app/pages/parent_notes/edit_parent_notes.dart';
 
 // Details of an parent notes
 class ParentNoteDetails extends StatelessWidget {
@@ -49,7 +49,7 @@ class ParentNoteDetails extends StatelessWidget {
             icon: const Icon(Icons.delete),
             onPressed: () {
               // Send a request to the server to delete the parent note
-              Future<http.Response> response = http.post(
+              Future<http.Response> response = globals.session.post(
                 Uri.parse('${globals.serverUrl}/api/delete_parent_notes/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',

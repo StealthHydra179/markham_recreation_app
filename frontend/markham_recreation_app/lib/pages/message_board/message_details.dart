@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/pages/message_board/fetch_messages.dart';
 
-import 'message.dart';
-import 'edit_message.dart';
+import 'package:markham_recreation_app/pages/message_board/message.dart';
+import 'package:markham_recreation_app/pages/message_board/edit_message.dart';
 
 // Details of an Message
 class MessageBoardDetails extends StatelessWidget {
@@ -49,7 +49,7 @@ class MessageBoardDetails extends StatelessWidget {
             icon: const Icon(Icons.delete),
             onPressed: () {
               // Send a request to the server to delete the Message
-              Future<http.Response> response = http.post(
+              Future<http.Response> response = globals.session.post(
                 Uri.parse('${globals.serverUrl}/api/delete_message/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',

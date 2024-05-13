@@ -93,7 +93,7 @@ class _NewMessageBoardState extends State<NewMessageBoard> {
                 }
 
                 // Send the checklist to the server
-                Future<http.Response> response = http.post(
+                Future<http.Response> response = globals.session.post(
                   Uri.parse('${globals.serverUrl}/api/new_message/${globals.campId}'), //+globals.camp_id.toString()
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',

@@ -26,8 +26,8 @@ List<Camp> campList = [
 bool campLoaded = false;
 
 // Fetch camp from server
-Future<void> fetchcamp() async {
-  final response = await http.get(Uri.parse('$serverUrl/api/camp/0')).catchError(// TODO error check no camp assigned
+Future<void> fetchcamp(int attemptNumber) async {
+  final response = await session.get(Uri.parse('$serverUrl/api/camp/0')).catchError(// TODO error check no camp assigned
     (error) {
       throw Exception('Failed to load camp');
     },
@@ -41,9 +41,21 @@ Future<void> fetchcamp() async {
       campName = campList[0].name;
       startDate = campList[0].startDate;
     }
-  } else {
+  } else if (response.statusCode == 401) {
+      //redirect to /
+      loggedIn = false;
+      // retryFuture(fetchcamp, attemptNumber+1);
+      // Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false); // TODO renable this
+    } else {
     throw Exception('Failed to load camp');
   }
+}
+
+retryFuture(Future<void> Function(int) function, int attemptNumber) async {
+  if (attemptNumber > 5) {
+    return;
+  }
+  await Future.delayed(Duration(milliseconds: 100*attemptNumber), () => function(attemptNumber+1));
 }
 
 
@@ -63,3 +75,48 @@ class Camp {
     );
   }
 }
+
+bool loggedIn = false;
+
+class UnauthorisedException implements Exception  {
+  UnauthorisedException();
+}
+
+class Session {
+  Map<String, String> storedHeaders = {};
+
+  Future<http.Response> get(Uri url, {Map<String, String>? headers}) async {
+    Map<String, String> tempHeaders = Map.from(storedHeaders);
+    if (headers != null) {
+      tempHeaders.addAll(headers);
+    }
+    print('Headers: $tempHeaders');
+    Future<http.Response> response = http.get(url, headers: tempHeaders);
+    response.then((value) => updateCookie(value));
+    return response;
+  }
+
+  Future<http.Response> post(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
+    Map<String, String> tempHeaders = Map.from(storedHeaders);
+    if (headers != null) {
+      tempHeaders.addAll(headers);
+    }
+    print('Headers: $tempHeaders');
+    Future<http.Response> response = http.post(url, headers: tempHeaders, body: body, encoding: encoding);
+    response.then((value) => updateCookie(value));
+    return response;
+  }
+
+  void updateCookie(http.Response response) {
+    String? rawCookie = response.headers['set-cookie'];
+    if (rawCookie != null) {
+      print('Cookie: $rawCookie');
+      int index = rawCookie.indexOf(';');
+      storedHeaders['cookie'] =
+          (index == -1) ? rawCookie : rawCookie.substring(0, index);
+      print(storedHeaders['cookie']);
+    }
+  }
+}
+
+Session session = Session();

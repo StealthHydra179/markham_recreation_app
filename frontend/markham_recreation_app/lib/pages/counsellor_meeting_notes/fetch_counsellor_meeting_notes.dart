@@ -15,8 +15,8 @@ import 'package:markham_recreation_app/pages/counsellor_meeting_notes/counsellor
 late Future<List<CounsellorMeetingNote>> futureCounsellorMeetingNotes;
 
 // Fetch counsellor meeting notes from the server
-Future<List<CounsellorMeetingNote>> futureFetchCounsellorMeetingNotes() async {
-  final response = await http.get(
+Future<List<CounsellorMeetingNote>> futureFetchCounsellorMeetingNotes(context) async {
+  final response = await globals.session.get(
     Uri.parse('${globals.serverUrl}/api/get_counsellor_meeting_notes/${globals.campId}'),
   );
 
@@ -28,6 +28,11 @@ Future<List<CounsellorMeetingNote>> futureFetchCounsellorMeetingNotes() async {
     List<dynamic> counsellorMeetingNotesJson = jsonDecode(response.body);
     counsellorMeetingNotes = counsellorMeetingNotesJson.map((dynamic json) => CounsellorMeetingNote.fromJson(json)).toList();
     return counsellorMeetingNotes;
+  } else if (response.statusCode == 401) {
+        //redirect to /
+        globals.loggedIn = false;
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);        
+        return counsellorMeetingNotes;    
   } else {
     // If that response was not OK, throw an error.
     throw Exception('Failed to load counsellor meeting notes');
@@ -81,7 +86,7 @@ class _FetchCounsellorMeetingNotesState extends State<FetchCounsellorMeetingNote
   @override
   void initState() {
     super.initState();
-    futureCounsellorMeetingNotes = futureFetchCounsellorMeetingNotes();
+    futureCounsellorMeetingNotes = futureFetchCounsellorMeetingNotes(context);
   }
 
   @override
@@ -101,7 +106,7 @@ class _FetchCounsellorMeetingNotesState extends State<FetchCounsellorMeetingNote
                 MaterialPageRoute(builder: (context) => const NewCounsellorMeetingNote()),
               ).then((value) {
                 // Refresh the list of counsellor meeting notes after returning from the new counsellor meeting note page
-                futureCounsellorMeetingNotes = futureFetchCounsellorMeetingNotes();
+                futureCounsellorMeetingNotes = futureFetchCounsellorMeetingNotes(context);
                 setState(() {});
               });
             },
@@ -111,7 +116,7 @@ class _FetchCounsellorMeetingNotesState extends State<FetchCounsellorMeetingNote
             icon: const Icon(Icons.refresh),
             onPressed: () {
               // Refresh the list of counsellor meeting notes
-              futureCounsellorMeetingNotes = futureFetchCounsellorMeetingNotes();
+              futureCounsellorMeetingNotes = futureFetchCounsellorMeetingNotes(context);
               setState(() {});
             },
           ),
@@ -143,7 +148,7 @@ class _FetchCounsellorMeetingNotesState extends State<FetchCounsellorMeetingNote
                             MaterialPageRoute(builder: (context) => CounsellorMeetingNoteDetails(counsellorMeetingNote: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of absences after returning from the absence details page
-                            futureCounsellorMeetingNotes = futureFetchCounsellorMeetingNotes();
+                            futureCounsellorMeetingNotes = futureFetchCounsellorMeetingNotes(context);
                             setState(() {});
                           });
                         },

@@ -15,8 +15,8 @@ import 'package:markham_recreation_app/pages/parent_notes/new_parent_note.dart';
 late Future<List<ParentNote>> futureParentNotes;
 
 // Fetch parent notes from the server
-Future<List<ParentNote>> futureFetchParentNotes() async {
-  final response = await http.get(
+Future<List<ParentNote>> futureFetchParentNotes(context) async {
+  final response = await globals.session.get(
     Uri.parse('${globals.serverUrl}/api/get_parent_notes/${globals.campId}'),
   );
 
@@ -27,6 +27,11 @@ Future<List<ParentNote>> futureFetchParentNotes() async {
     // If server returns an OK response, parse the JSON and store the parent notes
     List<dynamic> parentNotesJson = jsonDecode(response.body);
     parentNotes = parentNotesJson.map((dynamic json) => ParentNote.fromJson(json)).toList();
+    return parentNotes;
+  } else if (response.statusCode == 401) {
+    //redirect to /
+    globals.loggedIn = false;
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     return parentNotes;
   } else {
     // If that response was not OK, throw an error.
@@ -81,7 +86,7 @@ class _FetchParentNotesState extends State<FetchParentNotes> {
   @override
   void initState() {
     super.initState();
-    futureParentNotes = futureFetchParentNotes();
+    futureParentNotes = futureFetchParentNotes(context);
   }
 
   @override
@@ -101,7 +106,7 @@ class _FetchParentNotesState extends State<FetchParentNotes> {
                 MaterialPageRoute(builder: (context) => const NewParentNote()),
               ).then((value) {
                 // Refresh the list of parent notes after returning from the new parent note page
-                futureParentNotes = futureFetchParentNotes();
+                futureParentNotes = futureFetchParentNotes(context);
                 setState(() {});
               });
             },
@@ -111,7 +116,7 @@ class _FetchParentNotesState extends State<FetchParentNotes> {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               // Refresh the list of parent notes
-              futureParentNotes = futureFetchParentNotes();
+              futureParentNotes = futureFetchParentNotes(context);
               setState(() {});
             },
           ),
@@ -141,7 +146,7 @@ class _FetchParentNotesState extends State<FetchParentNotes> {
                             MaterialPageRoute(builder: (context) => ParentNoteDetails(parentNote: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of parent notes after returning from the parent note details page
-                            futureParentNotes = futureFetchParentNotes();
+                            futureParentNotes = futureFetchParentNotes(context);
                             setState(() {});
                           });
                         },

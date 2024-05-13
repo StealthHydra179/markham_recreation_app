@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/pages/absences/fetch_absences.dart';
 
-import 'absence.dart';
-import 'edit_absence.dart';
+import 'package:markham_recreation_app/pages/absences/absence.dart';
+import 'package:markham_recreation_app/pages/absences/edit_absence.dart';
 
 // Details of an absence
 class AbsenceDetails extends StatelessWidget {
@@ -49,7 +49,7 @@ class AbsenceDetails extends StatelessWidget {
             icon: const Icon(Icons.delete),
             onPressed: () {
               // Send a request to the server to delete the absence
-              Future<http.Response> response = http.post(
+              Future<http.Response> response = globals.session.post(
                 Uri.parse('${globals.serverUrl}/api/delete_absence/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',

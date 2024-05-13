@@ -15,8 +15,8 @@ import 'package:markham_recreation_app/pages/supervisor_meeting_notes/supervisor
 late Future<List<SupervisorMeetingNote>> futureSupervisorMeetingNotes;
 
 // Fetch supervisor meeting notes from the server
-Future<List<SupervisorMeetingNote>> futureFetchSupervisorMeetingNotes() async {
-  final response = await http.get(
+Future<List<SupervisorMeetingNote>> futureFetchSupervisorMeetingNotes(context) async {
+  final response = await globals.session.get(
     Uri.parse('${globals.serverUrl}/api/get_supervisor_meeting_notes/${globals.campId}'),
   );
 
@@ -28,7 +28,12 @@ Future<List<SupervisorMeetingNote>> futureFetchSupervisorMeetingNotes() async {
     List<dynamic> supervisorMeetingNotesJson = jsonDecode(response.body);
     supervisorMeetingNotes = supervisorMeetingNotesJson.map((dynamic json) => SupervisorMeetingNote.fromJson(json)).toList();
     return supervisorMeetingNotes;
-  } else {
+  } else if (response.statusCode == 401) {
+        //redirect to /
+        globals.loggedIn = false;
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);        
+        return supervisorMeetingNotes;
+    } else {
     // If that response was not OK, throw an error.
     throw Exception('Failed to load supervisor meeting notes');
   }
@@ -81,7 +86,7 @@ class _FetchSupervisorMeetingNotesState extends State<FetchSupervisorMeetingNote
   @override
   void initState() {
     super.initState();
-    futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes();
+    futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes(context);
   }
 
   @override
@@ -101,7 +106,7 @@ class _FetchSupervisorMeetingNotesState extends State<FetchSupervisorMeetingNote
                 MaterialPageRoute(builder: (context) => const NewSupervisorMeetingNote()),
               ).then((value) {
                 // Refresh the list of supervisor meeting notes after returning from the new supervisor meeting note page
-                futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes();
+                futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes(context);
                 setState(() {});
               });
             },
@@ -111,7 +116,7 @@ class _FetchSupervisorMeetingNotesState extends State<FetchSupervisorMeetingNote
             icon: const Icon(Icons.refresh),
             onPressed: () {
               // Refresh the list of supervisor meeting notes
-              futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes();
+              futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes(context);
               setState(() {});
             },
           ),
@@ -143,7 +148,7 @@ class _FetchSupervisorMeetingNotesState extends State<FetchSupervisorMeetingNote
                             MaterialPageRoute(builder: (context) => SupervisorMeetingNoteDetails(supervisorMeetingNote: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of absences after returning from the absence details page
-                            futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes();
+                            futureSupervisorMeetingNotes = futureFetchSupervisorMeetingNotes(context);
                             setState(() {});
                           });
                         },

@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/pages/daily_notes/fetch_daily_notes.dart';
 
-import 'daily_note.dart';
-import 'edit_daily_note.dart';
+import 'package:markham_recreation_app/pages/daily_notes/daily_note.dart';
+import 'package:markham_recreation_app/pages/daily_notes/edit_daily_note.dart';
 
 // Details of an Daily Note
 class DailyNoteDetails extends StatelessWidget {
@@ -49,7 +49,7 @@ class DailyNoteDetails extends StatelessWidget {
             icon: const Icon(Icons.delete),
             onPressed: () {
               // Send a request to the server to delete the Daily Note
-              Future<http.Response> response = http.post(
+              Future<http.Response> response = globals.session.post(
                 Uri.parse('${globals.serverUrl}/api/delete_daily_note/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',

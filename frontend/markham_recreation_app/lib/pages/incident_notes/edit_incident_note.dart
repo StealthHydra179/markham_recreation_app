@@ -8,7 +8,7 @@ import 'package:markham_recreation_app/pages/incident_notes/incident_note_detail
 import 'package:markham_recreation_app/pages/incident_notes/fetch_incident_notes.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'incident_note.dart';
+import 'package:markham_recreation_app/pages/incident_notes/incident_note.dart';
 
 // Edit an incident note
 class EditIncidentNote extends StatefulWidget {
@@ -106,7 +106,7 @@ class _EditIncidentNoteState extends State<EditIncidentNote> {
                 // TODO check if date is out of bounds
 
                 // Send the checklist to the server
-                Future<http.Response> response = http.post(
+                Future<http.Response> response = globals.session.post(
                   Uri.parse('${globals.serverUrl}/api/edit_incident_note/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -128,7 +128,7 @@ class _EditIncidentNoteState extends State<EditIncidentNote> {
                       ),
                     );
 
-                    futureFetchIncidentNotes().then((incidentNotes) {
+                    futureFetchIncidentNotes(context).then((incidentNotes) {
                       // move back 2 pages
                       Navigator.pop(context);
                       Navigator.pop(context);

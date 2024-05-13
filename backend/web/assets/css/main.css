@@ -14060,9 +14060,11 @@ a:hover {
  ********************
 ********************/
 .login-bg {
-  background: url("../images/login-bg.jpg");
+  background: url("../images/bg.jpg");
   background-size: cover;
-  background-position: center center;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+  height: 100vh;
 }
 
 .login-form {

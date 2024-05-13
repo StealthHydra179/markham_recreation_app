@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:markham_recreation_app/main.dart';
 import 'package:markham_recreation_app/pages/attendance/fetch_attendance.dart';
 import 'package:markham_recreation_app/pages/counsellor_meeting_notes/fetch_counsellor_meeting_notes.dart';
@@ -23,7 +24,7 @@ String dateFormatter(String date) {
 // TODO so when a page openned pop both the drawer and the previous page before navigating to a new page
 // TODO figure out why when restart server this doesnt open until the server responds
 Drawer drawer(BuildContext context) {
-  globals.fetchcamp();
+  globals.fetchcamp(0);
   return Drawer(
     child: ListView(
       // Important: Remove any padding from the ListView.
@@ -235,7 +236,28 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Sign Out'),
           onTap: () {
-            Navigator.pop(context);
+            Future<http.Response> response = globals.session.post(
+              Uri.parse('${globals.serverUrl}/api/logout'),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+            );
+
+            response.then((value) {
+              if (value.statusCode == 200) {
+                globals.loggedIn = false;
+                Navigator.pushNamedAndRemoveUntil(context,'/',(_) => false);
+                //reload app
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Failed to logout'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              }
+            });
+            //reload app
           },
         ),
         const AboutListTile(

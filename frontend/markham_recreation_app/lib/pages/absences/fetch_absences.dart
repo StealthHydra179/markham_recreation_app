@@ -15,8 +15,8 @@ import 'package:markham_recreation_app/pages/absences/new_absence.dart';
 late Future<List<Absence>> futureAbsences;
 
 // Fetch absences from the server
-Future<List<Absence>> futureFetchAbsences() async {
-  final response = await http.get(
+Future<List<Absence>> futureFetchAbsences(context) async {
+  final response = await globals.session.get(
     Uri.parse('${globals.serverUrl}/api/get_absences/${globals.campId}'),
   );
 
@@ -27,6 +27,11 @@ Future<List<Absence>> futureFetchAbsences() async {
     // If server returns an OK response, parse the JSON and store the absences
     List<dynamic> absencesJson = jsonDecode(response.body);
     absences = absencesJson.map((dynamic json) => Absence.fromJson(json)).toList();
+    return absences;
+  } else if (response.statusCode == 401) {
+        //redirect to /
+    globals.loggedIn = false;
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     return absences;
   } else {
     // If that response was not OK, throw an error.
@@ -81,7 +86,7 @@ class _FetchAbsencesState extends State<FetchAbsences> {
   @override
   void initState() {
     super.initState();
-    futureAbsences = futureFetchAbsences();
+    futureAbsences = futureFetchAbsences(context);
   }
 
   @override
@@ -101,7 +106,7 @@ class _FetchAbsencesState extends State<FetchAbsences> {
                 MaterialPageRoute(builder: (context) => const NewAbsence()),
               ).then((value) {
                 // Refresh the list of absences after returning from the new absence page
-                futureAbsences = futureFetchAbsences();
+                futureAbsences = futureFetchAbsences(context);
                 setState(() {});
               });
             },
@@ -111,7 +116,7 @@ class _FetchAbsencesState extends State<FetchAbsences> {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               // Refresh the list of absences
-              futureAbsences = futureFetchAbsences();
+              futureAbsences = futureFetchAbsences(context);
               setState(() {});
             },
           ),
@@ -144,7 +149,7 @@ class _FetchAbsencesState extends State<FetchAbsences> {
                             MaterialPageRoute(builder: (context) => AbsenceDetails(absence: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of absences after returning from the absence details page
-                            futureAbsences = futureFetchAbsences();
+                            futureAbsences = futureFetchAbsences(context);
                             setState(() {});
                           });
                         },

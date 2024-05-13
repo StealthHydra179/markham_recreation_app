@@ -15,8 +15,8 @@ import 'package:markham_recreation_app/pages/equipment_notes/equipment_note_deta
 late Future<List<EquipmentNote>> futureEquipmentNotes;
 
 // Fetch equipment notes from the server
-Future<List<EquipmentNote>> futureFetchEquipmentNotes() async {
-  final response = await http.get(
+Future<List<EquipmentNote>> futureFetchEquipmentNotes(context) async {
+  final response = await globals.session.get(
     Uri.parse('${globals.serverUrl}/api/get_equipment_notes/${globals.campId}'),
   );
 
@@ -28,6 +28,11 @@ Future<List<EquipmentNote>> futureFetchEquipmentNotes() async {
     List<dynamic> equipmentNotesJson = jsonDecode(response.body);
     equipmentNotes = equipmentNotesJson.map((dynamic json) => EquipmentNote.fromJson(json)).toList();
     return equipmentNotes;
+  } else if (response.statusCode == 401) {
+        //redirect to /
+        globals.loggedIn = false;
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);        
+        return equipmentNotes;    
   } else {
     // If that response was not OK, throw an error.
     throw Exception('Failed to load equipment notes');
@@ -81,7 +86,7 @@ class _FetchEquipmentNotesState extends State<FetchEquipmentNotes> {
   @override
   void initState() {
     super.initState();
-    futureEquipmentNotes = futureFetchEquipmentNotes();
+    futureEquipmentNotes = futureFetchEquipmentNotes(context);
   }
 
   @override
@@ -101,7 +106,7 @@ class _FetchEquipmentNotesState extends State<FetchEquipmentNotes> {
                 MaterialPageRoute(builder: (context) => const NewEquipmentNote()),
               ).then((value) {
                 // Refresh the list of equipment notes after returning from the new equipment note page
-                futureEquipmentNotes = futureFetchEquipmentNotes();
+                futureEquipmentNotes = futureFetchEquipmentNotes(context);
                 setState(() {});
               });
             },
@@ -111,7 +116,7 @@ class _FetchEquipmentNotesState extends State<FetchEquipmentNotes> {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               // Refresh the list of equipment notes
-              futureEquipmentNotes = futureFetchEquipmentNotes();
+              futureEquipmentNotes = futureFetchEquipmentNotes(context);
               setState(() {});
             },
           ),
@@ -143,7 +148,7 @@ class _FetchEquipmentNotesState extends State<FetchEquipmentNotes> {
                             MaterialPageRoute(builder: (context) => EquipmentNoteDetails(equipmentNote: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of absences after returning from the absence details page
-                            futureEquipmentNotes = futureFetchEquipmentNotes();
+                            futureEquipmentNotes = futureFetchEquipmentNotes(context);
                             setState(() {});
                           });
                         },

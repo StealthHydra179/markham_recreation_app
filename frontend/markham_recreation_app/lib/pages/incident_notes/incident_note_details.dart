@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:markham_recreation_app/pages/incident_notes/fetch_incident_notes.dart';
 
-import 'incident_note.dart';
-import 'edit_incident_note.dart';
+import 'package:markham_recreation_app/pages/incident_notes/incident_note.dart';
+import 'package:markham_recreation_app/pages/incident_notes/edit_incident_note.dart';
 
 // Details of an Incident Note
 class IncidentNoteDetails extends StatelessWidget {
@@ -49,7 +49,7 @@ class IncidentNoteDetails extends StatelessWidget {
             icon: const Icon(Icons.delete),
             onPressed: () {
               // Send a request to the server to delete the Incident Note
-              Future<http.Response> response = http.post(
+              Future<http.Response> response = globals.session.post(
                 Uri.parse('${globals.serverUrl}/api/delete_incident_note/${globals.campId}'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',

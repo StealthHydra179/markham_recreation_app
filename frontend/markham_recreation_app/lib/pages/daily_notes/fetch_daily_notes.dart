@@ -15,8 +15,8 @@ import 'package:markham_recreation_app/pages/daily_notes/daily_note_details.dart
 late Future<List<DailyNote>> futureDailyNotes;
 
 // Fetch daily notes from the server
-Future<List<DailyNote>> futureFetchDailyNotes() async {
-  final response = await http.get(
+Future<List<DailyNote>> futureFetchDailyNotes(context) async {
+  final response = await globals.session.get(
     Uri.parse('${globals.serverUrl}/api/get_daily_notes/${globals.campId}'),
   );
 
@@ -27,6 +27,11 @@ Future<List<DailyNote>> futureFetchDailyNotes() async {
     // If server returns an OK response, parse the JSON and store the Daily Notes
     List<dynamic> dailyNotesJson = jsonDecode(response.body);
     dailyNotes = dailyNotesJson.map((dynamic json) => DailyNote.fromJson(json)).toList();
+    return dailyNotes;
+  } else if (response.statusCode == 401) {
+        //redirect to /
+    globals.loggedIn = false;
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     return dailyNotes;
   } else {
     // If that response was not OK, throw an error.
@@ -81,7 +86,7 @@ class _FetchDailyNotesState extends State<FetchDailyNotes> {
   @override
   void initState() {
     super.initState();
-    futureDailyNotes = futureFetchDailyNotes();
+    futureDailyNotes = futureFetchDailyNotes(context);
   }
 
   @override
@@ -101,7 +106,7 @@ class _FetchDailyNotesState extends State<FetchDailyNotes> {
                 MaterialPageRoute(builder: (context) => const NewDailyNote()),
               ).then((value) {
                 // Refresh the list of daily notes after returning from the new daily note page
-                futureDailyNotes = futureFetchDailyNotes();
+                futureDailyNotes = futureFetchDailyNotes(context);
                 setState(() {});
               });
             },
@@ -111,7 +116,7 @@ class _FetchDailyNotesState extends State<FetchDailyNotes> {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               // Refresh the list of daily notes
-              futureDailyNotes = futureFetchDailyNotes();
+              futureDailyNotes = futureFetchDailyNotes(context);
               setState(() {});
             },
           ),
@@ -143,7 +148,7 @@ class _FetchDailyNotesState extends State<FetchDailyNotes> {
                             MaterialPageRoute(builder: (context) => DailyNoteDetails(dailyNote: snapshot.data![index])),
                           ).then((value) {
                             // Refresh the list of absences after returning from the absence details page
-                            futureDailyNotes = futureFetchDailyNotes();
+                            futureDailyNotes = futureFetchDailyNotes(context);
                             setState(() {});
                           });
                         },

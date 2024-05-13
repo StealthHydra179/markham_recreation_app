@@ -8,7 +8,7 @@ import 'package:markham_recreation_app/pages/absences/absence_details.dart';
 import 'package:markham_recreation_app/pages/absences/fetch_absences.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-import 'absence.dart';
+import 'package:markham_recreation_app/pages/absences/absence.dart';
 
 // Edit an absence
 class EditAbsence extends StatefulWidget {
@@ -165,7 +165,7 @@ class _EditAbsenceState extends State<EditAbsence> {
                 // TODO check if date is out of bounds
 
                 // Send the checklist to the server
-                Future<http.Response> response = http.post(
+                Future<http.Response> response = globals.session.post(
                   Uri.parse('${globals.serverUrl}/api/edit_absence/${globals.campId}'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -190,7 +190,7 @@ class _EditAbsenceState extends State<EditAbsence> {
                       ),
                     );
 
-                    futureFetchAbsences().then((absences) {
+                    futureFetchAbsences(context).then((absences) {
                       // move back 2 pages
                       Navigator.pop(context);
                       Navigator.pop(context);
