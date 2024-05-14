@@ -1,7 +1,6 @@
-library weekly_checklist;
+
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:markham_recreation_app/drawer.dart' as drawer;
@@ -176,7 +175,7 @@ class _FetchEquipmentNotesState extends State<FetchEquipmentNotes> {
 
 
 
-// library weekly_checklist;
+// 
 
 // import 'package:flutter/material.dart';
 

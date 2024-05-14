@@ -1,4 +1,4 @@
-library weekly_checklist;
+
 
 // TODO add reload action
 import 'package:flutter/cupertino.dart';

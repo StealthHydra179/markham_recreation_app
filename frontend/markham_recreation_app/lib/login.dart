@@ -5,9 +5,6 @@ import 'package:markham_recreation_app/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:markham_recreation_app/main.dart';
-
-
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
