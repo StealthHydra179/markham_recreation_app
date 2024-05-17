@@ -120,6 +120,19 @@ class _FetchWeeklyChecklistState extends State<FetchWeeklyChecklist> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text('Weekly Checklist', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
+        actions: <Widget>[
+          // New attendance button
+          // Refresh button
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              // Refresh the list of attendance
+              // TODO add a refresh state
+              _fetch_checklist();
+              setState(() {});
+            },
+          ),
+        ],
       ),
       drawer: drawer.drawer(context),
       body: Column(

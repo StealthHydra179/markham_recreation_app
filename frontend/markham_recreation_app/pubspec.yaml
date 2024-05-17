@@ -38,6 +38,7 @@ dependencies:
   http: ^1.2.1
   date_field: ^4.0.1
   intl: ^0.18.1
+  flutter_spinbox: ^0.13.1
 
 dev_dependencies:
   flutter_test:
