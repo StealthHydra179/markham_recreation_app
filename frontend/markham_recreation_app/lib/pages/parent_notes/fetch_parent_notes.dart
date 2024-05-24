@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'dart:convert';
 
 import 'package:markham_recreation_app/drawer.dart' as drawer;
@@ -37,32 +38,11 @@ Future<List<ParentNote>> futureFetchParentNotes(context) async {
     throw Exception('Failed to load parent notes');
   }
 }
-
 // Format datetime string into a date and a time
 String dateTimeFormatter(String date) {
   // Import form yyyy-mm-ddThh:mm:ss.000Z to mm/dd/yyyy hh:mm
-
-  // timzone offset
-  int offset = DateTime.now().timeZoneOffset.inHours;
-  // adjust time
-  int hour = int.parse(date.substring(11, 13)) + offset;
-  int day = int.parse(date.substring(8, 10));
-  int month = int.parse(date.substring(5, 7));
-  int year = int.parse(date.substring(0, 4));
-
-  if (hour > 23) {
-    hour -= 24;
-    day++;
-  }
-  if (day > 31) {
-    day -= 31;
-    month++;
-  }
-  if (month > 12) {
-    month -= 12;
-    year++;
-  }
-  return '$month/$day/$year $hour:${date.substring(14, 16)}';
+  final DateFormat formatter = DateFormat('MM/dd/yyyy HH:mm');
+  return formatter.format(DateTime.parse(date).add(DateTime.now().timeZoneOffset));
 }
 
 // Format datetime string into a date
