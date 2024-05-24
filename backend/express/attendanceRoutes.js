@@ -30,7 +30,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
 
         // passes all the attendance data as a list, only update those that are different
         let update_attendance_present = `UPDATE attendance
-            SET present = $1, present_upd_by = $2, present_upd_date = $3 WHERE attendance_id = $4;`
+            SET present = $1, present_upd_by = $2, present_upd_date = $3 WHERE attendance_id = $4;`;
         let update_attendance_before = `UPDATE attendance
             SET before_care = $1, before_care_upd_by = $2, before_care_upd_date = $3 WHERE attendance_id = $4;`;
         let update_attendance_after = `UPDATE attendance
@@ -64,7 +64,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                     dataSanitization(req.body["attendance"][i].present),
                     req.session.userId,
                     new Date().toISOString(),
-                    dataSanitization(req.body["attendance"][i].attendance_id)
+                    dataSanitization(req.body["attendance"][i].attendance_id),
                 ];
                 await postgresClient.query(update_attendance_present, values);
             }
@@ -94,8 +94,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         //check if the data is different
 
         res.send({});
-
-    })
+    });
 
     logger.warn("attendanceRoutes.js not implemented");
 };
