@@ -1,10 +1,10 @@
 const express = require("express");
-let cookie_parser=require('cookie-parser')
+let cookie_parser = require("cookie-parser");
 const { Client: postgres_client } = require("pg");
 const winston = require("winston");
 const DailyRotateFile = require("winston-daily-rotate-file");
 const uuid = require("uuid");
-var session = require('express-session')
+var session = require("express-session");
 
 // Load environment variables
 require("dotenv").config();
@@ -13,27 +13,29 @@ require("dotenv").config();
 const expressServer = express();
 const serverPort = process.env.PORT || 3000;
 expressServer.use(express.json());
-expressServer.use(cookie_parser('mark_rec_cjkw3as'));
+expressServer.use(cookie_parser("mark_rec_cjkw3as"));
 // expressServer.set('trust proxy', 1)
-expressServer.use(session({
-    genid: function(req) {
-        let id = uuid.v4() // use UUIDs for session IDs
-        console.log("Session ID: " + id);//todo why is this being called like 7 times
-        return id // use UUIDs for session IDs
-    },
-    secret: 'mark_rec_cjkw3as',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        secure: false, //TODO when on https, set to true
-        maxAge: 600000
-    }
-}))
+expressServer.use(
+    session({
+        genid: function (req) {
+            let id = uuid.v4(); // use UUIDs for session IDs
+            console.log("Session ID: " + id); //todo why is this being called like 7 times
+            return id; // use UUIDs for session IDs
+        },
+        secret: "mark_rec_cjkw3as",
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            secure: false, //TODO when on https, set to true
+            maxAge: 600000,
+        },
+    }),
+);
 
 // Database Connection
 const postgresClient = new postgres_client({
     application_name: "Markham Recreation Summer Camp Server",
-    ssl: process.env.db_SSL ? false : {rejectUnauthorized: false},
+    ssl: process.env.db_SSL ? false : { rejectUnauthorized: false },
 });
 let postgresConnected = false;
 
@@ -136,10 +138,12 @@ expressServer.get("/api", (req, res) => {
 });
 
 expressServer.get("/privacy", (req, res) => {
-    res.send("Privacy: All data is confidential and will not be shared with any third parties except for Markham Recreation. All data is encrypted and stored securely. If you have any questions, please contact Markham Recreation.");
+    res.send(
+        "Privacy: All data is confidential and will not be shared with any third parties except for Markham Recreation. All data is encrypted and stored securely. If you have any questions, please contact Markham Recreation.",
+    );
 });
 
-expressServer.use('/admin', express.static("web"));
+expressServer.use("/admin", express.static("web"));
 
 let routePassthrough = [expressServer, logger, postgresClient, dataSanitization, getPostgresConnected];
 
@@ -218,4 +222,4 @@ expressServer.listen(serverPort, () => {
 //         'Password: <input name="pass" type="password"><br>' +
 //         '<input type="submit" text="Login"></form>')
 // })
-logger.warn("MOVE CAMPERS IN CAMP TO ATTENDANCE PAGE") //TODO
+logger.warn("MOVE CAMPERS IN CAMP TO ATTENDANCE PAGE"); //TODO

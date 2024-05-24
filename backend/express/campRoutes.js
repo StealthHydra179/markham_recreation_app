@@ -11,7 +11,6 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         }
         logger.debug(`GET /api/camp/:user_id ${dataSanitization(req.params.user_id)}`);
 
-
         // TODO replace with join
         const query = "SELECT * FROM camp_user_role WHERE user_id = $1";
         const values = [dataSanitization(req.params.user_id)];
@@ -33,7 +32,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     });
 
     expressServer.get("/api/campers/:camp_id", authenticate, (req, res) => {
-      let postgresConnected = getPostgresConnected();
+        let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
             res.status(500).send({ message: "Database not connected" });
             logger.error("Database not connected");
@@ -55,7 +54,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             }
             res.json(result.rows[0]);
         });
-    })
+    });
 
     expressServer.post("/api/campers/:camp_id", authenticate, (req, res) => {
         let postgresConnected = getPostgresConnected();
@@ -77,7 +76,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             }
             res.json({ message: "Camp updated" });
         });
-    })
+    });
 
     logger.info("campRoutes.js loaded");
 };
