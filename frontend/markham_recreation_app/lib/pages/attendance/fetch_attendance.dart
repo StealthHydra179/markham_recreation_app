@@ -82,7 +82,7 @@ class _FetchAttendanceState extends State<FetchAttendance> {
        } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Failed to Load Weekly Checklist'),
+            content: Text('Failed to Load Attendance'),
             duration: Duration(seconds: 3),
           ),
         );
@@ -119,54 +119,71 @@ class _FetchAttendanceState extends State<FetchAttendance> {
         ],
       ),
       drawer: drawer.drawer(context),
-      body: Column(
-        children: <Widget>[
-          // Display checklist in a list view
-          // Expanded(
-          //   child: 
-             SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
+      body: 
+      // Column(
+      //   children: <Widget>[
+      //     // Display checklist in a list view
+      //     // Expanded(
+      //     //   child: 
+      //        SingleChildScrollView(
+      //       child: Column(
+        Flex(direction: Axis.vertical, children: [
+        Expanded(
+                // physics: const AlwaysScrollableScrollPhysics(),
+              // child: <Widget>[
+                child:
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: attendance.length,
                   itemBuilder: (BuildContext context, int index) {
-                    List<List<dynamic>> listData = [
-                      ["present", attendance[index].present_count == null ? 0 : attendance[index].present_count!, attendance[index].camper_count],
-                      ["before care", attendance[index].before_care_count == null ? 0 : attendance[index].before_care_count!, attendance[index].camper_count],
-                      ["after care", attendance[index].after_care_count == null ? 0 : attendance[index].after_care_count!, attendance[index].camper_count],
-                    ];
-                    
-                    return Column(
-                      children: <Widget>[
-
-
-                        ListView.builder(
-                          itemCount: listData.length,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index2) {
-                            return Padding(
+                    return ListTile(
+                      title: Text(date_to_day(DateTime.parse(attendance[index].attendance_date))),
+                      subtitle: Column(
+                        children: <Widget>[
+                          Padding(
                             padding: const EdgeInsets.all(10),
                             child: SpinBox(
-                              value: listData[index2][1].toDouble(),
+                              value: attendance[index].present_count == null ? 0 : attendance[index].present_count!.toDouble(),
                               min: 0,
-                              max: listData[index2][2].toDouble(),
+                              max: attendance[index].camper_count.toDouble(),
                               onChanged: (value) {
                                 attendance[index].present_count = value.toInt();
                               },
-                              decoration: InputDecoration(labelText: "Number of campers " + listData[index2][0]+' on ' + date_to_day(DateTime.parse(attendance[index].attendance_date))),
+                              decoration: InputDecoration(labelText: "Number of campers present on " + date_to_day(DateTime.parse(attendance[index].attendance_date))),
                             ),
-                          );
-                          },
                           ),
-                      const Divider(height: 1),
-                    ],
-                );
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: SpinBox(
+                              value: attendance[index].before_care_count == null ? 0 : attendance[index].before_care_count!.toDouble(),
+                              min: 0,
+                              max: attendance[index].camper_count.toDouble(),
+                              onChanged: (value) {
+                                attendance[index].before_care_count = value.toInt();
+                              },
+                              decoration: InputDecoration(labelText: "Number of campers in before care on " + date_to_day(DateTime.parse(attendance[index].attendance_date))),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: SpinBox(
+                              value: attendance[index].after_care_count == null ? 0 : attendance[index].after_care_count!.toDouble(),
+                              min: 0,
+                              max: attendance[index].camper_count.toDouble(),
+                              onChanged: (value) {
+                                attendance[index].after_care_count = value.toInt();
+                              },
+                              decoration: InputDecoration(labelText: "Number of campers in after care on " + date_to_day(DateTime.parse(attendance[index].attendance_date))),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+
 
                   },
                 ),
-                
+        ),  
                 const Divider(height: 0),
 
                 ElevatedButton(
@@ -182,7 +199,7 @@ class _FetchAttendanceState extends State<FetchAttendance> {
                       },
                       body: jsonEncode(<String, dynamic>{
                         'camp_id': globals.campId,
-                        'attendace': attendance,
+                        'attendance': attendance,
                       }),
                     );
                     response.then((http.Response response) {
@@ -219,10 +236,10 @@ class _FetchAttendanceState extends State<FetchAttendance> {
                 ),
               ],
             ),
-          ),
           // ),
-        ],
-      ),
+          // ),
+      //   ],
+      // ),
     );
   }
 }

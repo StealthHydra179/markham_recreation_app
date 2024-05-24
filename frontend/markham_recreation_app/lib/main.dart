@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:intl/date_symbol_data_local.dart';
 // import 'package:http/browser_client.dart';
 
 import 'package:markham_recreation_app/globals.dart' as globals;
@@ -9,24 +10,32 @@ import 'package:markham_recreation_app/login.dart';
 
 void main() {
   var clientFactory = Client.new;
-
-  
-  WidgetsFlutterBinding.ensureInitialized();
-
-  globals.fetchcamp(0).whenComplete(() {
-    findSystemLocale().whenComplete(() {
-      runWithClient(() => runApp(const MyApp()), clientFactory);
-    });
+  initializeDateFormatting().then((_) {
+    // globals.fetchcamp(0).whenComplete(() {
+      findSystemLocale().whenComplete(() {
+        runWithClient(() => runApp(const MyApp()), clientFactory);
+      });
+    // });
   });
+  // globals.fetchcamp(0).whenComplete(() {
+    // findSystemLocale().whenComplete(() {
+    //   runWithClient(() => runApp(const MyApp()), clientFactory);
+    // });
+  // });
 }
 
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
+  
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
+    WidgetsFlutterBinding.ensureInitialized();
     return MaterialApp(
       title: 'Markham Recreation Summer camp',
       theme: ThemeData(

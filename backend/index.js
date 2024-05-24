@@ -11,7 +11,7 @@ require("dotenv").config();
 
 // Express Server
 const expressServer = express();
-const serverPort = 3000;
+const serverPort = process.env.PORT || 3000;
 expressServer.use(express.json());
 expressServer.use(cookie_parser('mark_rec_cjkw3as'));
 // expressServer.set('trust proxy', 1)
@@ -33,6 +33,7 @@ expressServer.use(session({
 // Database Connection
 const postgresClient = new postgres_client({
     application_name: "Markham Recreation Summer Camp Server",
+    ssl: process.env.db_SSL ? false : {rejectUnauthorized: false},
 });
 let postgresConnected = false;
 
@@ -134,6 +135,10 @@ expressServer.get("/api", (req, res) => {
     res.send({ message: "Hello World" });
 });
 
+expressServer.get("/privacy", (req, res) => {
+    res.send("Privacy: All data is confidential and will not be shared with any third parties except for Markham Recreation. All data is encrypted and stored securely. If you have any questions, please contact Markham Recreation.");
+});
+
 expressServer.use('/admin', express.static("web"));
 
 let routePassthrough = [expressServer, logger, postgresClient, dataSanitization, getPostgresConnected];
@@ -213,3 +218,4 @@ expressServer.listen(serverPort, () => {
 //         'Password: <input name="pass" type="password"><br>' +
 //         '<input type="submit" text="Login"></form>')
 // })
+logger.warn("MOVE CAMPERS IN CAMP TO ATTENDANCE PAGE") //TODO

@@ -5,12 +5,16 @@ import 'package:http/http.dart' as http;
 
 const Color primaryColor = Colors.red;
 const Color secondaryColor = Colors.white;
-
+  
 const String title = 'Markham Recreation Summer Camp Administration App';
 
-const String serverUrl = 'http://10.0.2.2:3000'; //localhost is 10.0.2.2 in the emulator
+// const String serverUrl = 'http://10.0.2.2:3000'; //localhost is 10.0.2.2 in the emulator
 // const String serverUrl = 'http://localhost:3000';
+const serverUrl = "https://markham-recreation.ca";
 
+
+int userId = -1;
+String username = "";
 // Current Camp
 int campId = -1; //TODO: change this to be dynamic based on the user's camp
 String campName = 'Loading'; //TODO: change this to be dynamic based on the user's camp
@@ -27,7 +31,10 @@ bool campLoaded = false;
 
 // Fetch camp from server
 Future<void> fetchcamp(int attemptNumber) async {
-  final response = await session.get(Uri.parse('$serverUrl/api/camp/0')).catchError(// TODO error check no camp assigned
+  if (userId == -1) {
+    throw Exception('Failed to load camp');
+  }
+  final response = await session.get(Uri.parse('$serverUrl/api/camp/$userId')).catchError(// TODO error check no camp assigned
     (error) {
       throw Exception('Failed to load camp');
     },

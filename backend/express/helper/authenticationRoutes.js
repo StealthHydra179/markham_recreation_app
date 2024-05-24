@@ -105,7 +105,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                                     return err; // delted next
                                 }
                                 // res.status(200).send({ message: message }); // todo cookie stuff
-                                res.send({ message: message })
+                                res.send({ "ID": req.session.userId, "username": req.session.user })
                                 logger.info("Mobile Login successful");
                                 logger.info("User logged in: ",req.session)
                             })

@@ -132,7 +132,8 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                     })
 
                 } else {
-                    res.status(401).send({ message: "Login failed" });
+                    // res.status(401).send({ message: "Login failed" });
+                    res.status(401).redirect('/admin/login');
                     logger.info("Login failed");
                 }
             });

@@ -68,7 +68,8 @@ function loadCamps() {
         let templateOutput = `
         <div class="col-sm-12">
             <div class="alert alert-secondary" role="alert">
-                <h4>${campName} @ ${facility} in ${room}</h4>
+<!--                <h4>${campName} @ ${facility} in ${room}</h4>-->
+                <h4>${campName} @ ${facility}</h4>
                 <p>
                     ${campDescription}
                 </p>
@@ -76,7 +77,11 @@ function loadCamps() {
                 <div class="row">
                     <div class="col-sm-10">
                         <p>
-                            ${start_date} to ${end_date}<br>Camp Supervisor(s): ${supervisorName}<br>Camp Director(s): ${directorName}<br>Campers: ${camperCount}<br>Location: ${location}
+                            ${start_date} to ${end_date}
+                           <!-- <br>Camp Supervisor(s): ${supervisorName}
+                            <br>Camp Director(s): ${directorName} -->
+                            <br>Campers: ${camperCount}
+                            <br>Location: ${location}
                         </p>
                     </div>
                     <div class="col-sm-2 align-self-end">
@@ -93,9 +98,14 @@ function loadCamps() {
     });
 }
 
+function locationParser(location) {
+    return encodeURIComponent(location.replace(/ /g, "_").toLowerCase());
+}
+
 function updateFacilities() {
     // when the location is changed, update the facilities
     let location = document.getElementById("campLocation").options[document.getElementById("campLocation").selectedIndex].text;
+    location = locationParser(location);
     let facilitySelect = document.getElementById("facilities");
     let facilityOptions = facilitySelect.options;
     for (let i = 0; i < facilityOptions.length; i++) {
@@ -149,7 +159,7 @@ function setup() {
             facilities.forEach((facility) => {
                 let option = document.createElement("option");
                 option.value = facility.facility_name;
-                option.classList.add(facility.location_name+"_location_facility")
+                option.classList.add(locationParser(facility.location_name)+"_location_facility")
                 facilitySelect.appendChild(option);
             });
         }

@@ -17,6 +17,7 @@ class MessageBoard {
 
   factory MessageBoard.fromJson(Map<String, dynamic> json) {
     // Create an message from a JSON object
+    print(json);
     return switch (json) {
       {
         // TODO change the JSON object keys server-side to camelCase

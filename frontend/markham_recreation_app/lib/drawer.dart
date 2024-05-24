@@ -12,6 +12,7 @@ import 'package:markham_recreation_app/pages/supervisor_meeting_notes/fetch_supe
 import 'package:markham_recreation_app/pages/message_board/fetch_messages.dart';
 import 'package:markham_recreation_app/pages/weekly_checklist/fetch_weekly_checklist.dart';
 import 'package:markham_recreation_app/pages/absences/fetch_absences.dart';
+import 'package:markham_recreation_app/pages/camp_information/fetch_camp_information.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
 
@@ -32,8 +33,8 @@ Drawer drawer(BuildContext context) {
       children: [
          UserAccountsDrawerHeader(
           decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary), // Can use global color here, and make the whole header constant for performance
-          accountName: const Text(
-            "User Name",
+          accountName: Text(
+            globals.username,
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
@@ -44,7 +45,13 @@ Drawer drawer(BuildContext context) {
               fontWeight: FontWeight.bold,
             ),
           ),
-          currentAccountPicture: FlutterLogo(),
+          //image markham_icon.png
+
+          currentAccountPicture: const CircleAvatar(
+            backgroundColor: Colors.white,
+            foregroundImage: AssetImage('lib/markham_icon.png'),
+            // radius: 100,
+          ),
           onDetailsPressed: () {
             //List the camp from the global variable in a small dialog
             showDialog(
@@ -84,6 +91,20 @@ Drawer drawer(BuildContext context) {
             );
 
             //reset show details arrow
+          },
+        ),
+        ListTile(
+          leading: const Icon(
+            Icons.warning,
+          ),
+          title: const Text('Camper Information'),
+          onTap: () {
+            //Pop until at landing page
+            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FetchCampInformation()),
+            );
           },
         ),
         ListTile(

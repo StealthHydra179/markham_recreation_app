@@ -54,9 +54,9 @@ class _LoginState extends State<Login> {
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
-                  );
+                  // ScaffoldMessenger.of(context).showSnackBar(
+                  //   const SnackBar(content: Text('Processing Data')),
+                  // );
 
                   //send login request
                   Future<http.Response> response = globals.session.post(
@@ -72,8 +72,12 @@ class _LoginState extends State<Login> {
 
                   response.then((value) {
                     if (value.statusCode == 200) {
-                      globals.loggedIn = true;
-                      Navigator.pop(context);
+                      globals.userId = json.decode(value.body)["ID"];
+                      globals.username = json.decode(value.body)['username'];
+                      globals.fetchcamp(0).then((value) {
+                        globals.loggedIn = true;
+                        Navigator.pop(context);
+                      });
                       // remove the home page and readd it
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

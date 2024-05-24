@@ -32,5 +32,52 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         });
     });
 
+    expressServer.get("/api/campers/:camp_id", authenticate, (req, res) => {
+      let postgresConnected = getPostgresConnected();
+        if (!postgresConnected) {
+            res.status(500).send({ message: "Database not connected" });
+            logger.error("Database not connected");
+            return;
+        }
+
+        logger.debug(`GET /api/campers/:camp_id ${dataSanitization(req.params.camp_id)}`);
+
+        const query = "SELECT * FROM camp WHERE camp_id = $1";
+        const values = [dataSanitization(req.params.camp_id)];
+        postgresClient.query(query, values, (err, result) => {
+            if (err) {
+                logger.error("e", err);
+                return;
+            }
+            if (result.rows.length == 0) {
+                res.status(404).send({ message: "Camp not found" });
+                return;
+            }
+            res.json(result.rows[0]);
+        });
+    })
+
+    expressServer.post("/api/campers/:camp_id", authenticate, (req, res) => {
+        let postgresConnected = getPostgresConnected();
+        if (!postgresConnected) {
+            res.status(500).send({ message: "Database not connected" });
+            logger.error("Database not connected");
+            return;
+        }
+
+        logger.debug(`POST /api/camp ${dataSanitization(req.params.camp_id)}`);
+
+        // const query = "UPDATE camp (camper_count) VALUES ($1) WHERE camp_id = $2";
+        const query = "UPDATE camp SET camper_count = $1 WHERE camp_id = $2";
+        const values = [dataSanitization(req.body.campers), dataSanitization(req.params.camp_id)];
+        postgresClient.query(query, values, (err, result) => {
+            if (err) {
+                logger.error("e", err);
+                return;
+            }
+            res.json({ message: "Camp updated" });
+        });
+    })
+
     logger.info("campRoutes.js loaded");
 };

@@ -23,7 +23,7 @@ Future<List<StaffPerformanceNote>> futureFetchStaffPerformanceNotes(context) asy
   List<StaffPerformanceNote> staffPerformanceNotes = [];
 
   if (response.statusCode == 200) {
-    // If server returns an OK response, parse the JSON and store the Staff performance Notes
+    // If server returns an OK response, parse the JSON and store the Staff Performance Notes
     List<dynamic> staffPerformanceNotesJson = jsonDecode(response.body);
     staffPerformanceNotes = staffPerformanceNotesJson.map((dynamic json) => StaffPerformanceNote.fromJson(json)).toList();
     return staffPerformanceNotes;
@@ -94,7 +94,7 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Staff performance Notes', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('Staff Performance Notes', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
         actions: <Widget>[
           // New staff performance note button
@@ -201,7 +201,7 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
 //     return Scaffold(
 //       appBar: AppBar(
 //         backgroundColor: Theme.of(context).colorScheme.primary,
-//         title: const Text('Staff performance Notes', style: TextStyle(color: globals.secondaryColor)),
+//         title: const Text('Staff Performance Notes', style: TextStyle(color: globals.secondaryColor)),
 //         iconTheme: const IconThemeData(color: globals.secondaryColor),
 //         actions: <Widget>[
 //           // New staff performance note button

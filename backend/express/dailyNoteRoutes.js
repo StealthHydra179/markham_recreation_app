@@ -74,12 +74,13 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
 
         // update specific query
         const updateQuery =
-            "UPDATE daily_note SET daily_note = $1, daily_note_upd_date = $2, daily_note_upd_by = $3 WHERE daily_note_id = $4";
+            "UPDATE daily_note SET daily_note = $1, daily_note_upd_date = $2, daily_note_upd_by = $3, daily_note_date = $5 WHERE daily_note_id = $4";
         const updateQueryValues = [
             dataSanitization(req.body.daily_note),
             new Date().toISOString(),
             0, //TODO equie_note_upd_by
             dataSanitization(req.body.daily_note_id),
+            dataSanitization(req.body.daily_note_date),
         ];
 
         postgresClient

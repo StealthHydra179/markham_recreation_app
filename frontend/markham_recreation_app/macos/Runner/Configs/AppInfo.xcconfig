@@ -8,7 +8,7 @@
 PRODUCT_NAME = markham_recreation_app
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.markhamRecreationApp
+PRODUCT_BUNDLE_IDENTIFIER = dev.shydra.markhamRecreationApp
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 dev.shydra. All rights reserved.

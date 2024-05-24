@@ -28,7 +28,7 @@ class _NewStaffPerformanceNoteState extends State<NewStaffPerformanceNote> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('New Staff performance Note', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('New Staff Performance Note', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       body: SingleChildScrollView(
@@ -108,14 +108,14 @@ class _NewStaffPerformanceNoteState extends State<NewStaffPerformanceNote> {
                     Navigator.pop(context, true); // go back to the previous page and force a refresh
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('New Staff performance Note Saved'),
+                        content: Text('New Staff Performance Note Saved'),
                         duration: Duration(seconds: 3),
                       ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Failed to Save New Staff performance Note'),
+                        content: Text('Failed to Save New Staff Performance Note'),
                         duration: Duration(seconds: 3),
                       ),
                     );
@@ -124,7 +124,7 @@ class _NewStaffPerformanceNoteState extends State<NewStaffPerformanceNote> {
                   // Runs when the server is down
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to Save Staff performance Note'),
+                      content: Text('Failed to Save Staff Performance Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );

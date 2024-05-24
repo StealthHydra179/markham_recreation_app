@@ -8,7 +8,7 @@ import 'package:markham_recreation_app/pages/staff_performance_notes/fetch_staff
 import 'package:markham_recreation_app/pages/staff_performance_notes/staff_performance_note.dart';
 import 'package:markham_recreation_app/pages/staff_performance_notes/edit_staff_performance_note.dart';
 
-// Details of an Staff performance Note
+// Details of an Staff Performance Note
 class StaffPerformanceNoteDetails extends StatelessWidget {
   final StaffPerformanceNote staffPerformanceNote;
 
@@ -21,7 +21,7 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
         
         title: const Text(
-          'Staff performance Note Details',
+          'Staff Performance Note Details',
           style: TextStyle(color: globals.secondaryColor) 
         ),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
@@ -34,7 +34,7 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
           },
         ),
         actions: <Widget>[
-          // Edit current Staff performance Note
+          // Edit current Staff Performance Note
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
@@ -44,11 +44,11 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
               );
             },
           ),
-          // Delete current Staff performance Note
+          // Delete current Staff Performance Note
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              // Send a request to the server to delete the Staff performance Note
+              // Send a request to the server to delete the Staff Performance Note
               Future<http.Response> response = globals.session.post(
                 Uri.parse('${globals.serverUrl}/api/delete_staff_performance_note/${globals.campId}'),
                 headers: <String, String>{
@@ -63,7 +63,7 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
                 if (response.statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Deleted Staff performance Note'),
+                      content: Text('Deleted Staff Performance Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );
@@ -73,7 +73,7 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to Delete Staff performance Note'),
+                      content: Text('Failed to Delete Staff Performance Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );
@@ -82,7 +82,7 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
                 // Runs when the server is down
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Failed to Delete Staff performance Note'),
+                    content: Text('Failed to Delete Staff Performance Note'),
                     duration: Duration(seconds: 3),
                   ),
                 );
@@ -92,7 +92,7 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
         ],
       ),
 
-      // Display Staff performance Note details
+      // Display Staff Performance Note details
       body: Column(
         children: <Widget>[
           ListTile(

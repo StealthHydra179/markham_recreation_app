@@ -39,7 +39,7 @@ class _EditStaffPerformanceNoteState extends State<EditStaffPerformanceNote> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Edit Staff performance Note', style: TextStyle(color: globals.secondaryColor)),
+        title: const Text('Edit Staff Performance Note', style: TextStyle(color: globals.secondaryColor)),
         iconTheme: const IconThemeData(color: globals.secondaryColor),
       ),
       body: SingleChildScrollView(
@@ -71,7 +71,7 @@ class _EditStaffPerformanceNoteState extends State<EditStaffPerformanceNote> {
                     controller: _notesController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Staff performance Note',
+                      labelText: 'Staff Performance Note',
                     ),
                   ),
                 ),
@@ -123,7 +123,7 @@ class _EditStaffPerformanceNoteState extends State<EditStaffPerformanceNote> {
                   if (response.statusCode == 200) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Edited Staff performance Note'),
+                        content: Text('Edited Staff Performance Note'),
                         duration: Duration(seconds: 3),
                       ),
                     );
@@ -146,7 +146,7 @@ class _EditStaffPerformanceNoteState extends State<EditStaffPerformanceNote> {
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Failed to Edit Staff performance Note'),
+                        content: Text('Failed to Edit Staff Performance Note'),
                         duration: Duration(seconds: 3),
                       ),
                     );
@@ -155,7 +155,7 @@ class _EditStaffPerformanceNoteState extends State<EditStaffPerformanceNote> {
                   // Runs when the server is down
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to Edit Staff performance Note'),
+                      content: Text('Failed to Edit Staff Performance Note'),
                       duration: Duration(seconds: 3),
                     ),
                   );
