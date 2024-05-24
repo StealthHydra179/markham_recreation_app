@@ -4,7 +4,6 @@ const saltRounds = 10;
 const express = require("express");
 var session = require('express-session')
 function isAuthenticated (req, res, next) {
-    console.log(req.session)
     if (req.session.user) next()
     else res.redirect('/admin/login')
 }
@@ -36,8 +35,6 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         let message = "Login failed";
         let user = req.body.username;
         let pass = req.body.password;
-        console.log(pass)
-        console.log(req.body)
         // url encode user and pass
         user = encodeURIComponent(user);
         pass = encodeURIComponent(pass);
@@ -94,7 +91,6 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
 
                         if (full_time.length + director.length == 0) {
                             // res.status(401).send({ message: "Login failed" }); // TODO display message on login page
-                            console.log(res1.rows[0].user_id)
                             res.status(401).redirect('/admin/login');
                             logger.info("Login failed");
                             return;

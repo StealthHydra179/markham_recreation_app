@@ -15,8 +15,6 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         let message = "Login failed";
         let user = req.body.username;
         let pass = req.body.password;
-        console.log(pass)
-        console.log(req.body)
         // url encode user and pass
         user = encodeURIComponent(user);
         pass = encodeURIComponent(pass);
@@ -72,7 +70,6 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
 
                         if (full_time.length + director.length +supervisor.length == 0) {
                             // res.status(401).send({ message: "Login failed" }); // TODO display message on login page
-                            console.log(req.session.user_id)
                             res.status(401).send({ message: "Login failed" });
                             logger.info("Login failed");
                             return;

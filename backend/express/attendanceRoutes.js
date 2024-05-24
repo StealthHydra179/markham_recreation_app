@@ -15,7 +15,6 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         let retrieve_attendance = `SELECT * FROM attendance LEFT JOIN camp ON attendance.camp_id = camp.camp_id WHERE camp.camp_id = $1 ORDER BY attendance_date ASC `;
         let values = [dataSanitization(req.params.camp_id)];
         const { rows } = await postgresClient.query(retrieve_attendance, values);
-        console.log(rows.length);
         res.json(rows);
     });
 
@@ -61,8 +60,6 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         for (let i = 0; i < req.body["attendance"].length; i++) {
             // console.log(values)
             if (req.body["attendance"][i].present != rows[i].present) {
-                console.log("present", req.body["attendance"][i].present, rows[i].present);
-                console.log(dataSanitization(req.body["attendance"][i].present))
                 let values = [
                     dataSanitization(req.body["attendance"][i].present),
                     req.session.userId,
