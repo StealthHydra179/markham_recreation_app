@@ -63,7 +63,7 @@ class AbsenceDetails extends StatelessWidget {
                 if (response.statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Deleted Absence'),
+                      content: Text('Deleted Absence (Reload List to View Updates)'),
                       duration: Duration(seconds: 3),
                     ),
                   );

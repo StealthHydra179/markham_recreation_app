@@ -63,7 +63,7 @@ class CounsellorMeetingNoteDetails extends StatelessWidget {
                 if (response.statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Deleted Counsellor Meeting Note'),
+                      content: Text('Deleted Counsellor Meeting Note (Reload List to View Updates)'),
                       duration: Duration(seconds: 3),
                     ),
                   );

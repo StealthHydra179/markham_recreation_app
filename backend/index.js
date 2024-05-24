@@ -18,7 +18,7 @@ expressServer.use(cookie_parser('mark_rec_cjkw3as'));
 expressServer.use(session({
     genid: function(req) {
         let id = uuid.v4() // use UUIDs for session IDs
-        console.log("Session ID: " + id);//todo why is this being called like 7 times
+        // console.log("Session ID: " + id);
         return id // use UUIDs for session IDs
     },
     secret: 'mark_rec_cjkw3as',
@@ -218,4 +218,3 @@ expressServer.listen(serverPort, () => {
 //         'Password: <input name="pass" type="password"><br>' +
 //         '<input type="submit" text="Login"></form>')
 // })
-logger.warn("MOVE CAMPERS IN CAMP TO ATTENDANCE PAGE") //TODO

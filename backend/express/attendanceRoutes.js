@@ -65,7 +65,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                 console.log(dataSanitization(req.body["attendance"][i].present))
                 let values = [
                     dataSanitization(req.body["attendance"][i].present),
-                    0, //TODO get user id
+                    req.session.userId,
                     new Date().toISOString(),
                     dataSanitization(req.body["attendance"][i].attendance_id)
                 ];
@@ -74,7 +74,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             if (req.body["attendance"][i].before_care != rows[i].before_care) {
                 let values = [
                     dataSanitization(req.body["attendance"][i].before_care),
-                    0, //TODO get user id
+                    req.session.userId,
                     new Date().toISOString(),
                     dataSanitization(req.body["attendance"][i].attendance_id),
                 ];
@@ -83,7 +83,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             if (req.body["attendance"][i].after_care != rows[i].after_care) {
                 let values = [
                     dataSanitization(req.body["attendance"][i].after_care),
-                    0, //TODO get user id
+                    req.session.userId,
                     new Date().toISOString(),
                     dataSanitization(req.body["attendance"][i].attendance_id),
                 ];

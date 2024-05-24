@@ -63,7 +63,7 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
                 if (response.statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Deleted Staff Performance Note'),
+                      content: Text('Deleted Staff Performance Note (Reload List to View Updates)'),
                       duration: Duration(seconds: 3),
                     ),
                   );

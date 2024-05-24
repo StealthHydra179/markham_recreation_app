@@ -63,7 +63,7 @@ class ParentNoteDetails extends StatelessWidget {
                 if (response.statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Deleted Parent Note'),
+                      content: Text('Deleted Parent Note (Reload List to View Updates)'),
                       duration: Duration(seconds: 3),
                     ),
                   );

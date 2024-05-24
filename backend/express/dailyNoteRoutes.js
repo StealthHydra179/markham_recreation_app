@@ -46,12 +46,13 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             dataSanitization(req.body.daily_note),
             dataSanitization(req.body.daily_note_date),
             new Date().toISOString(),
-            0, //TODO equie_note_upd_by
+            req.session.userId,
         ];
 
-        postgresClient.query(addQuery, addQueryValues, (err, res) => {
+        postgresClient.query(addQuery, addQueryValues, (err, res1) => {
             if (err) {
-                logger.error("New daily note error: ", err); // TODO send an error to the client // TODO figure out why logger.error gave undefined?
+                logger.error("New daily note error: ", err);
+                res.status(500).send({ message: "New daily note error" });
                 return;
             }
             logger.info("Added new daily note to database");
@@ -59,7 +60,6 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         res.json(req.body);
     });
 
-    // TODO sanitize before putting into logger
     expressServer.post("/api/edit_daily_note/:camp_id", authenticate, (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
@@ -78,7 +78,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         const updateQueryValues = [
             dataSanitization(req.body.daily_note),
             new Date().toISOString(),
-            0, //TODO equie_note_upd_by
+            req.session.userId,
             dataSanitization(req.body.daily_note_id),
             dataSanitization(req.body.daily_note_date),
         ];

@@ -400,7 +400,7 @@ module.exports = async function csvExportHelper(logger, postgresClient, getPostg
     // // Left Side
     let currentLeftSideEnd = -1;
 
-    // Daily Notes
+    // Daily Notes // TODO filter out saturday and sunday and turn them into a single row
     writeMergeCell(ws, "A", row3End+2, "F", row3End+2, "Daily Notes", titleNoBorderStyle);
     writeMergeCell(ws, "A", row3End+2+1, "F", row3End+2+1, "How did the day go? Any successes or challenges with program or activity plans? What worked well? What was learned and can be improved upon?", subTitleNoBorderStyle);
     thickOutlineRange(ws, "A", row3End+2, "F", row3End+2+1, false);

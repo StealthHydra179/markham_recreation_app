@@ -46,12 +46,13 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             dataSanitization(req.body.app_message),
             dataSanitization(req.body.app_message_date),
             new Date().toISOString(),
-            0, //TODO equie_note_upd_by
+            req.session.userId,
         ];
 
-        postgresClient.query(addQuery, addQueryValues, (err, res) => {
+        postgresClient.query(addQuery, addQueryValues, (err, res1) => {
             if (err) {
-                logger.error("New message error: ", err); // TODO send an error to the client // TODO figure out why logger.error gave undefined?
+                logger.error("New message error: ", err);
+                res.status(500).send({ message: "New message error" });
                 return;
             }
             logger.info("Added new message to database");
@@ -78,7 +79,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         const updateQueryValues = [
             dataSanitization(req.body.app_message),
             new Date().toISOString(),
-            0, //TODO equie_note_upd_by
+            req.session.userId,
             dataSanitization(req.body.app_message_id),
             dataSanitization(req.body.app_message_date),
         ];

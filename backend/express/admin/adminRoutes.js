@@ -124,7 +124,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                                     res.status(500).send({message: "Error logging in"});
                                     return err; // delted next
                                 }
-                                // res.status(200).send({ message: message }); // todo cookie stuff
+                                // res.status(200).send({ message: message });
                                 res.redirect('/admin/home');
                                 logger.info("Login successful");
                             })
@@ -179,7 +179,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     //     // Incident reports, absent campers, and parent comment count for the week
     //     let startOfWeek = new Date();
     //     startOfWeek.setHours(0, 0, 0, 0);
-    //     startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // TODO check if this is even correct
+    //     startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // t o d o check if this is even correct
     //
     //     let incident_note_count = `SELECT COUNT(*) AS incident_reports FROM incident_note WHERE in_note_date >= $1;`
     //     let absent_campers_count = `SELECT COUNT(*) AS absent_campers FROM absence WHERE absence_date >= $1;`
@@ -187,7 +187,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     //     let values = [startOfWeek];
     //
     //     logger.error("weekly_summary not implemented");
-    //     res.status(501).send({ message: "Not implemented" }); // TODO implement
+    //     res.status(501).send({ message: "Not implemented" }); //  t o d o implement
     // })
 
     // expressServer.get("/api/admin_statistics", (req, res) => {
@@ -202,7 +202,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
     //     logger.debug(`GET /api/admin_statistics`);
     //
     //     logger.error("admin_statistics not implemented");
-    //     res.status(501).send({ message: "Not implemented" }); // TODO implement
+    //     res.status(501).send({ message: "Not implemented" }); //  t o d o implement
     // })
 
     expressServer.get("/api/admin/fetch_camps", isAuthenticated, (req, res) => {
@@ -225,7 +225,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
                 return;
             }
 
-            //for each camp make sure the user has access to it TODO
+            //for each camp make sure the user has access to it
             let query1 = `SELECT * FROM camp_user_role WHERE user_id = $1 AND (role_id = 2 OR role_id = 1);`;
             let values = [req.session.userId];
             let result1 = await postgresClient.query(query1, values);

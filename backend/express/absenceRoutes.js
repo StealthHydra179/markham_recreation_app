@@ -59,9 +59,10 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             0, // dataSanitization(req.body.absence_upd_by),
         ];
 
-        postgresClient.query(addQuery, addQueryValues, (err, res) => {
+        postgresClient.query(addQuery, addQueryValues, (err, res1) => {
             if (err) {
-                logger.error("New absence error: ", err); // TODO send an error to the client // TODO figure out why logger.error gave undefined?
+                logger.error("New absence error: ", err);
+                res.status(500).send({ message: "Error adding absence" });
                 return;
             }
             logger.info("Added new absence to database");
@@ -96,7 +97,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             dataSanitization(req.body.followed_up),
             dataSanitization(req.body.reason),
             new Date().toISOString(),
-            0, //TODO absence_upd_by
+            req.session.userId,
             dataSanitization(req.body.absence_id),
         ];
 

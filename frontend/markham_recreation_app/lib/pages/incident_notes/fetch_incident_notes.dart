@@ -116,7 +116,7 @@ class _FetchIncidentNotesState extends State<FetchIncidentNotes> {
                     itemBuilder: (context, index) {
                       // For each incident note, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text("${dateTimeFormatter(snapshot.data![index].inNoteDate)}"),
+                        title: Text("${dateFormatter(snapshot.data![index].inNoteDate)}"),
                         subtitle: Text(snapshot.data![index].inNote),
                         trailing: const Icon(Icons.chevron_right),
 

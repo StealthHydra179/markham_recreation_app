@@ -39,7 +39,7 @@ module.exports = function (
         let update_checklist = `UPDATE checklist_status
             SET checklist_status = $1, checklist_upd_by = $2, checklist_upd_date = $3
             WHERE camp_id = $4 AND checklist_id = $5`
-        let user_id = 0; // TODO get user id
+        let user_id = req.session.userId;
         let today = new Date().toISOString();
         // console.log(req.body)
         for (let i = 0; i < req.body["checklist"].length; i++) {

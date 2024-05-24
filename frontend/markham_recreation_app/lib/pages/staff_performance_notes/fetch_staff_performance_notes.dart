@@ -116,7 +116,7 @@ class _FetchStaffPerformanceNotesState extends State<FetchStaffPerformanceNotes>
                     itemBuilder: (context, index) {
                       // For each staff performance note, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text("${dateTimeFormatter(snapshot.data![index].stNoteDate)}"),
+                        title: Text("${dateFormatter(snapshot.data![index].stNoteDate)}"),
                         subtitle: Text(snapshot.data![index].stNote),
                         trailing: const Icon(Icons.chevron_right),
 

@@ -63,7 +63,7 @@ class IncidentNoteDetails extends StatelessWidget {
                 if (response.statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Deleted Incident Note'),
+                      content: Text('Deleted Incident Note (Reload List to View Updates)'),
                       duration: Duration(seconds: 3),
                     ),
                   );

@@ -52,9 +52,10 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             0, // dataSanitization(req.body.pa_note_upd_by),
         ];
 
-        postgresClient.query(addQuery, addQueryValues, (err, res) => {
+        postgresClient.query(addQuery, addQueryValues, (err, res1) => {
             if (err) {
-                logger.error("Add parent note error: ", err); // TODO send an error to the client
+                logger.error("Add parent note error: ", err);
+                res.status(500).send({ message: "Add parent note error" });
                 return;
             }
             logger.info("Added new parent note to database");
@@ -82,7 +83,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             dataSanitization(req.body.parent_note_date),
             dataSanitization(req.body.parent_note),
             new Date().toISOString(),
-            0, //TODO pa_note_upd_by
+            req.session.userId,
             dataSanitization(req.body.parent_note_id),
         ];
 

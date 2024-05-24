@@ -115,7 +115,7 @@ class _FetchEquipmentNotesState extends State<FetchEquipmentNotes> {
                     itemBuilder: (context, index) {
                       // For each equipment note, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text("${dateTimeFormatter(snapshot.data![index].equipNoteDate)}"),
+                        title: Text("${dateFormatter(snapshot.data![index].equipNoteDate)}"),
                         subtitle: Text(snapshot.data![index].equipNote),
                         trailing: const Icon(Icons.chevron_right),
 

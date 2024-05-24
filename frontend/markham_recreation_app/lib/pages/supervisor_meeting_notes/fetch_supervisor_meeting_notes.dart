@@ -115,7 +115,7 @@ class _FetchSupervisorMeetingNotesState extends State<FetchSupervisorMeetingNote
                     itemBuilder: (context, index) {
                       // For each supervisor meeting note, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text("${dateTimeFormatter(snapshot.data![index].stNoteDate)}"),
+                        title: Text("${dateFormatter(snapshot.data![index].stNoteDate)}"),
                         subtitle: Text(snapshot.data![index].stNote),
                         trailing: const Icon(Icons.chevron_right),
 

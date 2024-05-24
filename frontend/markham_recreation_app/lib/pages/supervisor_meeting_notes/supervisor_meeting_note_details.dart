@@ -58,7 +58,7 @@ class SupervisorMeetingNoteDetails extends StatelessWidget {
                 if (response.statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Deleted Supervisor Meeting Note'),
+                      content: Text('Deleted Supervisor Meeting Note (Reload List to View Updates)'),
                       duration: Duration(seconds: 3),
                     ),
                   );

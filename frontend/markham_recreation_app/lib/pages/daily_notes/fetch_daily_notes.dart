@@ -115,7 +115,7 @@ class _FetchDailyNotesState extends State<FetchDailyNotes> {
                     itemBuilder: (context, index) {
                       // For each daily note, display the camper name, date, and a chevron icon
                       return ListTile(
-                        title: Text("${dateTimeFormatter(snapshot.data![index].inNoteDate)}"),
+                        title: Text("${dateFormatter(snapshot.data![index].inNoteDate)}"),
                         subtitle: Text(snapshot.data![index].inNote),
                         trailing: const Icon(Icons.chevron_right),
 

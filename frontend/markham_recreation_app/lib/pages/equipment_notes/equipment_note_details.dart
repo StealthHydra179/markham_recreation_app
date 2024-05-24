@@ -63,7 +63,7 @@ class EquipmentNoteDetails extends StatelessWidget {
                 if (response.statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Deleted Equipment Note'),
+                      content: Text('Deleted Equipment Note (Reload List to View Updates)'),
                       duration: Duration(seconds: 3),
                     ),
                   );
