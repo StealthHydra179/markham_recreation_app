@@ -1,12 +1,6 @@
 const authenticate = require("./helper/authentication");
 
-module.exports = function (
-    expressServer,
-    logger,
-    postgresClient,
-    dataSanitization,
-    getPostgresConnected,
-) {
+module.exports = function (expressServer, logger, postgresClient, dataSanitization, getPostgresConnected) {
     expressServer.get("/api/weekly_checklist/:camp_id", authenticate, async (req, res) => {
         let postgresConnected = getPostgresConnected();
         if (!postgresConnected) {
@@ -20,7 +14,7 @@ module.exports = function (
             FROM checklist_status RIGHT JOIN checklist_item 
                 ON checklist_status.checklist_id = checklist_item.checklist_id 
             WHERE checklist_status.camp_id = $1 AND checklist_item.checklist_active = true
-            ORDER BY checklist_item.checklist_id`
+            ORDER BY checklist_item.checklist_id`;
         let values = [dataSanitization(req.params.camp_id)];
         const { rows } = await postgresClient.query(retrieve_checklist, values);
 
@@ -38,7 +32,7 @@ module.exports = function (
 
         let update_checklist = `UPDATE checklist_status
             SET checklist_status = $1, checklist_upd_by = $2, checklist_upd_date = $3
-            WHERE camp_id = $4 AND checklist_id = $5`
+            WHERE camp_id = $4 AND checklist_id = $5`;
         let user_id = req.session.userId;
         let today = new Date().toISOString();
         // console.log(req.body)
@@ -48,7 +42,7 @@ module.exports = function (
                 user_id,
                 today,
                 dataSanitization(req.params.camp_id),
-                dataSanitization(req.body["checklist"][i].checklist_id)
+                dataSanitization(req.body["checklist"][i].checklist_id),
             ];
             // console.log(values)
             await postgresClient.query(update_checklist, values);
