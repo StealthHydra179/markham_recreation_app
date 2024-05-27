@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -8,15 +10,26 @@ import 'package:markham_recreation_app/drawer.dart' as drawer;
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
 import 'package:markham_recreation_app/login.dart';
 
+
+import 'package:flutter/services.dart';
+
 void main() {
+  
   var clientFactory = Client.new;
-  initializeDateFormatting().then((_) {
-    // globals.fetchcamp(0).whenComplete(() {
-      findSystemLocale().whenComplete(() {
-        runWithClient(() => runApp(const MyApp()), clientFactory);
-      });
-    // });
-  });
+  findSystemLocale().whenComplete(() {
+   
+    initializeDateFormatting().then((_) {
+      // globals.fetchcamp(0).whenComplete(() {
+      // WidgetsFlutterBinding.ensureInitialized();
+        // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) {
+          
+          runWithClient(() {
+            runApp(const MyApp());
+            }, clientFactory);
+        });
+      // });
+    });
+  // });
   // globals.fetchcamp(0).whenComplete(() {
     // findSystemLocale().whenComplete(() {
     //   runWithClient(() => runApp(const MyApp()), clientFactory);
@@ -34,8 +47,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    
-    WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       title: 'Markham Recreation Summer camp',
       theme: ThemeData(
@@ -103,6 +115,10 @@ class _LandingPageState extends State<LandingPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              const Image(
+                image: AssetImage('lib/markham_icon.png'),
+                width: 200,
+              ),
               const Text(
                 'Please select a page from the navigation.',
               ),
@@ -110,9 +126,14 @@ class _LandingPageState extends State<LandingPage> {
               //   '$_counter',
               //   style: Theme.of(context).textTheme.headlineMedium,
               // ),
+              Padding(// bottom padding 25% of the screen
+                padding: EdgeInsets.fromLTRB(0, 0, 0, max(MediaQuery.of(context).size.height * 0.25 - 150, 0)), 
+                child: const Text('')
+              ),
             ],
           ),
         ),
+        
         // floatingActionButton: FloatingActionButton(
         //   onPressed: _incrementCounter,
         //   tooltip: 'Increment',
@@ -132,6 +153,11 @@ class _LandingPageState extends State<LandingPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              // Image of the logo
+              const Image(
+                image: AssetImage('lib/markham_icon.png'),
+                width: 200,
+              ),
               const Text(
                 'Please login to access the app.',
               ),
@@ -140,6 +166,10 @@ class _LandingPageState extends State<LandingPage> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const Login())).then((_) {setState(() {});});
                 },
                 child: const Text('Login'),
+              ),
+              Padding(// bottom padding 25% of the screen
+                padding: EdgeInsets.fromLTRB(0, 0, 0, max(MediaQuery.of(context).size.height * 0.25 - 150, 0)), 
+                child: const Text('')
               ),
             ],
           ),

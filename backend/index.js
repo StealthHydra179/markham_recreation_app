@@ -122,8 +122,13 @@ function dataSanitization(input) {
 
 // Webserver/API Routes
 expressServer.get("/", (req, res) => {
-    res.send("Hello World");
-    logger.info("json", { test: "json" });
+    // res.send("Hello World");
+    // redirect to admin/home
+    res.redirect("/admin/home");
+});
+
+expressServer.get("/admin", (req, res) => {
+    res.redirect("/admin/home");
 });
 
 expressServer.get("/api", (req, res) => {
