@@ -19,7 +19,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         // send web/index.html
         // load web files as static
         res.sendFile("web/login.html", { root: "./" });
-        logger.info("admin/login loaded");
+        logger.info("admin/login page opened");
     })
 
     expressServer.post("/admin/login", express.urlencoded({ extended: false }), (req, res) => {
@@ -350,5 +350,5 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
         res.send({user: user})
     })
 
-    logger.warn("adminRoutes.js not implemented");
+    logger.info("adminRoutes.js loaded");
 }

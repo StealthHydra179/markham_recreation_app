@@ -97,5 +97,5 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
 
     })
 
-    logger.warn("attendanceRoutes.js not implemented");
+    logger.info("attendanceRoutes.js loaded");
 };

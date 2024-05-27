@@ -58,5 +58,4 @@ module.exports = function (
     });
 
     logger.info("weeklyChecklistRoutes.js loaded");
-    logger.debug("weeklyChecklistRoutes.js rewrite incomplete");
 };
