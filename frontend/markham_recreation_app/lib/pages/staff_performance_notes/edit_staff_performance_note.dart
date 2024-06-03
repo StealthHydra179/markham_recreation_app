@@ -73,6 +73,8 @@ class _EditStaffPerformanceNoteState extends State<EditStaffPerformanceNote> {
                       border: OutlineInputBorder(),
                       labelText: 'Staff Performance Note',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

@@ -73,6 +73,8 @@ class _EditEquipmentNoteState extends State<EditEquipmentNote> {
                       border: OutlineInputBorder(),
                       labelText: 'Equipment Note',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

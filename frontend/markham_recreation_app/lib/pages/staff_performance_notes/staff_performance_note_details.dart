@@ -93,7 +93,8 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
       ),
 
       // Display Staff Performance Note details
-      body: Column(
+      body: SingleChildScrollView(
+        child: Column(
         children: <Widget>[
           ListTile(
             title: Text('Date: ${dateFormatter(staffPerformanceNote.stNoteDate)}'),
@@ -109,6 +110,7 @@ class StaffPerformanceNoteDetails extends StatelessWidget {
             title: Text('Modified By: ${staffPerformanceNote.updBy}'),
           ),
         ],
+      ),
       ),
     );
   }

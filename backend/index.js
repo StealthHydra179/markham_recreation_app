@@ -26,7 +26,7 @@ expressServer.use(session({
     saveUninitialized: true,
     cookie: {
         secure: false, //TODO when on https, set to true
-        maxAge: 600000
+        maxAge: 1800000
     }
 }))
 

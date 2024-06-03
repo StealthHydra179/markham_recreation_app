@@ -65,6 +65,8 @@ class _NewParentNoteState extends State<NewParentNote> {
                   border: OutlineInputBorder(),
                   labelText: 'Parent Notes',
                 ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
               ),
             ),
           ),

@@ -113,6 +113,8 @@ class _EditAbsenceState extends State<EditAbsence> {
                       border: OutlineInputBorder(),
                       labelText: 'Reason',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

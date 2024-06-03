@@ -92,7 +92,8 @@ class SupervisorMeetingNoteDetails extends StatelessWidget {
       ),
 
       // Display Supervisor Meeting Note details
-      body: Column(
+      body: SingleChildScrollView(
+        child: Column(
         children: <Widget>[
           ListTile(
             title: Text('Date: ${dateFormatter(supervisorMeetingNote.stNoteDate)}'),
@@ -108,6 +109,7 @@ class SupervisorMeetingNoteDetails extends StatelessWidget {
             title: Text('Modified By: ${supervisorMeetingNote.updBy}'),
           ),
         ],
+      ),
       ),
     );
   }

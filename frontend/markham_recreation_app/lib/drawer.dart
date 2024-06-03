@@ -281,21 +281,21 @@ Drawer drawer(BuildContext context) {
             //reload app
           },
         ),
-        const AboutListTile(
-          icon: Icon(
-            Icons.info,
-          ),
-          applicationIcon: Icon(
-            Icons.local_play,
-          ),
-          applicationName: 'Markham Recreation Summer Camp App',
-          applicationVersion: '0.0.0',
-          applicationLegalese: '© 2024 StealthTech',
-          aboutBoxChildren: [
-            ///Content goes here...
-          ],
-          child: Text('About app'),
-        ),
+        // const AboutListTile(
+        //   icon: Icon(
+        //     Icons.info,
+        //   ),
+        //   applicationIcon: Icon(
+        //     Icons.local_play,
+        //   ),
+        //   applicationName: 'Markham Recreation Summer Camp App',
+        //   applicationVersion: '0.0.0',
+        //   applicationLegalese: '© 2024 StealthTech',
+        //   aboutBoxChildren: [
+        //     ///Content goes here...
+        //   ],
+        //   child: Text('About app'),
+        // ),
       ],
     ),
   );

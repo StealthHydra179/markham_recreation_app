@@ -98,8 +98,10 @@ class _NewAbsenceState extends State<NewAbsence> {
                     controller: _notesController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Notes',
+                      labelText: 'Reason',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

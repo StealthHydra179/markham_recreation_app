@@ -158,9 +158,9 @@ class _LandingPageState extends State<LandingPage> {
                 image: AssetImage('lib/markham_icon.png'),
                 width: 200,
               ),
-              const Text(
-                'Please login to access the app.',
-              ),
+              // const Text(
+              //   'Please login to access the app.',
+              // ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const Login())).then((_) {setState(() {});});

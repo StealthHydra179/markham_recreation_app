@@ -61,6 +61,8 @@ class _NewDailyNoteState extends State<NewDailyNote> {
                       border: OutlineInputBorder(),
                       labelText: 'Notes',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

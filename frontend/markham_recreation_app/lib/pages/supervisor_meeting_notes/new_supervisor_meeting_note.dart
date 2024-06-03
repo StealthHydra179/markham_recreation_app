@@ -61,6 +61,8 @@ class _NewSupervisorMeetingNoteState extends State<NewSupervisorMeetingNote> {
                       border: OutlineInputBorder(),
                       labelText: 'Notes',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

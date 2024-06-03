@@ -73,6 +73,8 @@ class _EditCounsellorMeetingNoteState extends State<EditCounsellorMeetingNote> {
                       border: OutlineInputBorder(),
                       labelText: 'Counsellor Meeting Note',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

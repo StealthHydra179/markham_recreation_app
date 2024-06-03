@@ -73,6 +73,8 @@ class _EditMessageBoardState extends State<EditMessageBoard> {
                       border: OutlineInputBorder(),
                       labelText: 'Message',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

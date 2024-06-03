@@ -61,6 +61,8 @@ class _NewStaffPerformanceNoteState extends State<NewStaffPerformanceNote> {
                       border: OutlineInputBorder(),
                       labelText: 'Notes',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

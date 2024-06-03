@@ -73,6 +73,8 @@ class _EditIncidentNoteState extends State<EditIncidentNote> {
                       border: OutlineInputBorder(),
                       labelText: 'Incident Note',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

@@ -73,6 +73,8 @@ class _EditDailyNoteState extends State<EditDailyNote> {
                       border: OutlineInputBorder(),
                       labelText: 'Daily Note',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

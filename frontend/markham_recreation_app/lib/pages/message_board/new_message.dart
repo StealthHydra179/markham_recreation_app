@@ -61,6 +61,8 @@ class _NewMessageBoardState extends State<NewMessageBoard> {
                       border: OutlineInputBorder(),
                       labelText: 'Notes',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

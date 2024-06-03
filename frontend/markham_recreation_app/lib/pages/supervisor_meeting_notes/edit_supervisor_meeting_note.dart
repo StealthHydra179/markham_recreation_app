@@ -73,6 +73,8 @@ class _EditSupervisorMeetingNoteState extends State<EditSupervisorMeetingNote> {
                       border: OutlineInputBorder(),
                       labelText: 'Supervisor Meeting Note',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
               ),

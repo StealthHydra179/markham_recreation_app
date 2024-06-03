@@ -56,7 +56,7 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             dataSanitization(req.body.followed_up),
             dataSanitization(req.body.reason),
             new Date().toISOString(),
-            0, // dataSanitization(req.body.absence_upd_by),
+            req.session.userId, // dataSanitization(req.body.absence_upd_by),
         ];
 
         postgresClient.query(addQuery, addQueryValues, (err, res1) => {
