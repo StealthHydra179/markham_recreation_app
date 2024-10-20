@@ -5,38 +5,34 @@ import 'package:http/http.dart' as http;
 
 const Color primaryColor = Colors.red;
 const Color secondaryColor = Colors.white;
-  
+
 const String title = 'Camp Administration Application';
 
 // Select the correct server URL based on the platform
 // Android emulator: 10.0.2.2:3000
 // Web: localhost:3000
 // Deployed: markham-recreation.ca
-const String serverUrl = 'http://10.0.2.2:3000'; 
+const String serverUrl = 'http://10.0.2.2:3000';
 // const String serverUrl = 'http://localhost:3000';
 // const serverUrl = "https://markham-recreation.ca";
 
-//first week start_date
-//2022-07-02
+// The first week of the camp, all dates will be initialized relative to here.
 DateTime firstWeek = DateTime.parse('2024-07-02');
 
-
+// Logged in user information
 int userId = -1;
 String username = "";
-// Current Camp
-int campId = -1; //TODO: change this to be dynamic based on the user's camp
-String campName = 'Loading'; //TODO: change this to be dynamic based on the user's camp
-DateTime startDate = DateTime.now(); //TODO: change this to be dynamic based on the user's camp
-String facilityName = 'Loading'; //TODO: change this to be dynamic based on the user's camp
-int weekNumber = 1; //TODO: change this to be dynamic based on the user's camp
+// Current viewed camp information
+int campId = -1;
+String campName = 'Loading';
+DateTime startDate = DateTime.now();
+String facilityName = 'Loading';
+int weekNumber = 1;
 
-// List of available camp // TODO fetch from server
-List<Camp> campList = [
-//   Camp(id: 1, name: 'Example Camp'),
-//   Camp(id: 2, name: 'Another Camp'),
-//   Camp(id: 3, name: 'Third Camp'),
-];
+// List of available camps to the user
+List<Camp> campList = [];
 
+// Whether the camp has been loaded from the server
 bool campLoaded = false;
 
 // Fetch camp from server
@@ -44,15 +40,20 @@ Future<void> fetchcamp(int attemptNumber) async {
   if (userId == -1) {
     throw Exception('Failed to load camp');
   }
-  final response = await session.get(Uri.parse('$serverUrl/api/camp/$userId')).catchError(// TODO error check no camp assigned
+
+  // Send a GET request to the server to get the camp information
+  final response = await session.get(Uri.parse('$serverUrl/api/camp/$userId')).catchError(
     (error) {
       throw Exception('Failed to load camp');
     },
   );
   if (response.statusCode == 200) {
+    // If the server returns an OK response, parse the JSON and store the camp information
     List<dynamic> data = jsonDecode(response.body);
     campList = data.map((camp) => Camp.fromJson(camp)).toList();
     campLoaded = true;
+
+    // If the camp has not been selected, select the first camp in the list
     if (campId == -1) {
       campId = campList[0].id;
       campName = campList[0].name;
@@ -61,24 +62,15 @@ Future<void> fetchcamp(int attemptNumber) async {
       weekNumber = ((startDate.difference(firstWeek).inDays) / 7).ceil();
     }
   } else if (response.statusCode == 401) {
-      //redirect to /
-      loggedIn = false;
-      // retryFuture(fetchcamp, attemptNumber+1);
-      // Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false); // TODO renable this
-    } else {
+    // If the server returns an unauthorized response, the user is not logged in,
+    // the app will prompt the user to log in on the next interaction
+    loggedIn = false;
+  } else {
     throw Exception('Failed to load camp');
   }
 }
 
-retryFuture(Future<void> Function(int) function, int attemptNumber) async {
-  if (attemptNumber > 5) {
-    return;
-  }
-  await Future.delayed(Duration(milliseconds: 100*attemptNumber), () => function(attemptNumber+1));
-}
-
-
-// TODO refactor to own file
+// Camp class to store camp information
 class Camp {
   final int id;
   final String name;
@@ -88,6 +80,7 @@ class Camp {
 
   Camp({required this.id, required this.name, required this.startDate, required this.facilityName, required this.weekNumber});
 
+  // Parse JSON data to create a camp object
   factory Camp.fromJson(Map<String, dynamic> json) {
     return Camp(
       id: json['camp_id'],
@@ -99,47 +92,53 @@ class Camp {
   }
 }
 
+// ----------------------------
+// Session management
+// ----------------------------
+
+// Whether the user is logged in
 bool loggedIn = false;
 
-class UnauthorisedException implements Exception  {
+// Exception for unauthorized access
+class UnauthorisedException implements Exception {
   UnauthorisedException();
 }
 
+// Session class to manage HTTP requests
 class Session {
   Map<String, String> storedHeaders = {};
 
+  // Send a GET request with the stored headers
   Future<http.Response> get(Uri url, {Map<String, String>? headers}) async {
     Map<String, String> tempHeaders = Map.from(storedHeaders);
     if (headers != null) {
       tempHeaders.addAll(headers);
     }
-    print('Headers: $tempHeaders');
     Future<http.Response> response = http.get(url, headers: tempHeaders);
     response.then((value) => updateCookie(value));
     return response;
   }
 
+  // Send a POST request with the stored headers
   Future<http.Response> post(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
     Map<String, String> tempHeaders = Map.from(storedHeaders);
     if (headers != null) {
       tempHeaders.addAll(headers);
     }
-    print('Headers: $tempHeaders');
     Future<http.Response> response = http.post(url, headers: tempHeaders, body: body, encoding: encoding);
     response.then((value) => updateCookie(value));
     return response;
   }
 
+  // Update the stored headers with the cookie from the response
   void updateCookie(http.Response response) {
     String? rawCookie = response.headers['set-cookie'];
     if (rawCookie != null) {
-      print('Cookie: $rawCookie');
       int index = rawCookie.indexOf(';');
-      storedHeaders['cookie'] =
-          (index == -1) ? rawCookie : rawCookie.substring(0, index);
-      print(storedHeaders['cookie']);
+      storedHeaders['cookie'] = (index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
   }
 }
 
+// Global session object to manage HTTP requests
 Session session = Session();
