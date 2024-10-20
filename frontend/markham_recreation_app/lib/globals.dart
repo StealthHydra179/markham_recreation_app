@@ -6,9 +6,13 @@ import 'package:http/http.dart' as http;
 const Color primaryColor = Colors.red;
 const Color secondaryColor = Colors.white;
   
-const String title = 'Markham Recreation Summer Camp Administration App';
+const String title = 'Camp Administration Application';
 
-const String serverUrl = 'http://10.0.2.2:3000'; //localhost is 10.0.2.2 in the emulator
+// Select the correct server URL based on the platform
+// Android emulator: 10.0.2.2:3000
+// Web: localhost:3000
+// Deployed: markham-recreation.ca
+const String serverUrl = 'http://10.0.2.2:3000'; 
 // const String serverUrl = 'http://localhost:3000';
 // const serverUrl = "https://markham-recreation.ca";
 
