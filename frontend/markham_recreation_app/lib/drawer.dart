@@ -15,42 +15,29 @@ import 'package:markham_recreation_app/pages/absences/fetch_absences.dart';
 import 'package:markham_recreation_app/pages/camp_information/fetch_camp_information.dart';
 import 'package:markham_recreation_app/globals.dart' as globals;
 
-
-// TODO move dateformatter to globals file
-String dateFormatter(String date) {
-  // Import form yyyy-mm-ddThh:mm:ss.000Z to mm/dd/yyyy
-  return '${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}';
-}
-
-// TODO so when a page openned pop both the drawer and the previous page before navigating to a new page
-// TODO figure out why when restart server this doesnt open until the server responds
 Drawer drawer(BuildContext context) {
   globals.fetchcamp(0);
   return Drawer(
     child: ListView(
-      // Important: Remove any padding from the ListView.
       padding: EdgeInsets.zero,
       children: [
-         UserAccountsDrawerHeader(
-          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary), // Can use global color here, and make the whole header constant for performance
+        UserAccountsDrawerHeader(
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
           accountName: Text(
             globals.username,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          accountEmail: Text(
-            globals.campName, // TODO add current camp
             style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
-          //image camp.png
-
+          accountEmail: Text(
+            globals.campName,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           currentAccountPicture: const CircleAvatar(
             backgroundColor: Colors.white,
             foregroundImage: AssetImage('lib/camp.png'),
-            // radius: 100,
           ),
           onDetailsPressed: () {
             //List the camp from the global variable in a small dialog
@@ -60,49 +47,51 @@ Drawer drawer(BuildContext context) {
                 return AlertDialog(
                   title: const Text('Select Camp'),
                   content: Container(
-                    width: double.maxFinite,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: globals.campList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title: Text("Week ${globals.campList[index].weekNumber} - ${globals.campList[index].name} @ ${globals.campList[index].facilityName}"), // TODO fix the arrow changing directions on tap but not changing back
-                          subtitle: Text("${dateFormatter(globals.campList[index].startDate.toString())} to ${dateFormatter(globals.campList[index].startDate.add(const Duration(days: 7)).toString())}"),
-                          onTap: () {
-                            globals.campId = globals.campList[index].id;
-                            globals.campName = globals.campList[index].name;
-                            globals.startDate = globals.campList[index].startDate;
-                            globals.facilityName = globals.campList[index].facilityName;
-                            globals.weekNumber = globals.campList[index].weekNumber;
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            Navigator.popUntil(context, (_) => false);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const LandingPage(title: globals.title)),
-                            );
-                            //update drawer widget with new camp name
-                          },
-                        );
-                      },
-                    )
-                    //TODO add reload action (for when a new camp is added)
-                  ),
+                      width: double.maxFinite,
+
+                      // Build the list of camps
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: globals.campList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            // For each camp, display the camp name and the start date, and set the onTap action to change the camp
+                            title: Text("Week ${globals.campList[index].weekNumber} - ${globals.campList[index].name} @ ${globals.campList[index].facilityName}"), // TODO fix the arrow changing directions on tap but not changing back
+                            subtitle: Text("${globals.dateFormatter(globals.campList[index].startDate.toString())} to ${globals.dateFormatter(globals.campList[index].startDate.add(const Duration(days: 7)).toString())}"),
+                            onTap: () {
+                              // Set the global variables to the selected camp
+                              globals.campId = globals.campList[index].id;
+                              globals.campName = globals.campList[index].name;
+                              globals.startDate = globals.campList[index].startDate;
+                              globals.facilityName = globals.campList[index].facilityName;
+                              globals.weekNumber = globals.campList[index].weekNumber;
+
+                              // Close the dialog and reload the app to show the new camp
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.popUntil(context, (_) => false);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LandingPage(title: globals.title)),
+                              );
+                            },
+                          );
+                        },
+                      )),
                 );
               },
             );
-
-            //reset show details arrow
           },
         ),
+
+        // Different options for the pages that can be navigated to
         ListTile(
           leading: const Icon(
             Icons.warning,
           ),
           title: const Text('Camper Information'),
           onTap: () {
-            //Pop until at landing page
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchCampInformation()),
@@ -115,8 +104,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Weekly Checklist'),
           onTap: () {
-            //Pop until at landing page
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchWeeklyChecklist()),
@@ -129,7 +117,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Message Board'),
           onTap: () {
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchMessageBoards()),
@@ -142,7 +130,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Attendance'),
           onTap: () {
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchAttendance()),
@@ -155,7 +143,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Absences'),
           onTap: () {
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchAbsences()),
@@ -168,7 +156,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Daily Notes'),
           onTap: () {
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchDailyNotes()),
@@ -181,7 +169,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Incident/Accident Report'),
           onTap: () {
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchIncidentNotes()),
@@ -194,7 +182,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Parent Comments/Concerns'),
           onTap: () {
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchParentNotes()),
@@ -207,7 +195,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Equipment and Supplies'),
           onTap: () {
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchEquipmentNotes()),
@@ -220,7 +208,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Staff Performance'),
           onTap: () {
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchStaffPerformanceNotes()),
@@ -233,7 +221,7 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Counsellor Weekly Meeting Notes'),
           onTap: () {
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchCounsellorMeetingNotes()),
@@ -246,19 +234,22 @@ Drawer drawer(BuildContext context) {
           ),
           title: const Text('Supervisor Weekly Meeting Notes'),
           onTap: () {
-            Navigator.popUntil(context, (route)=>route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FetchSupervisorMeetingNotes()),
             );
           },
         ),
+
+        // Sign out option
         ListTile(
           leading: const Icon(
             Icons.chevron_right,
           ),
           title: const Text('Sign Out'),
           onTap: () {
+            // Send a POST request to the server to logout
             Future<http.Response> response = globals.session.post(
               Uri.parse('${globals.serverUrl}/api/logout'),
               headers: <String, String>{
@@ -266,10 +257,11 @@ Drawer drawer(BuildContext context) {
               },
             );
 
+            // If the request is successful, set the loggedIn variable to false and reload the app
             response.then((value) {
               if (value.statusCode == 200) {
                 globals.loggedIn = false;
-                Navigator.pushNamedAndRemoveUntil(context,'/',(_) => false);
+                Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
                 //reload app
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -283,21 +275,6 @@ Drawer drawer(BuildContext context) {
             //reload app
           },
         ),
-        // const AboutListTile(
-        //   icon: Icon(
-        //     Icons.info,
-        //   ),
-        //   applicationIcon: Icon(
-        //     Icons.local_play,
-        //   ),
-        //   applicationName: 'Markham Recreation Summer Camp App',
-        //   applicationVersion: '0.0.0',
-        //   applicationLegalese: '© 2024 StealthTech',
-        //   aboutBoxChildren: [
-        //     ///Content goes here...
-        //   ],
-        //   child: Text('About app'),
-        // ),
       ],
     ),
   );

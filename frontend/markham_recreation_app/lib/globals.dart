@@ -141,3 +141,9 @@ class Session {
 
 // Global session object to manage HTTP requests
 Session session = Session();
+
+
+// Format the date from yyyy-mm-ddThh:mm:ss.000Z to mm/dd/yyyy
+String dateFormatter(String date) {
+  return '${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}';
+}
