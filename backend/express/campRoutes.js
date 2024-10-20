@@ -22,11 +22,12 @@ module.exports = function (expressServer, logger, postgresClient, dataSanitizati
             }
             // get name of camp
             for (let i = 0; i < result.rows.length; i++) {
-                const query = "SELECT * FROM camp WHERE camp_id = $1";
+                const query = "SELECT * FROM camp LEFT JOIN camp_facility ON camp.facility_id = camp_facility.facility_id WHERE camp_id = $1";
                 const values = [result.rows[i].camp_id];
                 const res = await postgresClient.query(query, values);
                 result.rows[i]["camp_name"] = res.rows[0].camp_name;
                 result.rows[i]["start_date"] = res.rows[0].start_date;
+                result.rows[i]["facility_name"] = res.rows[0].facility_name;
             }
             res.json(result.rows);
         });

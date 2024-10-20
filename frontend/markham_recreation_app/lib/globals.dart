@@ -8,9 +8,13 @@ const Color secondaryColor = Colors.white;
   
 const String title = 'Markham Recreation Summer Camp Administration App';
 
-// const String serverUrl = 'http://10.0.2.2:3000'; //localhost is 10.0.2.2 in the emulator
+const String serverUrl = 'http://10.0.2.2:3000'; //localhost is 10.0.2.2 in the emulator
 // const String serverUrl = 'http://localhost:3000';
-const serverUrl = "https://markham-recreation.ca";
+// const serverUrl = "https://markham-recreation.ca";
+
+//first week start_date
+//2022-07-02
+DateTime firstWeek = DateTime.parse('2024-07-02');
 
 
 int userId = -1;
@@ -19,6 +23,8 @@ String username = "";
 int campId = -1; //TODO: change this to be dynamic based on the user's camp
 String campName = 'Loading'; //TODO: change this to be dynamic based on the user's camp
 DateTime startDate = DateTime.now(); //TODO: change this to be dynamic based on the user's camp
+String facilityName = 'Loading'; //TODO: change this to be dynamic based on the user's camp
+int weekNumber = 1; //TODO: change this to be dynamic based on the user's camp
 
 // List of available camp // TODO fetch from server
 List<Camp> campList = [
@@ -47,6 +53,8 @@ Future<void> fetchcamp(int attemptNumber) async {
       campId = campList[0].id;
       campName = campList[0].name;
       startDate = campList[0].startDate;
+      facilityName = campList[0].facilityName;
+      weekNumber = ((startDate.difference(firstWeek).inDays) / 7).ceil();
     }
   } else if (response.statusCode == 401) {
       //redirect to /
@@ -71,14 +79,18 @@ class Camp {
   final int id;
   final String name;
   final DateTime startDate;
+  final String facilityName;
+  final int weekNumber;
 
-  Camp({required this.id, required this.name, required this.startDate});
+  Camp({required this.id, required this.name, required this.startDate, required this.facilityName, required this.weekNumber});
 
   factory Camp.fromJson(Map<String, dynamic> json) {
     return Camp(
       id: json['camp_id'],
       name: json['camp_name'],
       startDate: DateTime.parse(json['start_date']),
+      facilityName: json['facility_name'],
+      weekNumber: ((DateTime.parse(json['start_date']).difference(firstWeek).inDays) / 7).ceil(),
     );
   }
 }

@@ -45,11 +45,11 @@ Drawer drawer(BuildContext context) {
               fontWeight: FontWeight.bold,
             ),
           ),
-          //image markham_icon.png
+          //image camp.png
 
           currentAccountPicture: const CircleAvatar(
             backgroundColor: Colors.white,
-            foregroundImage: AssetImage('lib/markham_icon.png'),
+            foregroundImage: AssetImage('lib/camp.png'),
             // radius: 100,
           ),
           onDetailsPressed: () {
@@ -66,12 +66,14 @@ Drawer drawer(BuildContext context) {
                       itemCount: globals.campList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
-                          title: Text(globals.campList[index].name), // TODO fix the arrow changing directions on tap but not changing back
+                          title: Text("Week ${globals.campList[index].weekNumber} - ${globals.campList[index].name} @ ${globals.campList[index].facilityName}"), // TODO fix the arrow changing directions on tap but not changing back
                           subtitle: Text("${dateFormatter(globals.campList[index].startDate.toString())} to ${dateFormatter(globals.campList[index].startDate.add(const Duration(days: 7)).toString())}"),
                           onTap: () {
                             globals.campId = globals.campList[index].id;
                             globals.campName = globals.campList[index].name;
                             globals.startDate = globals.campList[index].startDate;
+                            globals.facilityName = globals.campList[index].facilityName;
+                            globals.weekNumber = globals.campList[index].weekNumber;
                             Navigator.pop(context);
                             Navigator.pop(context);
                             Navigator.popUntil(context, (_) => false);
