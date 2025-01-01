@@ -3,9 +3,9 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
-      <excludeFolder url="file://$MODULE_DIR$/markham_recreation_app/.dart_tool" />
-      <excludeFolder url="file://$MODULE_DIR$/markham_recreation_app/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/markham_recreation_app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/example_recreation_app/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/example_recreation_app/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/example_recreation_app/build" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>
