@@ -14,14 +14,11 @@ Table camps {
   week string
 }
 
-Ref: users.id < camps.user
-
-
 Table attendance {
   id int [pk]
   camp int
   date date
-  // TODO store timestamps?
+  
   present int
   present_edited_by int
 
@@ -68,9 +65,6 @@ Table checklist {
   counsellor_check_edited_by int
   counsellor_check_date bool
 }
-
-// Ref: week_update.camp_id > camps.id
-// Ref: absent.week_id > week_update.id
 
 Table message {
   id int [pk]
@@ -120,6 +114,7 @@ Table incident_notes {
  by int
 }
 
+Ref: users.id < camps.user
 
 Ref: "checklist"."camp" - "camps"."id"
 

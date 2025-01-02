@@ -1,1 +1,0 @@
-print("\u001b[31mHello, world!\u001b[0m")
